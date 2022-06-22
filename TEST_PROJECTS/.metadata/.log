@@ -20,3 +20,40 @@ Command-line arguments:  -os win32 -ws win32 -arch x86_64 E:\Workspace\STM32_SEC
 
 !ENTRY org.eclipse.core.resources 4 566 2022-06-21 21:20:32.425
 !MESSAGE Workspace was not properly initialized or has already shutdown.
+!SESSION 2022-06-21 21:29:55.241 -----------------------------------------------
+eclipse.buildId=Version 1.9.0
+java.version=11.0.11
+java.vendor=AdoptOpenJDK
+BootLoader constants: OS=win32, ARCH=x86_64, WS=win32, NL=ko_KR
+Command-line arguments:  -os win32 -ws win32 -arch x86_64
+
+!ENTRY com.st.stm32cube.ide.mcu.informationcenter 4 4 2022-06-21 21:30:00.591
+!MESSAGE CubeMX plugin appears to be active, Log4j initialization might be too late.
+
+!ENTRY com.st.stm32cube.ide.mcu.informationcenter 1 1 2022-06-21 21:30:00.650
+!MESSAGE Log4j initialized with config file E:\Workspace\STM32_SECURITY_LAB\TEST_PROJECTS\.metadata\.log4j.xml
+
+!ENTRY com.st.stm32cube.ide.mcu.ide 1 1 2022-06-21 21:30:05.195
+!MESSAGE Started RMI Server, listening on port 41337
+!SESSION 2022-06-22 21:11:35.176 -----------------------------------------------
+eclipse.buildId=Version 1.9.0
+java.version=11.0.11
+java.vendor=AdoptOpenJDK
+BootLoader constants: OS=win32, ARCH=x86_64, WS=win32, NL=ko_KR
+Framework arguments:  E:\Workspace\STM32_SECURITY_LAB\TEST_PROJECTS\STM32_HAL_SRAM_WRP\.project
+Command-line arguments:  -os win32 -ws win32 -arch x86_64 E:\Workspace\STM32_SECURITY_LAB\TEST_PROJECTS\STM32_HAL_SRAM_WRP\.project
+
+!ENTRY com.st.stm32cube.ide.mcu.informationcenter 4 4 2022-06-22 21:11:41.847
+!MESSAGE CubeMX plugin appears to be active, Log4j initialization might be too late.
+
+!ENTRY com.st.stm32cube.ide.mcu.informationcenter 1 1 2022-06-22 21:11:41.918
+!MESSAGE Log4j initialized with config file E:\Workspace\STM32_SECURITY_LAB\TEST_PROJECTS\.metadata\.log4j.xml
+
+!ENTRY com.st.stm32cube.ide.mcu.ide 1 1 2022-06-22 21:11:46.774
+!MESSAGE Started RMI Server, listening on port 41337
+
+!ENTRY org.eclipse.cdt.core 1 0 2022-06-22 21:11:50.394
+!MESSAGE Indexed 'STM32_HAL_SRAM_WRP' (27 sources, 107 headers) in 3.04 sec: 10,284 declarations; 46,651 references; 7 unresolved inclusions; 358 syntax errors; 1,603 unresolved names (2.7%)
+
+!ENTRY org.eclipse.core.resources 4 566 2022-06-22 21:34:00.721
+!MESSAGE Workspace was not properly initialized or has already shutdown.
