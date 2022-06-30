@@ -1,0 +1,10 @@
+20:52:33 **** Incremental Build of configuration Debug for project STM32_HAL_SECURE_MEM_EXAM1 ****
+make -j12 all 
+arm-none-eabi-size   STM32_HAL_SECURE_MEM_EXAM1.elf 
+   text	   data	    bss	    dec	    hex	filename
+  14768	    120	   1736	  16624	   40f0	STM32_HAL_SECURE_MEM_EXAM1.elf
+Finished building: default.size.stdout
+ 
+
+20:52:33 Build Finished. 0 errors, 0 warnings. (took 378ms)
+

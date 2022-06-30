@@ -6,7 +6,9 @@
 		<item key="wholeword" value="false"/>
 		<item key="incremental" value="false"/>
 		<item key="isRegEx" value="false"/>
+		<item key="selection" value=""/>
 		<list key="findhistory">
+			<item value="USER_VECT_TAB_ADDRESS"/>
 			<item value="SRAM"/>
 		</list>
 		<list key="replacehistory">
