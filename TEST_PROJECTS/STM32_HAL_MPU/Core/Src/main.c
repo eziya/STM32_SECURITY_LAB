@@ -81,6 +81,8 @@ int main(void)
   SystemClock_Config();
 
   /* USER CODE BEGIN SysInit */
+
+  //configure MPU regions
   MPU_Config();
   MPU_AccessPermConfig();
 
@@ -104,7 +106,11 @@ int main(void)
 	  if(HAL_GPIO_ReadPin(BTN_BLUE_GPIO_Port, BTN_BLUE_Pin) == GPIO_PIN_RESET)
 	  {
 	    uint8_t arr[32] = {1,2,3,};
+
+	    //CPU access will raise hard fault
 	    //PrivilegedReadOnlyArray[0] = arr[0];
+
+	    //MPU configuration doesn't affect DMA operation.
 	    HAL_DMA_Start(&hdma_memtomem_dma1_channel1, (uint32_t)arr, (uint32_t)PrivilegedReadOnlyArray, 32);
 	  }
 

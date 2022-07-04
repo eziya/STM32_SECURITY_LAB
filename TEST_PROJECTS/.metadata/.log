@@ -420,3 +420,36 @@ java.lang.Exception: Cannot find bounds of current function
 
 !ENTRY org.eclipse.core.resources 4 566 2022-06-30 22:23:15.478
 !MESSAGE Workspace was not properly initialized or has already shutdown.
+!SESSION 2022-07-04 18:17:54.085 -----------------------------------------------
+eclipse.buildId=Version 1.9.0
+java.version=11.0.11
+java.vendor=AdoptOpenJDK
+BootLoader constants: OS=win32, ARCH=x86_64, WS=win32, NL=ko_KR
+Command-line arguments:  -os win32 -ws win32 -arch x86_64
+
+!ENTRY com.st.stm32cube.ide.mcu.informationcenter 4 4 2022-07-04 18:18:13.249
+!MESSAGE CubeMX plugin appears to be active, Log4j initialization might be too late.
+
+!ENTRY com.st.stm32cube.ide.mcu.informationcenter 1 1 2022-07-04 18:18:13.327
+!MESSAGE Log4j initialized with config file E:\Workspace\STM32_SECURITY_LAB\TEST_PROJECTS\.metadata\.log4j.xml
+
+!ENTRY com.st.stm32cube.ide.mcu.ide 1 1 2022-07-04 18:18:18.193
+!MESSAGE Started RMI Server, listening on port 41337
+
+!ENTRY org.eclipse.cdt.core 1 0 2022-07-04 18:18:53.600
+!MESSAGE Indexed 'STM32_HAL_MPU' (28 sources, 110 headers) in 2.45 sec: 9,244 declarations; 36,677 references; 3 unresolved inclusions; 26 syntax errors; 171 unresolved names (0.37%)
+!SESSION 2022-07-04 19:18:55.708 -----------------------------------------------
+eclipse.buildId=Version 1.9.0
+java.version=11.0.11
+java.vendor=AdoptOpenJDK
+BootLoader constants: OS=win32, ARCH=x86_64, WS=win32, NL=ko_KR
+Command-line arguments:  -os win32 -ws win32 -arch x86_64
+
+!ENTRY com.st.stm32cube.ide.mcu.informationcenter 4 4 2022-07-04 19:19:00.883
+!MESSAGE CubeMX plugin appears to be active, Log4j initialization might be too late.
+
+!ENTRY com.st.stm32cube.ide.mcu.informationcenter 1 1 2022-07-04 19:19:00.936
+!MESSAGE Log4j initialized with config file E:\Workspace\STM32_SECURITY_LAB\TEST_PROJECTS\.metadata\.log4j.xml
+
+!ENTRY com.st.stm32cube.ide.mcu.ide 1 1 2022-07-04 19:19:05.321
+!MESSAGE Started RMI Server, listening on port 41337
