@@ -8,3 +8,4 @@ https://www.st.com/content/st_com/en/support/learning/stm32-education/stm32-mooc
 5. Unique Boot Entry (https://blog.naver.com/eziya76/222791288575)
 6. Secure Memory (https://blog.naver.com/eziya76/222796801719)
 7. Memory Protection Unit (https://blog.naver.com/eziya76/222800018921)
+8. Firewall (https://blog.naver.com/eziya76/222801484836)
