@@ -1,0 +1,10 @@
+22:10:49 **** Incremental Build of configuration Debug for project STM32_HAL_LED ****
+make -j12 all 
+arm-none-eabi-size   STM32_HAL_LED.elf 
+   text	   data	    bss	    dec	    hex	filename
+  12232	     20	   1700	  13952	   3680	STM32_HAL_LED.elf
+Finished building: default.size.stdout
+ 
+
+22:10:49 Build Finished. 0 errors, 0 warnings. (took 350ms)
+

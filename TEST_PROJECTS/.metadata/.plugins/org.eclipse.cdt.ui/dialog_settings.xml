@@ -23,7 +23,10 @@
 		</list>
 	</section>
 	<section name="org.eclipse.cdt.ui.text.hover.CMacroExpansionExploration.internal">
-		<item key="size.width" value="384"/>
-		<item key="size.height" value="180"/>
+		<item key="size.width" value="712"/>
+		<item key="size.height" value="190"/>
+	</section>
+	<section name="CResourceRenameRefactoringInputPage">
+		<item key="updateReferences" value="true"/>
 	</section>
 </section>
