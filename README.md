@@ -9,3 +9,5 @@ https://www.st.com/content/st_com/en/support/learning/stm32-education/stm32-mooc
 6. Secure Memory (https://blog.naver.com/eziya76/222796801719)
 7. Memory Protection Unit (https://blog.naver.com/eziya76/222800018921)
 8. Firewall (https://blog.naver.com/eziya76/222801484836)
+9. TrustZone#1 (https://blog.naver.com/eziya76/222805384866)
+10. TrustZone#2 (https://blog.naver.com/eziya76/222807815641)
