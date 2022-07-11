@@ -776,3 +776,399 @@ Invalid thread id: 1
 java.lang.Exception: Invalid thread id: 1
 	at org.eclipse.cdt.dsf.mi.service.command.AbstractMIControl$RxThread.processMIOutput(AbstractMIControl.java:1013)
 	at org.eclipse.cdt.dsf.mi.service.command.AbstractMIControl$RxThread.run(AbstractMIControl.java:842)
+!SESSION 2022-07-11 18:47:11.309 -----------------------------------------------
+eclipse.buildId=Version 1.9.0
+java.version=11.0.11
+java.vendor=AdoptOpenJDK
+BootLoader constants: OS=win32, ARCH=x86_64, WS=win32, NL=ko_KR
+Command-line arguments:  -os win32 -ws win32 -arch x86_64
+
+!ENTRY com.st.stm32cube.ide.mcu.informationcenter 4 4 2022-07-11 18:47:32.703
+!MESSAGE CubeMX plugin appears to be active, Log4j initialization might be too late.
+
+!ENTRY com.st.stm32cube.ide.mcu.informationcenter 1 1 2022-07-11 18:47:32.770
+!MESSAGE Log4j initialized with config file E:\Workspace\STM32_SECURITY_LAB\TEST_PROJECTS\.metadata\.log4j.xml
+
+!ENTRY com.st.stm32cube.ide.mcu.ide 1 1 2022-07-11 18:47:35.556
+!MESSAGE Started RMI Server, listening on port 41337
+
+!ENTRY org.eclipse.cdt.managedbuilder.core 4 0 2022-07-11 18:48:02.867
+!MESSAGE Exception trying to parse option [#include <c:\st\stm32cubeide_1.9.0\stm32cubeide\plugins\com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.10.3-2021.10.win32_1.0.0.202111181127\tools\bin\../arm-none-eabi/include/newlib-nano>], class CrossBuiltinSpecsDetector
+!STACK 0
+java.util.ConcurrentModificationException
+	at java.base/java.util.HashMap.computeIfAbsent(HashMap.java:1134)
+	at org.eclipse.cdt.managedbuilder.language.settings.providers.AbstractLanguageSettingsOutputScanner.findContainerForLocationURI(AbstractLanguageSettingsOutputScanner.java:818)
+	at org.eclipse.cdt.managedbuilder.language.settings.providers.AbstractLanguageSettingsOutputScanner.resolvePathEntryInWorkspace(AbstractLanguageSettingsOutputScanner.java:1241)
+	at org.eclipse.cdt.managedbuilder.language.settings.providers.AbstractLanguageSettingsOutputScanner.createResolvedPathEntry(AbstractLanguageSettingsOutputScanner.java:1193)
+	at org.eclipse.cdt.managedbuilder.language.settings.providers.AbstractLanguageSettingsOutputScanner.processLine(AbstractLanguageSettingsOutputScanner.java:606)
+	at org.eclipse.cdt.managedbuilder.language.settings.providers.AbstractBuiltinSpecsDetector$ConsoleParserAdapter.processLine(AbstractBuiltinSpecsDetector.java:256)
+	at org.eclipse.cdt.internal.core.ConsoleOutputSniffer.processLine(ConsoleOutputSniffer.java:180)
+	at org.eclipse.cdt.internal.core.ConsoleOutputSniffer$ConsoleOutputStream.checkLine(ConsoleOutputSniffer.java:101)
+	at org.eclipse.cdt.internal.core.ConsoleOutputSniffer$ConsoleOutputStream.write(ConsoleOutputSniffer.java:60)
+	at java.base/java.io.OutputStream.write(OutputStream.java:122)
+	at org.eclipse.cdt.internal.core.ProcessClosure$ReaderThread.run(ProcessClosure.java:60)
+
+!ENTRY org.eclipse.cdt.managedbuilder.core 4 0 2022-07-11 18:48:02.869
+!MESSAGE Exception trying to parse option [#include <c:\st\stm32cubeide_1.9.0\stm32cubeide\plugins\com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.10.3-2021.10.win32_1.0.0.202111181127\tools\bin\../lib/gcc/arm-none-eabi/10.3.1/include>], class CrossBuiltinSpecsDetector
+!STACK 0
+java.util.ConcurrentModificationException
+	at java.base/java.util.HashMap.computeIfAbsent(HashMap.java:1134)
+	at org.eclipse.cdt.managedbuilder.language.settings.providers.AbstractLanguageSettingsOutputScanner.determineMappedURI(AbstractLanguageSettingsOutputScanner.java:1014)
+	at org.eclipse.cdt.managedbuilder.language.settings.providers.AbstractLanguageSettingsOutputScanner.createResolvedPathEntry(AbstractLanguageSettingsOutputScanner.java:1186)
+	at org.eclipse.cdt.managedbuilder.language.settings.providers.AbstractLanguageSettingsOutputScanner.processLine(AbstractLanguageSettingsOutputScanner.java:606)
+	at org.eclipse.cdt.managedbuilder.language.settings.providers.AbstractBuiltinSpecsDetector$ConsoleParserAdapter.processLine(AbstractBuiltinSpecsDetector.java:256)
+	at org.eclipse.cdt.internal.core.ConsoleOutputSniffer.processLine(ConsoleOutputSniffer.java:180)
+	at org.eclipse.cdt.internal.core.ConsoleOutputSniffer$ConsoleOutputStream.checkLine(ConsoleOutputSniffer.java:101)
+	at org.eclipse.cdt.internal.core.ConsoleOutputSniffer$ConsoleOutputStream.write(ConsoleOutputSniffer.java:60)
+	at java.base/java.io.OutputStream.write(OutputStream.java:122)
+	at org.eclipse.cdt.internal.core.ProcessClosure$ReaderThread.run(ProcessClosure.java:60)
+
+!ENTRY org.eclipse.cdt.managedbuilder.core 4 0 2022-07-11 18:48:02.872
+!MESSAGE Exception trying to parse option [#include <c:\st\stm32cubeide_1.9.0\stm32cubeide\plugins\com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.10.3-2021.10.win32_1.0.0.202111181127\tools\bin\../lib/gcc/arm-none-eabi/10.3.1/include-fixed>], class CrossBuiltinSpecsDetector
+!STACK 0
+java.util.ConcurrentModificationException
+	at java.base/java.util.HashMap.computeIfAbsent(HashMap.java:1134)
+	at org.eclipse.cdt.managedbuilder.language.settings.providers.AbstractLanguageSettingsOutputScanner.findContainerForLocationURI(AbstractLanguageSettingsOutputScanner.java:818)
+	at org.eclipse.cdt.managedbuilder.language.settings.providers.AbstractLanguageSettingsOutputScanner.resolvePathEntryInWorkspace(AbstractLanguageSettingsOutputScanner.java:1241)
+	at org.eclipse.cdt.managedbuilder.language.settings.providers.AbstractLanguageSettingsOutputScanner.createResolvedPathEntry(AbstractLanguageSettingsOutputScanner.java:1193)
+	at org.eclipse.cdt.managedbuilder.language.settings.providers.AbstractLanguageSettingsOutputScanner.processLine(AbstractLanguageSettingsOutputScanner.java:606)
+	at org.eclipse.cdt.managedbuilder.language.settings.providers.AbstractBuiltinSpecsDetector$ConsoleParserAdapter.processLine(AbstractBuiltinSpecsDetector.java:256)
+	at org.eclipse.cdt.internal.core.ConsoleOutputSniffer.processLine(ConsoleOutputSniffer.java:180)
+	at org.eclipse.cdt.internal.core.ConsoleOutputSniffer$ConsoleOutputStream.checkLine(ConsoleOutputSniffer.java:101)
+	at org.eclipse.cdt.internal.core.ConsoleOutputSniffer$ConsoleOutputStream.write(ConsoleOutputSniffer.java:60)
+	at java.base/java.io.OutputStream.write(OutputStream.java:122)
+	at org.eclipse.cdt.internal.core.ProcessClosure$ReaderThread.run(ProcessClosure.java:60)
+
+!ENTRY org.eclipse.cdt.managedbuilder.core 4 0 2022-07-11 18:48:02.873
+!MESSAGE Exception trying to parse option [#include <c:\st\stm32cubeide_1.9.0\stm32cubeide\plugins\com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.10.3-2021.10.win32_1.0.0.202111181127\tools\bin\../lib/gcc/arm-none-eabi/10.3.1/../../../../arm-none-eabi/include>], class CrossBuiltinSpecsDetector
+!STACK 0
+java.util.ConcurrentModificationException
+	at java.base/java.util.HashMap.computeIfAbsent(HashMap.java:1134)
+	at org.eclipse.cdt.managedbuilder.language.settings.providers.AbstractLanguageSettingsOutputScanner.findContainerForLocationURI(AbstractLanguageSettingsOutputScanner.java:818)
+	at org.eclipse.cdt.managedbuilder.language.settings.providers.AbstractLanguageSettingsOutputScanner.resolvePathEntryInWorkspace(AbstractLanguageSettingsOutputScanner.java:1241)
+	at org.eclipse.cdt.managedbuilder.language.settings.providers.AbstractLanguageSettingsOutputScanner.createResolvedPathEntry(AbstractLanguageSettingsOutputScanner.java:1193)
+	at org.eclipse.cdt.managedbuilder.language.settings.providers.AbstractLanguageSettingsOutputScanner.processLine(AbstractLanguageSettingsOutputScanner.java:606)
+	at org.eclipse.cdt.managedbuilder.language.settings.providers.AbstractBuiltinSpecsDetector$ConsoleParserAdapter.processLine(AbstractBuiltinSpecsDetector.java:256)
+	at org.eclipse.cdt.internal.core.ConsoleOutputSniffer.processLine(ConsoleOutputSniffer.java:180)
+	at org.eclipse.cdt.internal.core.ConsoleOutputSniffer$ConsoleOutputStream.checkLine(ConsoleOutputSniffer.java:101)
+	at org.eclipse.cdt.internal.core.ConsoleOutputSniffer$ConsoleOutputStream.write(ConsoleOutputSniffer.java:60)
+	at java.base/java.io.OutputStream.write(OutputStream.java:122)
+	at org.eclipse.cdt.internal.core.ProcessClosure$ReaderThread.run(ProcessClosure.java:60)
+
+!ENTRY org.eclipse.cdt.managedbuilder.core 4 0 2022-07-11 18:48:03.269
+!MESSAGE Exception trying to parse option [#include <c:\st\stm32cubeide_1.9.0\stm32cubeide\plugins\com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.10.3-2021.10.win32_1.0.0.202111181127\tools\bin\../lib/gcc/arm-none-eabi/10.3.1/../../../../arm-none-eabi/include/c++/10.3.1>], class CrossBuiltinSpecsDetector
+!STACK 0
+java.util.ConcurrentModificationException
+	at java.base/java.util.HashMap.computeIfAbsent(HashMap.java:1134)
+	at org.eclipse.cdt.managedbuilder.language.settings.providers.AbstractLanguageSettingsOutputScanner.findContainerForLocationURI(AbstractLanguageSettingsOutputScanner.java:818)
+	at org.eclipse.cdt.managedbuilder.language.settings.providers.AbstractLanguageSettingsOutputScanner.resolvePathEntryInWorkspace(AbstractLanguageSettingsOutputScanner.java:1241)
+	at org.eclipse.cdt.managedbuilder.language.settings.providers.AbstractLanguageSettingsOutputScanner.createResolvedPathEntry(AbstractLanguageSettingsOutputScanner.java:1193)
+	at org.eclipse.cdt.managedbuilder.language.settings.providers.AbstractLanguageSettingsOutputScanner.processLine(AbstractLanguageSettingsOutputScanner.java:606)
+	at org.eclipse.cdt.managedbuilder.language.settings.providers.AbstractBuiltinSpecsDetector$ConsoleParserAdapter.processLine(AbstractBuiltinSpecsDetector.java:256)
+	at org.eclipse.cdt.internal.core.ConsoleOutputSniffer.processLine(ConsoleOutputSniffer.java:180)
+	at org.eclipse.cdt.internal.core.ConsoleOutputSniffer$ConsoleOutputStream.checkLine(ConsoleOutputSniffer.java:101)
+	at org.eclipse.cdt.internal.core.ConsoleOutputSniffer$ConsoleOutputStream.write(ConsoleOutputSniffer.java:60)
+	at java.base/java.io.OutputStream.write(OutputStream.java:122)
+	at org.eclipse.cdt.internal.core.ProcessClosure$ReaderThread.run(ProcessClosure.java:60)
+
+!ENTRY org.eclipse.cdt.managedbuilder.core 4 0 2022-07-11 18:48:03.270
+!MESSAGE Exception trying to parse option [#include <c:\st\stm32cubeide_1.9.0\stm32cubeide\plugins\com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.10.3-2021.10.win32_1.0.0.202111181127\tools\bin\../lib/gcc/arm-none-eabi/10.3.1/../../../../arm-none-eabi/include/c++/10.3.1/arm-none-eabi/thumb/v8-m.main+fp/hard>], class CrossBuiltinSpecsDetector
+!STACK 0
+java.util.ConcurrentModificationException
+	at java.base/java.util.HashMap.computeIfAbsent(HashMap.java:1134)
+	at org.eclipse.cdt.managedbuilder.language.settings.providers.AbstractLanguageSettingsOutputScanner.determineMappedURI(AbstractLanguageSettingsOutputScanner.java:1014)
+	at org.eclipse.cdt.managedbuilder.language.settings.providers.AbstractLanguageSettingsOutputScanner.createResolvedPathEntry(AbstractLanguageSettingsOutputScanner.java:1186)
+	at org.eclipse.cdt.managedbuilder.language.settings.providers.AbstractLanguageSettingsOutputScanner.processLine(AbstractLanguageSettingsOutputScanner.java:606)
+	at org.eclipse.cdt.managedbuilder.language.settings.providers.AbstractBuiltinSpecsDetector$ConsoleParserAdapter.processLine(AbstractBuiltinSpecsDetector.java:256)
+	at org.eclipse.cdt.internal.core.ConsoleOutputSniffer.processLine(ConsoleOutputSniffer.java:180)
+	at org.eclipse.cdt.internal.core.ConsoleOutputSniffer$ConsoleOutputStream.checkLine(ConsoleOutputSniffer.java:101)
+	at org.eclipse.cdt.internal.core.ConsoleOutputSniffer$ConsoleOutputStream.write(ConsoleOutputSniffer.java:60)
+	at java.base/java.io.OutputStream.write(OutputStream.java:122)
+	at org.eclipse.cdt.internal.core.ProcessClosure$ReaderThread.run(ProcessClosure.java:60)
+
+!ENTRY org.eclipse.cdt.managedbuilder.core 4 0 2022-07-11 18:48:03.271
+!MESSAGE Exception trying to parse option [#include <c:\st\stm32cubeide_1.9.0\stm32cubeide\plugins\com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.10.3-2021.10.win32_1.0.0.202111181127\tools\bin\../lib/gcc/arm-none-eabi/10.3.1/../../../../arm-none-eabi/include/c++/10.3.1/backward>], class CrossBuiltinSpecsDetector
+!STACK 0
+java.util.ConcurrentModificationException
+	at java.base/java.util.HashMap.computeIfAbsent(HashMap.java:1134)
+	at org.eclipse.cdt.managedbuilder.language.settings.providers.AbstractLanguageSettingsOutputScanner.determineMappedURI(AbstractLanguageSettingsOutputScanner.java:1014)
+	at org.eclipse.cdt.managedbuilder.language.settings.providers.AbstractLanguageSettingsOutputScanner.createResolvedPathEntry(AbstractLanguageSettingsOutputScanner.java:1186)
+	at org.eclipse.cdt.managedbuilder.language.settings.providers.AbstractLanguageSettingsOutputScanner.processLine(AbstractLanguageSettingsOutputScanner.java:606)
+	at org.eclipse.cdt.managedbuilder.language.settings.providers.AbstractBuiltinSpecsDetector$ConsoleParserAdapter.processLine(AbstractBuiltinSpecsDetector.java:256)
+	at org.eclipse.cdt.internal.core.ConsoleOutputSniffer.processLine(ConsoleOutputSniffer.java:180)
+	at org.eclipse.cdt.internal.core.ConsoleOutputSniffer$ConsoleOutputStream.checkLine(ConsoleOutputSniffer.java:101)
+	at org.eclipse.cdt.internal.core.ConsoleOutputSniffer$ConsoleOutputStream.write(ConsoleOutputSniffer.java:60)
+	at java.base/java.io.OutputStream.write(OutputStream.java:122)
+	at org.eclipse.cdt.internal.core.ProcessClosure$ReaderThread.run(ProcessClosure.java:60)
+
+!ENTRY org.eclipse.cdt.managedbuilder.core 4 0 2022-07-11 18:48:03.272
+!MESSAGE Exception trying to parse option [#include <c:\st\stm32cubeide_1.9.0\stm32cubeide\plugins\com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.10.3-2021.10.win32_1.0.0.202111181127\tools\bin\../lib/gcc/arm-none-eabi/10.3.1/../../../../arm-none-eabi/include/c++/10.3.1/backward>], class CrossBuiltinSpecsDetector
+!STACK 0
+java.util.ConcurrentModificationException
+	at java.base/java.util.HashMap.computeIfAbsent(HashMap.java:1134)
+	at org.eclipse.cdt.managedbuilder.language.settings.providers.AbstractLanguageSettingsOutputScanner.findContainerForLocationURI(AbstractLanguageSettingsOutputScanner.java:818)
+	at org.eclipse.cdt.managedbuilder.language.settings.providers.AbstractLanguageSettingsOutputScanner.resolvePathEntryInWorkspace(AbstractLanguageSettingsOutputScanner.java:1241)
+	at org.eclipse.cdt.managedbuilder.language.settings.providers.AbstractLanguageSettingsOutputScanner.createResolvedPathEntry(AbstractLanguageSettingsOutputScanner.java:1193)
+	at org.eclipse.cdt.managedbuilder.language.settings.providers.AbstractLanguageSettingsOutputScanner.processLine(AbstractLanguageSettingsOutputScanner.java:606)
+	at org.eclipse.cdt.managedbuilder.language.settings.providers.AbstractBuiltinSpecsDetector$ConsoleParserAdapter.processLine(AbstractBuiltinSpecsDetector.java:256)
+	at org.eclipse.cdt.internal.core.ConsoleOutputSniffer.processLine(ConsoleOutputSniffer.java:180)
+	at org.eclipse.cdt.internal.core.ConsoleOutputSniffer$ConsoleOutputStream.checkLine(ConsoleOutputSniffer.java:101)
+	at org.eclipse.cdt.internal.core.ConsoleOutputSniffer$ConsoleOutputStream.write(ConsoleOutputSniffer.java:60)
+	at java.base/java.io.OutputStream.write(OutputStream.java:122)
+	at org.eclipse.cdt.internal.core.ProcessClosure$ReaderThread.run(ProcessClosure.java:60)
+
+!ENTRY org.eclipse.cdt.core 4 0 2022-07-11 18:48:03.311
+!MESSAGE Internal error while trying to serialize language settings
+!STACK 1
+org.eclipse.core.internal.resources.ResourceException(/STM32L5_HAL_TRUSTZONE_Secure/.settings)[374]: java.lang.Exception: Resource '/STM32L5_HAL_TRUSTZONE_Secure/.settings' already exists.
+	at org.eclipse.core.internal.resources.ResourceException.provideStackTrace(ResourceException.java:42)
+	at org.eclipse.core.internal.resources.ResourceException.<init>(ResourceException.java:38)
+	at org.eclipse.core.internal.resources.Resource.checkDoesNotExist(Resource.java:309)
+	at org.eclipse.core.internal.resources.Resource.checkDoesNotExist(Resource.java:296)
+	at org.eclipse.core.internal.resources.Folder.assertCreateRequirements(Folder.java:33)
+	at org.eclipse.core.internal.resources.Folder.create(Folder.java:93)
+	at org.eclipse.core.internal.resources.Folder.create(Folder.java:121)
+	at org.eclipse.cdt.internal.core.language.settings.providers.LanguageSettingsProvidersSerializer.serializeLanguageSettings(LanguageSettingsProvidersSerializer.java:909)
+	at org.eclipse.cdt.core.language.settings.providers.LanguageSettingsManager.serializeLanguageSettings(LanguageSettingsManager.java:358)
+	at org.eclipse.cdt.core.language.settings.providers.LanguageSettingsSerializableProvider.serializeLanguageSettings(LanguageSettingsSerializableProvider.java:274)
+	at org.eclipse.cdt.managedbuilder.language.settings.providers.AbstractBuiltinSpecsDetector.runForEachLanguage(AbstractBuiltinSpecsDetector.java:614)
+	at org.eclipse.cdt.managedbuilder.language.settings.providers.AbstractBuiltinSpecsDetector$1.runInWorkspace(AbstractBuiltinSpecsDetector.java:518)
+	at org.eclipse.core.internal.resources.InternalWorkspaceJob.run(InternalWorkspaceJob.java:42)
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:63)
+!SUBENTRY 1 org.eclipse.core.resources 4 374 2022-07-11 18:48:03.311
+!MESSAGE Resource '/STM32L5_HAL_TRUSTZONE_Secure/.settings' already exists.
+!STACK 0
+java.lang.Exception: Resource '/STM32L5_HAL_TRUSTZONE_Secure/.settings' already exists.
+	at org.eclipse.core.internal.resources.ResourceException.provideStackTrace(ResourceException.java:42)
+	at org.eclipse.core.internal.resources.ResourceException.<init>(ResourceException.java:38)
+	at org.eclipse.core.internal.resources.Resource.checkDoesNotExist(Resource.java:309)
+	at org.eclipse.core.internal.resources.Resource.checkDoesNotExist(Resource.java:296)
+	at org.eclipse.core.internal.resources.Folder.assertCreateRequirements(Folder.java:33)
+	at org.eclipse.core.internal.resources.Folder.create(Folder.java:93)
+	at org.eclipse.core.internal.resources.Folder.create(Folder.java:121)
+	at org.eclipse.cdt.internal.core.language.settings.providers.LanguageSettingsProvidersSerializer.serializeLanguageSettings(LanguageSettingsProvidersSerializer.java:909)
+	at org.eclipse.cdt.core.language.settings.providers.LanguageSettingsManager.serializeLanguageSettings(LanguageSettingsManager.java:358)
+	at org.eclipse.cdt.core.language.settings.providers.LanguageSettingsSerializableProvider.serializeLanguageSettings(LanguageSettingsSerializableProvider.java:274)
+	at org.eclipse.cdt.managedbuilder.language.settings.providers.AbstractBuiltinSpecsDetector.runForEachLanguage(AbstractBuiltinSpecsDetector.java:614)
+	at org.eclipse.cdt.managedbuilder.language.settings.providers.AbstractBuiltinSpecsDetector$1.runInWorkspace(AbstractBuiltinSpecsDetector.java:518)
+	at org.eclipse.core.internal.resources.InternalWorkspaceJob.run(InternalWorkspaceJob.java:42)
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:63)
+
+!ENTRY org.eclipse.cdt.core 4 4 2022-07-11 18:48:03.312
+!MESSAGE Error serializing language settings
+!STACK 1
+org.eclipse.core.runtime.CoreException: Internal error while trying to serialize language settings
+	at org.eclipse.cdt.internal.core.language.settings.providers.LanguageSettingsProvidersSerializer.serializeLanguageSettings(LanguageSettingsProvidersSerializer.java:935)
+	at org.eclipse.cdt.core.language.settings.providers.LanguageSettingsManager.serializeLanguageSettings(LanguageSettingsManager.java:358)
+	at org.eclipse.cdt.core.language.settings.providers.LanguageSettingsSerializableProvider.serializeLanguageSettings(LanguageSettingsSerializableProvider.java:274)
+	at org.eclipse.cdt.managedbuilder.language.settings.providers.AbstractBuiltinSpecsDetector.runForEachLanguage(AbstractBuiltinSpecsDetector.java:614)
+	at org.eclipse.cdt.managedbuilder.language.settings.providers.AbstractBuiltinSpecsDetector$1.runInWorkspace(AbstractBuiltinSpecsDetector.java:518)
+	at org.eclipse.core.internal.resources.InternalWorkspaceJob.run(InternalWorkspaceJob.java:42)
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:63)
+Caused by: org.eclipse.core.internal.resources.ResourceException: Resource '/STM32L5_HAL_TRUSTZONE_Secure/.settings' already exists.
+	at org.eclipse.core.internal.resources.Resource.checkDoesNotExist(Resource.java:309)
+	at org.eclipse.core.internal.resources.Resource.checkDoesNotExist(Resource.java:296)
+	at org.eclipse.core.internal.resources.Folder.assertCreateRequirements(Folder.java:33)
+	at org.eclipse.core.internal.resources.Folder.create(Folder.java:93)
+	at org.eclipse.core.internal.resources.Folder.create(Folder.java:121)
+	at org.eclipse.cdt.internal.core.language.settings.providers.LanguageSettingsProvidersSerializer.serializeLanguageSettings(LanguageSettingsProvidersSerializer.java:909)
+	... 6 more
+Caused by: java.lang.Exception: Resource '/STM32L5_HAL_TRUSTZONE_Secure/.settings' already exists.
+	at org.eclipse.core.internal.resources.ResourceException.provideStackTrace(ResourceException.java:42)
+	at org.eclipse.core.internal.resources.ResourceException.<init>(ResourceException.java:38)
+	... 12 more
+!SUBENTRY 1 org.eclipse.cdt.core 4 0 2022-07-11 18:48:03.312
+!MESSAGE Internal error while trying to serialize language settings
+!STACK 1
+org.eclipse.core.internal.resources.ResourceException(/STM32L5_HAL_TRUSTZONE_Secure/.settings)[374]: java.lang.Exception: Resource '/STM32L5_HAL_TRUSTZONE_Secure/.settings' already exists.
+	at org.eclipse.core.internal.resources.ResourceException.provideStackTrace(ResourceException.java:42)
+	at org.eclipse.core.internal.resources.ResourceException.<init>(ResourceException.java:38)
+	at org.eclipse.core.internal.resources.Resource.checkDoesNotExist(Resource.java:309)
+	at org.eclipse.core.internal.resources.Resource.checkDoesNotExist(Resource.java:296)
+	at org.eclipse.core.internal.resources.Folder.assertCreateRequirements(Folder.java:33)
+	at org.eclipse.core.internal.resources.Folder.create(Folder.java:93)
+	at org.eclipse.core.internal.resources.Folder.create(Folder.java:121)
+	at org.eclipse.cdt.internal.core.language.settings.providers.LanguageSettingsProvidersSerializer.serializeLanguageSettings(LanguageSettingsProvidersSerializer.java:909)
+	at org.eclipse.cdt.core.language.settings.providers.LanguageSettingsManager.serializeLanguageSettings(LanguageSettingsManager.java:358)
+	at org.eclipse.cdt.core.language.settings.providers.LanguageSettingsSerializableProvider.serializeLanguageSettings(LanguageSettingsSerializableProvider.java:274)
+	at org.eclipse.cdt.managedbuilder.language.settings.providers.AbstractBuiltinSpecsDetector.runForEachLanguage(AbstractBuiltinSpecsDetector.java:614)
+	at org.eclipse.cdt.managedbuilder.language.settings.providers.AbstractBuiltinSpecsDetector$1.runInWorkspace(AbstractBuiltinSpecsDetector.java:518)
+	at org.eclipse.core.internal.resources.InternalWorkspaceJob.run(InternalWorkspaceJob.java:42)
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:63)
+!SUBENTRY 2 org.eclipse.core.resources 4 374 2022-07-11 18:48:03.312
+!MESSAGE Resource '/STM32L5_HAL_TRUSTZONE_Secure/.settings' already exists.
+!STACK 0
+java.lang.Exception: Resource '/STM32L5_HAL_TRUSTZONE_Secure/.settings' already exists.
+	at org.eclipse.core.internal.resources.ResourceException.provideStackTrace(ResourceException.java:42)
+	at org.eclipse.core.internal.resources.ResourceException.<init>(ResourceException.java:38)
+	at org.eclipse.core.internal.resources.Resource.checkDoesNotExist(Resource.java:309)
+	at org.eclipse.core.internal.resources.Resource.checkDoesNotExist(Resource.java:296)
+	at org.eclipse.core.internal.resources.Folder.assertCreateRequirements(Folder.java:33)
+	at org.eclipse.core.internal.resources.Folder.create(Folder.java:93)
+	at org.eclipse.core.internal.resources.Folder.create(Folder.java:121)
+	at org.eclipse.cdt.internal.core.language.settings.providers.LanguageSettingsProvidersSerializer.serializeLanguageSettings(LanguageSettingsProvidersSerializer.java:909)
+	at org.eclipse.cdt.core.language.settings.providers.LanguageSettingsManager.serializeLanguageSettings(LanguageSettingsManager.java:358)
+	at org.eclipse.cdt.core.language.settings.providers.LanguageSettingsSerializableProvider.serializeLanguageSettings(LanguageSettingsSerializableProvider.java:274)
+	at org.eclipse.cdt.managedbuilder.language.settings.providers.AbstractBuiltinSpecsDetector.runForEachLanguage(AbstractBuiltinSpecsDetector.java:614)
+	at org.eclipse.cdt.managedbuilder.language.settings.providers.AbstractBuiltinSpecsDetector$1.runInWorkspace(AbstractBuiltinSpecsDetector.java:518)
+	at org.eclipse.core.internal.resources.InternalWorkspaceJob.run(InternalWorkspaceJob.java:42)
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:63)
+
+!ENTRY org.eclipse.cdt.managedbuilder.core 4 0 2022-07-11 18:48:03.316
+!MESSAGE Problem running CDT Scanner Discovery provider com.st.stm32cube.ide.mcu.toolchain.armnone.setup.CrossBuiltinSpecsDetector
+!SUBENTRY 1 org.eclipse.cdt.core 4 4 2022-07-11 18:48:03.316
+!MESSAGE Error serializing language settings
+!STACK 1
+org.eclipse.core.runtime.CoreException: Internal error while trying to serialize language settings
+	at org.eclipse.cdt.internal.core.language.settings.providers.LanguageSettingsProvidersSerializer.serializeLanguageSettings(LanguageSettingsProvidersSerializer.java:935)
+	at org.eclipse.cdt.core.language.settings.providers.LanguageSettingsManager.serializeLanguageSettings(LanguageSettingsManager.java:358)
+	at org.eclipse.cdt.core.language.settings.providers.LanguageSettingsSerializableProvider.serializeLanguageSettings(LanguageSettingsSerializableProvider.java:274)
+	at org.eclipse.cdt.managedbuilder.language.settings.providers.AbstractBuiltinSpecsDetector.runForEachLanguage(AbstractBuiltinSpecsDetector.java:614)
+	at org.eclipse.cdt.managedbuilder.language.settings.providers.AbstractBuiltinSpecsDetector$1.runInWorkspace(AbstractBuiltinSpecsDetector.java:518)
+	at org.eclipse.core.internal.resources.InternalWorkspaceJob.run(InternalWorkspaceJob.java:42)
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:63)
+Caused by: org.eclipse.core.internal.resources.ResourceException: Resource '/STM32L5_HAL_TRUSTZONE_Secure/.settings' already exists.
+	at org.eclipse.core.internal.resources.Resource.checkDoesNotExist(Resource.java:309)
+	at org.eclipse.core.internal.resources.Resource.checkDoesNotExist(Resource.java:296)
+	at org.eclipse.core.internal.resources.Folder.assertCreateRequirements(Folder.java:33)
+	at org.eclipse.core.internal.resources.Folder.create(Folder.java:93)
+	at org.eclipse.core.internal.resources.Folder.create(Folder.java:121)
+	at org.eclipse.cdt.internal.core.language.settings.providers.LanguageSettingsProvidersSerializer.serializeLanguageSettings(LanguageSettingsProvidersSerializer.java:909)
+	... 6 more
+Caused by: java.lang.Exception: Resource '/STM32L5_HAL_TRUSTZONE_Secure/.settings' already exists.
+	at org.eclipse.core.internal.resources.ResourceException.provideStackTrace(ResourceException.java:42)
+	at org.eclipse.core.internal.resources.ResourceException.<init>(ResourceException.java:38)
+	... 12 more
+!SUBENTRY 2 org.eclipse.cdt.core 4 0 2022-07-11 18:48:03.316
+!MESSAGE Internal error while trying to serialize language settings
+!STACK 1
+org.eclipse.core.internal.resources.ResourceException(/STM32L5_HAL_TRUSTZONE_Secure/.settings)[374]: java.lang.Exception: Resource '/STM32L5_HAL_TRUSTZONE_Secure/.settings' already exists.
+	at org.eclipse.core.internal.resources.ResourceException.provideStackTrace(ResourceException.java:42)
+	at org.eclipse.core.internal.resources.ResourceException.<init>(ResourceException.java:38)
+	at org.eclipse.core.internal.resources.Resource.checkDoesNotExist(Resource.java:309)
+	at org.eclipse.core.internal.resources.Resource.checkDoesNotExist(Resource.java:296)
+	at org.eclipse.core.internal.resources.Folder.assertCreateRequirements(Folder.java:33)
+	at org.eclipse.core.internal.resources.Folder.create(Folder.java:93)
+	at org.eclipse.core.internal.resources.Folder.create(Folder.java:121)
+	at org.eclipse.cdt.internal.core.language.settings.providers.LanguageSettingsProvidersSerializer.serializeLanguageSettings(LanguageSettingsProvidersSerializer.java:909)
+	at org.eclipse.cdt.core.language.settings.providers.LanguageSettingsManager.serializeLanguageSettings(LanguageSettingsManager.java:358)
+	at org.eclipse.cdt.core.language.settings.providers.LanguageSettingsSerializableProvider.serializeLanguageSettings(LanguageSettingsSerializableProvider.java:274)
+	at org.eclipse.cdt.managedbuilder.language.settings.providers.AbstractBuiltinSpecsDetector.runForEachLanguage(AbstractBuiltinSpecsDetector.java:614)
+	at org.eclipse.cdt.managedbuilder.language.settings.providers.AbstractBuiltinSpecsDetector$1.runInWorkspace(AbstractBuiltinSpecsDetector.java:518)
+	at org.eclipse.core.internal.resources.InternalWorkspaceJob.run(InternalWorkspaceJob.java:42)
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:63)
+!SUBENTRY 3 org.eclipse.core.resources 4 374 2022-07-11 18:48:03.316
+!MESSAGE Resource '/STM32L5_HAL_TRUSTZONE_Secure/.settings' already exists.
+!STACK 0
+java.lang.Exception: Resource '/STM32L5_HAL_TRUSTZONE_Secure/.settings' already exists.
+	at org.eclipse.core.internal.resources.ResourceException.provideStackTrace(ResourceException.java:42)
+	at org.eclipse.core.internal.resources.ResourceException.<init>(ResourceException.java:38)
+	at org.eclipse.core.internal.resources.Resource.checkDoesNotExist(Resource.java:309)
+	at org.eclipse.core.internal.resources.Resource.checkDoesNotExist(Resource.java:296)
+	at org.eclipse.core.internal.resources.Folder.assertCreateRequirements(Folder.java:33)
+	at org.eclipse.core.internal.resources.Folder.create(Folder.java:93)
+	at org.eclipse.core.internal.resources.Folder.create(Folder.java:121)
+	at org.eclipse.cdt.internal.core.language.settings.providers.LanguageSettingsProvidersSerializer.serializeLanguageSettings(LanguageSettingsProvidersSerializer.java:909)
+	at org.eclipse.cdt.core.language.settings.providers.LanguageSettingsManager.serializeLanguageSettings(LanguageSettingsManager.java:358)
+	at org.eclipse.cdt.core.language.settings.providers.LanguageSettingsSerializableProvider.serializeLanguageSettings(LanguageSettingsSerializableProvider.java:274)
+	at org.eclipse.cdt.managedbuilder.language.settings.providers.AbstractBuiltinSpecsDetector.runForEachLanguage(AbstractBuiltinSpecsDetector.java:614)
+	at org.eclipse.cdt.managedbuilder.language.settings.providers.AbstractBuiltinSpecsDetector$1.runInWorkspace(AbstractBuiltinSpecsDetector.java:518)
+	at org.eclipse.core.internal.resources.InternalWorkspaceJob.run(InternalWorkspaceJob.java:42)
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:63)
+
+!ENTRY org.eclipse.cdt.core 1 0 2022-07-11 18:48:07.311
+!MESSAGE Indexed 'STM32L5_HAL_TRUSTZONE_Secure' (28 sources, 90 headers) in 2.76 sec: 6,435 declarations; 36,312 references; 0 unresolved inclusions; 1 syntax errors; 89 unresolved names (0.21%)
+
+!ENTRY org.eclipse.cdt.core 1 0 2022-07-11 18:48:08.697
+!MESSAGE Indexed 'STM32L5_HAL_TRUSTZONE_NonSecure' (25 sources, 35 headers) in 1.38 sec: 4,481 declarations; 29,510 references; 10 unresolved inclusions; 0 syntax errors; 3,362 unresolved names (9%)
+
+!ENTRY org.eclipse.cdt.dsf 4 10005 2022-07-11 19:07:55.890
+!MESSAGE Request for monitor: '181^error,msg="Unable to read memory."' resulted in an error.
+!SUBENTRY 1 org.eclipse.cdt.dsf.gdb 4 10004 2022-07-11 19:07:55.890
+!MESSAGE Failed to execute MI command:
+-data-read-memory 0xe000ee08 d 1 1 4
+Error message from debugger back end:
+Unable to read memory.
+!STACK 0
+java.lang.Exception: Unable to read memory.
+	at org.eclipse.cdt.dsf.mi.service.command.AbstractMIControl$RxThread.processMIOutput(AbstractMIControl.java:1013)
+	at org.eclipse.cdt.dsf.mi.service.command.AbstractMIControl$RxThread.run(AbstractMIControl.java:842)
+
+!ENTRY org.eclipse.cdt.dsf 4 10005 2022-07-11 19:10:55.259
+!MESSAGE Request for monitor: '124^error,msg="Unable to read memory."' resulted in an error.
+!SUBENTRY 1 org.eclipse.cdt.dsf.gdb 4 10004 2022-07-11 19:10:55.259
+!MESSAGE Failed to execute MI command:
+-data-read-memory 0xe000ee08 d 1 1 4
+Error message from debugger back end:
+Unable to read memory.
+!STACK 0
+java.lang.Exception: Unable to read memory.
+	at org.eclipse.cdt.dsf.mi.service.command.AbstractMIControl$RxThread.processMIOutput(AbstractMIControl.java:1013)
+	at org.eclipse.cdt.dsf.mi.service.command.AbstractMIControl$RxThread.run(AbstractMIControl.java:842)
+
+!ENTRY org.eclipse.cdt.dsf.gdb 4 5012 2022-07-11 19:12:34.005
+!MESSAGE Error in final launch sequence:
+
+Setup exceptions
+!STACK 1
+org.eclipse.core.runtime.CoreException: Setup exceptions
+	at org.eclipse.cdt.dsf.concurrent.Query.get(Query.java:112)
+	at org.eclipse.cdt.dsf.gdb.launching.GdbLaunchDelegate.launchDebugSession(GdbLaunchDelegate.java:252)
+	at org.eclipse.cdt.dsf.gdb.launching.GdbLaunchDelegate.launchDebugger(GdbLaunchDelegate.java:109)
+	at org.eclipse.cdt.dsf.gdb.launching.GdbLaunchDelegate.launch(GdbLaunchDelegate.java:97)
+	at com.st.stm32cube.ide.mcu.debug.launch.DSFDelegate.launch(DSFDelegate.java:328)
+	at org.eclipse.debug.internal.core.LaunchConfiguration.launch(LaunchConfiguration.java:803)
+	at org.eclipse.debug.internal.core.LaunchConfiguration.launch(LaunchConfiguration.java:716)
+	at org.eclipse.debug.internal.ui.DebugUIPlugin.buildAndLaunch(DebugUIPlugin.java:1021)
+	at org.eclipse.debug.internal.ui.DebugUIPlugin$2.run(DebugUIPlugin.java:1224)
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:63)
+!SUBENTRY 1 com.st.stm32cube.ide.mcu.debug.launch 4 0 2022-07-11 19:12:34.005
+!MESSAGE Setup exceptions
+
+!ENTRY org.eclipse.cdt.dsf 4 10005 2022-07-11 19:14:19.035
+!MESSAGE Request for monitor: '76^error,msg="Unable to read memory."' resulted in an error.
+!SUBENTRY 1 org.eclipse.cdt.dsf.gdb 4 10004 2022-07-11 19:14:19.035
+!MESSAGE Failed to execute MI command:
+-data-read-memory 0xe000ee08 d 1 1 4
+Error message from debugger back end:
+Unable to read memory.
+!STACK 0
+java.lang.Exception: Unable to read memory.
+	at org.eclipse.cdt.dsf.mi.service.command.AbstractMIControl$RxThread.processMIOutput(AbstractMIControl.java:1013)
+	at org.eclipse.cdt.dsf.mi.service.command.AbstractMIControl$RxThread.run(AbstractMIControl.java:842)
+
+!ENTRY org.eclipse.cdt.dsf 4 10005 2022-07-11 19:38:57.470
+!MESSAGE Request for monitor: '128^error,msg="Unable to read memory."' resulted in an error.
+!SUBENTRY 1 org.eclipse.cdt.dsf.gdb 4 10004 2022-07-11 19:38:57.470
+!MESSAGE Failed to execute MI command:
+-data-read-memory 0xe000ee08 d 1 1 4
+Error message from debugger back end:
+Unable to read memory.
+!STACK 0
+java.lang.Exception: Unable to read memory.
+	at org.eclipse.cdt.dsf.mi.service.command.AbstractMIControl$RxThread.processMIOutput(AbstractMIControl.java:1013)
+	at org.eclipse.cdt.dsf.mi.service.command.AbstractMIControl$RxThread.run(AbstractMIControl.java:842)
+
+!ENTRY org.eclipse.cdt.dsf 4 10005 2022-07-11 20:18:52.906
+!MESSAGE Request for monitor: '88^error,msg="Unable to read memory."' resulted in an error.
+!SUBENTRY 1 org.eclipse.cdt.dsf.gdb 4 10004 2022-07-11 20:18:52.906
+!MESSAGE Failed to execute MI command:
+-data-read-memory 0xe000ee08 d 1 1 4
+Error message from debugger back end:
+Unable to read memory.
+!STACK 0
+java.lang.Exception: Unable to read memory.
+	at org.eclipse.cdt.dsf.mi.service.command.AbstractMIControl$RxThread.processMIOutput(AbstractMIControl.java:1013)
+	at org.eclipse.cdt.dsf.mi.service.command.AbstractMIControl$RxThread.run(AbstractMIControl.java:842)
+
+!ENTRY org.eclipse.cdt.dsf 4 10005 2022-07-11 21:15:11.263
+!MESSAGE Request for monitor: '128^error,msg="Unable to read memory."' resulted in an error.
+!SUBENTRY 1 org.eclipse.cdt.dsf.gdb 4 10004 2022-07-11 21:15:11.263
+!MESSAGE Failed to execute MI command:
+-data-read-memory 0xe000ee08 d 1 1 4
+Error message from debugger back end:
+Unable to read memory.
+!STACK 0
+java.lang.Exception: Unable to read memory.
+	at org.eclipse.cdt.dsf.mi.service.command.AbstractMIControl$RxThread.processMIOutput(AbstractMIControl.java:1013)
+	at org.eclipse.cdt.dsf.mi.service.command.AbstractMIControl$RxThread.run(AbstractMIControl.java:842)

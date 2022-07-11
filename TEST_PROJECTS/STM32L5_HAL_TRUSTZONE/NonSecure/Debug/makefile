@@ -60,11 +60,11 @@ all: main-build
 main-build: STM32L5_HAL_TRUSTZONE_NonSecure.elf secondary-outputs
 
 dependents:
-	-cd D:/Workspace/STM32/TEST/STM32L5_HAL_TRUSTZONE/Secure/Debug && $(MAKE) clean all
+	-cd E:/Workspace/STM32_SECURITY_LAB/TEST_PROJECTS/STM32L5_HAL_TRUSTZONE/Secure/Debug && $(MAKE) clean all
 
 # Tool invocations
-STM32L5_HAL_TRUSTZONE_NonSecure.elf STM32L5_HAL_TRUSTZONE_NonSecure.map: $(OBJS) $(USER_OBJS) D:/Workspace/STM32/TEST/STM32L5_HAL_TRUSTZONE/Secure/Debug/STM32L5_HAL_TRUSTZONE_Secure.elf D:\Workspace\STM32\TEST\STM32L5_HAL_TRUSTZONE\NonSecure\STM32L552ZETXQ_FLASH.ld makefile objects.list $(OPTIONAL_TOOL_DEPS)
-	arm-none-eabi-gcc -o "STM32L5_HAL_TRUSTZONE_NonSecure.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m33 -T"D:\Workspace\STM32\TEST\STM32L5_HAL_TRUSTZONE\NonSecure\STM32L552ZETXQ_FLASH.ld" --specs=nosys.specs -Wl,-Map="STM32L5_HAL_TRUSTZONE_NonSecure.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv5-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+STM32L5_HAL_TRUSTZONE_NonSecure.elf STM32L5_HAL_TRUSTZONE_NonSecure.map: $(OBJS) $(USER_OBJS) E:/Workspace/STM32_SECURITY_LAB/TEST_PROJECTS/STM32L5_HAL_TRUSTZONE/Secure/Debug/STM32L5_HAL_TRUSTZONE_Secure.elf E:\Workspace\STM32_SECURITY_LAB\TEST_PROJECTS\STM32L5_HAL_TRUSTZONE\NonSecure\STM32L552ZETXQ_FLASH.ld makefile objects.list $(OPTIONAL_TOOL_DEPS)
+	arm-none-eabi-gcc -o "STM32L5_HAL_TRUSTZONE_NonSecure.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m33 -T"E:\Workspace\STM32_SECURITY_LAB\TEST_PROJECTS\STM32L5_HAL_TRUSTZONE\NonSecure\STM32L552ZETXQ_FLASH.ld" --specs=nosys.specs -Wl,-Map="STM32L5_HAL_TRUSTZONE_NonSecure.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv5-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
 	@echo 'Finished building target: $@'
 	@echo ' '
 
@@ -93,6 +93,6 @@ warn-no-linker-script-specified:
 	@echo 'Warning: No linker script specified. Check the linker settings in the build configuration.'
 
 .PHONY: all clean dependents main-build fail-specified-linker-script-missing warn-no-linker-script-specified
-D:/Workspace/STM32/TEST/STM32L5_HAL_TRUSTZONE/Secure/Debug/STM32L5_HAL_TRUSTZONE_Secure.elf:
+E:/Workspace/STM32_SECURITY_LAB/TEST_PROJECTS/STM32L5_HAL_TRUSTZONE/Secure/Debug/STM32L5_HAL_TRUSTZONE_Secure.elf:
 
 -include ../makefile.targets
