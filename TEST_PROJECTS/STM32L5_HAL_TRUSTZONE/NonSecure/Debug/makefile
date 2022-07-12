@@ -60,7 +60,7 @@ all: main-build
 main-build: STM32L5_HAL_TRUSTZONE_NonSecure.elf secondary-outputs
 
 dependents:
-	-cd E:/Workspace/STM32_SECURITY_LAB/TEST_PROJECTS/STM32L5_HAL_TRUSTZONE/Secure/Debug && $(MAKE) clean all
+	-cd E:/Workspace/STM32_SECURITY_LAB/TEST_PROJECTS/STM32L5_HAL_TRUSTZONE/Secure/Debug && $(MAKE) all
 
 # Tool invocations
 STM32L5_HAL_TRUSTZONE_NonSecure.elf STM32L5_HAL_TRUSTZONE_NonSecure.map: $(OBJS) $(USER_OBJS) E:/Workspace/STM32_SECURITY_LAB/TEST_PROJECTS/STM32L5_HAL_TRUSTZONE/Secure/Debug/STM32L5_HAL_TRUSTZONE_Secure.elf E:\Workspace\STM32_SECURITY_LAB\TEST_PROJECTS\STM32L5_HAL_TRUSTZONE\NonSecure\STM32L552ZETXQ_FLASH.ld makefile objects.list $(OPTIONAL_TOOL_DEPS)

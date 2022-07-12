@@ -155,7 +155,7 @@ int main(void)
       //RaiseSecureFault();
 
       //uncomment RaiseGTZCInterrupt will raise gtzc interrupt
-      RaiseGTZCInterrupt();
+      //RaiseGTZCInterrupt();
     }
 
     //toggle non-secure LED
