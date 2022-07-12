@@ -37,6 +37,10 @@ void MX_GTZC_S_Init(void)
   /* USER CODE BEGIN GTZC_S_Init 1 */
 
   /* USER CODE END GTZC_S_Init 1 */
+  if (HAL_GTZC_TZSC_ConfigPeriphAttributes(GTZC_PERIPH_LPUART1, GTZC_TZSC_PERIPH_SEC|GTZC_TZSC_PERIPH_NPRIV) != HAL_OK)
+  {
+    Error_Handler();
+  }
   MPCBB_NonSecureArea_Desc.SecureRWIllegalMode = GTZC_MPCBB_SRWILADIS_ENABLE;
   MPCBB_NonSecureArea_Desc.InvertSecureState = GTZC_MPCBB_INVSECSTATE_NOT_INVERTED;
   MPCBB_NonSecureArea_Desc.AttributeConfig.MPCBB_SecConfig_array[0] =   0xFFFFFFFF;
@@ -82,6 +86,10 @@ void MX_GTZC_S_Init(void)
     Error_Handler();
   }
   /* USER CODE BEGIN GTZC_S_Init 2 */
+  if (HAL_GTZC_TZIC_EnableIT(GTZC_PERIPH_LPUART1) != HAL_OK)
+  {
+    Error_Handler();
+  }
 
   /* USER CODE END GTZC_S_Init 2 */
 

@@ -73,6 +73,12 @@ CMSE_NS_ENTRY void NscTogglePin(void)
   SecureTogglePin();
 }
 
+extern void SecureUartTx(uint8_t* data, uint16_t len);
+CMSE_NS_ENTRY void NscUartTx(uint8_t* data, uint16_t len)
+{
+  SecureUartTx(data, len);
+}
+
 /**
   * @}
   */

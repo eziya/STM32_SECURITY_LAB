@@ -232,16 +232,16 @@ void SysTick_Handler(void)
 void GTZC_IRQHandler(void)
 {
   /* USER CODE BEGIN GTZC_IRQn 0 */
+  funcptr_NS callback_NS; // non-secure callback function pointer
 
   /* USER CODE END GTZC_IRQn 0 */
-  funcptr_NS callback_NS; /* non-secure callback function pointer */
-
   HAL_GTZC_IRQHandler();
-
+  /* USER CODE BEGIN GTZC_IRQn 1 */
   if(pSecureErrorCallback != (funcptr_NS)NULL)
   {
     /* return function pointer with cleared LSB */
     callback_NS = (funcptr_NS)cmse_nsfptr_create(pSecureErrorCallback);
+
     callback_NS();
   }
   else
@@ -249,7 +249,6 @@ void GTZC_IRQHandler(void)
     /* Something went wrong in test case */
     while(1);
   }
-  /* USER CODE BEGIN GTZC_IRQn 1 */
 
   /* USER CODE END GTZC_IRQn 1 */
 }

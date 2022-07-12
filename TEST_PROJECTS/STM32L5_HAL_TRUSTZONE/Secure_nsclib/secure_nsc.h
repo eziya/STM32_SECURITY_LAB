@@ -41,6 +41,7 @@ typedef enum
 /* Exported functions ------------------------------------------------------- */
 void SECURE_RegisterCallback(SECURE_CallbackIDTypeDef CallbackId, void *func);
 void NscTogglePin(void);
+void NscUartTx(uint8_t* data, uint16_t len);
 #endif /* SECURE_NSC_H */
 /* USER CODE END Non_Secure_CallLib_h */
 
