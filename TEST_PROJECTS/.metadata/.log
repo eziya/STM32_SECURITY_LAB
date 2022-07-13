@@ -1580,3 +1580,22 @@ org.eclipse.equinox.p2.core.ProvisionException: No repository found at https://d
 java.lang.NullPointerException
 	at org.eclipse.equinox.internal.p2.ui.sdk.scheduler.AutomaticUpdateScheduler$2.updatesAvailable(AutomaticUpdateScheduler.java:143)
 	at org.eclipse.equinox.internal.p2.updatechecker.UpdateChecker$UpdateCheckThread.run(UpdateChecker.java:83)
+!SESSION 2022-07-13 20:16:08.146 -----------------------------------------------
+eclipse.buildId=Version 1.9.0
+java.version=11.0.11
+java.vendor=AdoptOpenJDK
+BootLoader constants: OS=win32, ARCH=x86_64, WS=win32, NL=ko_KR
+Framework arguments:  E:\Workspace\STM32_SECURITY_LAB\TEST_PROJECTS\STM32_HAL_TRNG\.project
+Command-line arguments:  -os win32 -ws win32 -arch x86_64 E:\Workspace\STM32_SECURITY_LAB\TEST_PROJECTS\STM32_HAL_TRNG\.project
+
+!ENTRY com.st.stm32cube.ide.mcu.informationcenter 4 4 2022-07-13 20:16:15.581
+!MESSAGE CubeMX plugin appears to be active, Log4j initialization might be too late.
+
+!ENTRY com.st.stm32cube.ide.mcu.informationcenter 1 1 2022-07-13 20:16:15.686
+!MESSAGE Log4j initialized with config file E:\Workspace\STM32_SECURITY_LAB\TEST_PROJECTS\.metadata\.log4j.xml
+
+!ENTRY com.st.stm32cube.ide.mcu.ide 1 1 2022-07-13 20:16:20.639
+!MESSAGE Started RMI Server, listening on port 41337
+
+!ENTRY org.eclipse.cdt.core 1 0 2022-07-13 20:16:24.496
+!MESSAGE Indexed 'STM32_HAL_TRNG' (29 sources, 123 headers) in 3.17 sec: 12,632 declarations; 59,417 references; 7 unresolved inclusions; 1,311 syntax errors; 1,614 unresolved names (2.2%)

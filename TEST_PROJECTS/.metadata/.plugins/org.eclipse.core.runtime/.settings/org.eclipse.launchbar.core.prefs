@@ -1,9 +1,10 @@
 LaunchTargetManager/org.eclipse.launchbar.core.launchTargetType.local,Local/arch=x86_64
 LaunchTargetManager/org.eclipse.launchbar.core.launchTargetType.local,Local/name=Local
 LaunchTargetManager/org.eclipse.launchbar.core.launchTargetType.local,Local/os=win32
-configDescList=org.eclipse.cdt.dsf.gdb.gdbRemotedescriptorType\:STM32L5_HAL_TRUSTZONE_Secure,org.eclipse.cdt.dsf.gdb.gdbRemotedescriptorType\:STM32L5_HAL_TRUSTZONE_NonSecure Debug
+configDescList=
 eclipse.preferences.version=1
 org.eclipse.cdt.dsf.gdb.gdbRemotedescriptorType\:STM32L5_HAL_TRUSTZONE_NonSecure\ Debug/activeLaunchMode=run
+org.eclipse.cdt.dsf.gdb.gdbRemotedescriptorType\:STM32L5_HAL_TRUSTZONE_NonSecure\ Debug/activeLaunchTarget=null\:---
 org.eclipse.cdt.dsf.gdb.gdbRemotedescriptorType\:STM32L5_HAL_TRUSTZONE_Secure/activeLaunchMode=debug
 org.eclipse.cdt.dsf.gdb.gdbRemotedescriptorType\:STM32L5_HAL_TRUSTZONE_Secure/activeLaunchTarget=null\:---
 org.eclipse.cdt.dsf.gdb.gdbRemotedescriptorType\:STM32_HAL_FIREWALL\ Debug/activeLaunchMode=run
@@ -22,5 +23,6 @@ org.eclipse.cdt.dsf.gdb.gdbRemotedescriptorType\:STM32_HAL_SECURE_MEM_BOOT/activ
 org.eclipse.cdt.dsf.gdb.gdbRemotedescriptorType\:STM32_HAL_SECURE_MEM_EXAM1\ Debug/activeLaunchMode=run
 org.eclipse.cdt.dsf.gdb.gdbRemotedescriptorType\:STM32_HAL_SRAM_WRP\ Debug/activeLaunchMode=debug
 org.eclipse.cdt.dsf.gdb.gdbRemotedescriptorType\:STM32_HAL_SRAM_WRP\ Debug/activeLaunchTarget=null\:---
+org.eclipse.cdt.dsf.gdb.gdbRemotedescriptorType\:STM32_HAL_TRNG\ Debug/activeLaunchMode=run
 org.eclipse.cdt.dsf.gdb.gdbRemotedescriptorType\:STM32_HAL_UNIQUE_ID\ Debug/activeLaunchMode=run
 org.eclipse.cdt.dsf.gdb.gdbRemotedescriptorType\:STM32_HAL_UNIQUE_ID\ Debug/activeLaunchTarget=null\:---
