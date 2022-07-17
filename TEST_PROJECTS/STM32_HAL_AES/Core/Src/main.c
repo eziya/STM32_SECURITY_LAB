@@ -111,23 +111,29 @@ int main(void)
   /* USER CODE BEGIN 2 */
 
   startTick = HAL_GetTick();
-  HAL_CRYP_Encrypt(&hcryp1, plainText, 4, encrypted, 1000);
+  if(HAL_OK != HAL_CRYP_Encrypt(&hcryp1, plainText, 4, encrypted, 1000))
+  {
+    Error_Handler();
+  }
   endTick = HAL_GetTick();
   encTick = endTick - startTick;
 
   startTick = HAL_GetTick();
-  HAL_CRYP_Decrypt(&hcryp1, cipherText, 4, decrypted, 1000);
+  if(HAL_OK != HAL_CRYP_Decrypt(&hcryp1, cipherText, 4, decrypted, 1000))
+  {
+    Error_Handler();
+  }
   endTick = HAL_GetTick();
   decTick = encTick - startTick;
 
   if(memcmp(plainText, decrypted, sizeof(uint32_t)*4) != 0)
   {
-    HAL_GPIO_WritePin(LD3_GPIO_Port, LD3_Pin, GPIO_PIN_SET);
+    Error_Handler();
   }
 
   if(memcmp(cipherText, encrypted, sizeof(uint32_t)*4) != 0)
   {
-    HAL_GPIO_WritePin(LD3_GPIO_Port, LD3_Pin, GPIO_PIN_SET);
+    Error_Handler();
   }
 
   /* USER CODE END 2 */
@@ -225,6 +231,7 @@ void Error_Handler(void)
   __disable_irq();
   while (1)
   {
+    HAL_GPIO_WritePin(LD3_GPIO_Port, LD3_Pin, GPIO_PIN_SET);
   }
   /* USER CODE END Error_Handler_Debug */
 }
