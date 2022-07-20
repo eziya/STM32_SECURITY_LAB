@@ -12,3 +12,5 @@ https://www.st.com/content/st_com/en/support/learning/stm32-education/stm32-mooc
 9. TrustZone#1 (https://blog.naver.com/eziya76/222805384866)
 10. TrustZone#2 (https://blog.naver.com/eziya76/222807815641)
 11. OTFDEC,TAMPER,TRNG (https://blog.naver.com/eziya76/222810215492)
+12. AES, CRYPT block (https://blog.naver.com/eziya76/222817501783)
+13. PKA block (https://blog.naver.com/eziya76/222821208258)
