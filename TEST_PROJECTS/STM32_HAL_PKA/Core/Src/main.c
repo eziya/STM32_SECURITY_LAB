@@ -58,10 +58,6 @@ void PeriphCommonClock_Config(void);
 /* USER CODE BEGIN 0 */
 
 /*
-
-Tools> openssl genrsa -out MyPrivKey.pem 1024
-Tools> openssl rsa -in .\MyPrivKey.pem -pubout -out MyPubKey.pem
-Tools> openssl rsautl -raw -pubin -inkey .\MyPubKey.pem -encrypt -in .\plaintext.bin -out plaintext.enc
 Tools> openssl rsa -in .\MyPrivKey.pem -text
 Private-Key: (1024 bit)
 modulus:
@@ -131,26 +127,6 @@ WlJE6iKXtRno4dmjkq7qV15q8ZTURElN//jV5gvCuVD84/iKNM2AN6NUAicif47A
 y7hlAeTZ1n3kwFcoMA8CQGUhfYnxj4ykf8cJswERrfJ3cncfI6yaUs3f4AATWYc5
 kt5KfSnyqIB6NH1l4eRmj9bl9V7/RaeIz+fCdovD28w=
 -----END RSA PRIVATE KEY-----
-Tools> .\hexdump.exe .\plaintext.bin
-000000  00 01 02 03 04 05 06 07 08 09 0a 0b 0c 0d 0e 0f
-000010  00 01 02 03 04 05 06 07 08 09 0a 0b 0c 0d 0e 0f
-000020  00 01 02 03 04 05 06 07 08 09 0a 0b 0c 0d 0e 0f
-000030  00 01 02 03 04 05 06 07 08 09 0a 0b 0c 0d 0e 0f
-000040  00 01 02 03 04 05 06 07 08 09 0a 0b 0c 0d 0e 0f
-000050  00 01 02 03 04 05 06 07 08 09 0a 0b 0c 0d 0e 0f
-000060  00 01 02 03 04 05 06 07 08 09 0a 0b 0c 0d 0e 0f
-000070  00 01 02 03 04 05 06 07 08 09 0a 0b 0c 0d 0e 0f
-Tools> hexdump .\plaintext.enc
-000000  67 f1 99 c9 55 c3 db 9c a7 1e 8e 90 ea 65 07 57
-000010  09 be 74 2b 86 83 63 b4 2e 45 58 b8 04 4d 21 a8
-000020  60 62 c1 e2 e6 18 e3 f8 a0 3d d3 43 c2 cd 98 e0
-000030  a5 1f 08 09 6d d6 ca e8 1f 3e 54 b1 88 48 f4 19
-000040  4d 86 02 80 40 43 cb 13 d4 5f 89 ee ff 03 9c f7
-000050  fc 7c 6f 31 38 0f 52 bb fa 15 36 c2 3e bb aa 4a
-000060  75 a7 e2 66 0a 3a f8 56 e5 a7 52 7a 94 67 89 07
-000070  cb 40 4a 24 ac fb 9b 00 1c cb d4 62 fa 1c ae e0
-Tools>
-
 */
 
 uint8_t modulus[] = {
@@ -246,6 +222,7 @@ int main(void)
   in.pMod = modulus;
   in.pOp1 = plainText;
 
+  //publicExponent + modulus = public key
   if(HAL_OK != HAL_PKA_ModExp(&hpka, &in, 1000))
   {
     Error_Handler();
@@ -264,6 +241,7 @@ int main(void)
   in.pMod = modulus;
   in.pOp1 = encryptedText;
 
+  //privateExponent + modulus = private key
   if(HAL_OK != HAL_PKA_ModExp(&hpka, &in, 1000))
   {
     Error_Handler();
