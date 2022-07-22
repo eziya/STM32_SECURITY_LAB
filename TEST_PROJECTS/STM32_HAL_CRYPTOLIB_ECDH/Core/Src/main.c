@@ -58,6 +58,36 @@ void SystemClock_Config(void);
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
 
+/*
+ * NIST SP800-56A co-factor ECDH tests.
+ * KATs taken from NIST documents with parameters:
+ *
+ * - (QCAVSx,QCAVSy) is the public key for CAVS.
+ * - dIUT is the private key for IUT.
+ * - (QIUTx,QIUTy) is the public key for IUT.
+ * - ZIUT is the shared secret KAT.
+ *
+ * CAVS: Cryptographic Algorithm Validation System
+ * IUT: Implementation Under Test
+ *
+ * This function tests two things:
+ *
+ * 1. dIUT * G = (QIUTx,QIUTy)
+ *    i.e. public key for IUT computes correctly.
+ * 2. x-coord of cofactor * dIUT * (QCAVSx,QCAVSy) = ZIUT
+ *    i.e. co-factor ECDH key computes correctly.
+ *
+ * returns zero on failure or unsupported curve. One otherwise.
+ */
+
+//QCAVSx = 700c48f77f56584c5cc632ca65640db91b6bacce3a4df6b42ce7cc838833d287
+//QCAVSy = db71e509e3fd9b060ddb20ba5c51dcc5948d46fbf640dfe0441782cab85fa4ac
+//dIUT = 7d7dc5f71eb29ddaf80d6214632eeae03d9058af1fb6d22ed80badb62bc1a534
+//QIUTx = ead218590119e8876b29146ff89ca61770c4edbbf97d38ce385ed281d8a6b230
+//QIUTy = 28af61281fd35e2fa7002523acc85a429cb06ee6648325389f59edfce1405141
+//ZIUT = 46fc62106420ff012e54a434fbdd2d25ccc5852060561e68040dd7778997bd7b
+
+
 int __io_putchar (int ch)
 {
   HAL_UART_Transmit(&huart2, (uint8_t*)&ch, 1, HAL_MAX_DELAY);
@@ -94,10 +124,12 @@ const uint8_t remotePubKey[] =
 const uint8_t expectedSecret[] =
 {
     0x46, 0xfc, 0x62, 0x10, 0x64, 0x20, 0xff, 0x01, 0x2e, 0x54, 0xa4, 0x34, 0xfb, 0xdd, 0x2d, 0x25,
-    0xcc, 0xc5, 0x85, 0x20, 0x60, 0x56, 0x1e, 0x68, 0x04, 0x0d, 0xd7, 0x77, 0x89, 0x97, 0xbd, 0x7b
+    0xcc, 0xc5, 0x85, 0x20, 0x60, 0x56, 0x1e, 0x68, 0x04, 0x0d, 0xd7, 0x77, 0x89, 0x97, 0xbd, 0x7b,
+    0xc5, 0x53, 0x07, 0x9d, 0x5a, 0x6b, 0x96, 0x3c, 0x42, 0xf0, 0x13, 0xce, 0xb5, 0x3c, 0x97, 0x15,
+    0x14, 0x4b, 0xfb, 0x52, 0xd7, 0x00, 0xd0, 0x15, 0x38, 0x7e, 0x4f, 0xae, 0x29, 0x18, 0xa9, 0xcd
 };
 
-uint8_t sharedSecret[CMOX_ECC_SECP256R1_SECRET_LEN];
+uint8_t sharedSecret[CMOX_ECC_SECP256R1_SECRET_LEN] = {0,};
 
 
 bool MakeECDHSecret(void)
@@ -130,6 +162,7 @@ bool MakeECDHSecret(void)
   cmox_ecc_cleanup(&hECC);
 
   printHexArray(sharedSecret, sizeof(sharedSecret));
+  printf("\r\n");
 
   return true;
 }
@@ -168,13 +201,16 @@ int main(void)
   /* USER CODE BEGIN 2 */
 
   printf("Print myPrivKey.\r\n");
-  printHexArray(myPrivKey, sizeof(myPrivKey));
+  printHexArray((uint8_t*)myPrivKey, sizeof(myPrivKey));
+  printf("\r\n");
 
   printf("Print remotePubKey.\r\n");
-  printHexArray(remotePubKey, sizeof(remotePubKey));
+  printHexArray((uint8_t*)remotePubKey, sizeof(remotePubKey));
+  printf("\r\n");
 
   printf("Print expectedSecret.\r\n");
-  printHexArray(expectedSecret, sizeof(expectedSecret));
+  printHexArray((uint8_t*)expectedSecret, sizeof(expectedSecret));
+  printf("\r\n");
 
   /* Initialize cryptographic library */
   if(cmox_initialize(NULL) != CMOX_INIT_SUCCESS)
