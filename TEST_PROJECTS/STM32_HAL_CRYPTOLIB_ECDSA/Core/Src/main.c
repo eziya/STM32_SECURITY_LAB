@@ -151,7 +151,7 @@ bool CalculateHash(const uint8_t* data, size_t dataLen, uint8_t* hash)
   return true;
 }
 
-bool SignDataWithPrivKey(const uint8_t* data, size_t dataLen, const uint8_t* privKey, size_t privKeyLen, uint8_t* hash, uint8_t* signature)
+bool SignDataWithPrivKey(const uint8_t* data, size_t dataLen, const uint8_t* privKey, size_t privKeyLen, const uint8_t* hash, size_t hashLen, uint8_t* signature)
 {
   cmox_ecc_retval_t retVal;
   size_t outputLen;
@@ -168,7 +168,7 @@ bool SignDataWithPrivKey(const uint8_t* data, size_t dataLen, const uint8_t* pri
       privKey,                    //private key to sign
       privKeyLen,            //length of private key
       hash,                       //hash output
-      CMOX_SHA224_SIZE,           //length of hash
+      hashLen,           //length of hash
       signature,                  //signature output
       &outputLen);                //output length
 
@@ -250,6 +250,10 @@ int main(void)
     Error_Handler();
   }
 
+  printf("Print the message.\r\n");
+  printHexArray((uint8_t*)message, sizeof(message));
+  printf("\r\n");
+
   /********** Calculate Hash Example **********/
   if(!CalculateHash(message, sizeof(message), hash))
   {
@@ -257,11 +261,13 @@ int main(void)
   }
   else
   {
+    printf("Print the hash of message.\r\n");
     printHexArray(hash, sizeof(hash));
+    printf("\r\n");
   }
 
   /********** Sign & Verify Known Random Value Example **********/
-  if(!SignDataWithPrivKey(knownRandom, sizeof(knownRandom), privKey, sizeof(privKey), hash, signature))
+  if(!SignDataWithPrivKey(knownRandom, sizeof(knownRandom), privKey, sizeof(privKey), hash, sizeof(hash), signature))
   {
     HAL_GPIO_WritePin(LD2_GPIO_Port, LD2_Pin, GPIO_PIN_SET);
   }
@@ -276,15 +282,22 @@ int main(void)
     {
       HAL_GPIO_WritePin(LD2_GPIO_Port, LD2_Pin, GPIO_PIN_SET);
     }
+
+    printf("Print the hash of known random.\r\n");
+    printHexArray(hash, sizeof(hash));
+    printf("\r\n");
+
+    printf("Print the signature of known random.\r\n");
+    printHexArray(signature, sizeof(signature));
+    printf("\r\n");
+
+    printf("Print the knownSign of known random.\r\n");
+    printHexArray((uint8_t*)knownSign, sizeof(knownSign));
+    printf("\r\n");
   }
 
   /********** Sign & Verify Generated Random Value Example **********/
-  for (uint32_t i = 0; i < sizeof(arrRandom) / sizeof(uint32_t); i++)
-  {
-    if (HAL_RNG_GenerateRandomNumber(&hrng, &arrRandom[i]) != HAL_OK) return false;
-  }
-
-  if(!SignDataWithPrivKey((const uint8_t*)arrRandom, sizeof(arrRandom), privKey, sizeof(privKey), hash, signature))
+  if(!SignDataWithPrivKey((const uint8_t*)arrRandom, sizeof(arrRandom), privKey, sizeof(privKey), hash, sizeof(hash), signature))
   {
     HAL_GPIO_WritePin(LD2_GPIO_Port, LD2_Pin, GPIO_PIN_SET);
   }
@@ -292,6 +305,16 @@ int main(void)
   if(!VerifySignatureWithPubKey(pubKey, sizeof(pubKey), hash, sizeof(hash), signature, sizeof(signature)))
   {
     HAL_GPIO_WritePin(LD2_GPIO_Port, LD2_Pin, GPIO_PIN_SET);
+  }
+  else
+  {
+    printf("Print the hash of generated random.\r\n");
+    printHexArray(hash, sizeof(hash));
+    printf("\r\n");
+
+    printf("Print the signature of generated random.\r\n");
+    printHexArray(signature, sizeof(signature));
+    printf("\r\n");
   }
 
   /* No more need of cryptographic services, finalize cryptographic library */
