@@ -76,17 +76,20 @@ void printHexArray(uint8_t* arr, size_t len)
 }
 
 /** Extract from SigGen.txt
- * [P-256,SHA-224]
-Msg = ff624d0ba02c7b6370c1622eec3fa2186ea681d1659e0a845448e777b75a8e77a77bb26e5733179d58ef9bc8a4e8b69
-71aef2539f77ab0963a3415bbd6258339bd1bf55de65db520c63f5b8eab3d55debd05e9494212170f5d65b3286b8b668705b1
-e2b2b5568610617abb51d2dd0cb450ef59df4b907da90cfa7b268de8c4c2
-d = 708309a7449e156b0db70e5b52e606c7e094ed676ce8953bf6c14757c826f590
-Qx = 29578c7ab6ce0d11493c95d5ea05d299d536801ca9cbd50e9924e43b733b83ab
-Qy = 08c8049879c6278b2273348474158515accaa38344106ef96803c5a05adc4800
-k = 58f741771620bdc428e91a32d86d230873e9140336fcfb1e122892ee1d501bdc
-R = 4a19274429e40522234b8785dc25fc524f179dcc95ff09b3c9770fc71f54ca0d
-S = 58982b79a65b7320f5b92d13bdaecdd1259e760f0f718ba933fd098f6f75d4b7
- */
+
+ECDSA signing algorithm calculates a message's hash, then generates a random integer k and calculates the signature (a pair of integers {R, S}).
+R is calculated from k, and S is calculated using the message hash + the private key + the random number k.
+So, the signature is non-deterministic due to a randomness.
+
+[P-256,SHA-224]
+Msg              = ff624d0ba02c7b6370c1622eec3fa2186ea681d1659e0a845448e777b75a8e77a77bb26e5733179d58ef9bc8a4e8b6971aef2539f77ab0963a3415bbd6258339bd1bf55de65db520c63f5b8eab3d55debd05e9494212170f5d65b3286b8b668705b1e2b2b5568610617abb51d2dd0cb450ef59df4b907da90cfa7b268de8c4c2
+private key      = 708309a7449e156b0db70e5b52e606c7e094ed676ce8953bf6c14757c826f590
+public key       = 29578c7ab6ce0d11493c95d5ea05d299d536801ca9cbd50e9924e43b733b83ab08c8049879c6278b2273348474158515accaa38344106ef96803c5a05adc4800
+k(random number) = 58f741771620bdc428e91a32d86d230873e9140336fcfb1e122892ee1d501bdc
+R,S(signature)   = 4a19274429e40522234b8785dc25fc524f179dcc95ff09b3c9770fc71f54ca0d58982b79a65b7320f5b92d13bdaecdd1259e760f0f718ba933fd098f6f75d4b7
+*/
+
+//message
 const uint8_t message[] =
 {
     0xff, 0x62, 0x4d, 0x0b, 0xa0, 0x2c, 0x7b, 0x63, 0x70, 0xc1, 0x62, 0x2e, 0xec, 0x3f, 0xa2, 0x18,
@@ -98,11 +101,15 @@ const uint8_t message[] =
     0x05, 0xb1, 0xe2, 0xb2, 0xb5, 0x56, 0x86, 0x10, 0x61, 0x7a, 0xbb, 0x51, 0xd2, 0xdd, 0x0c, 0xb4,
     0x50, 0xef, 0x59, 0xdf, 0x4b, 0x90, 0x7d, 0xa9, 0x0c, 0xfa, 0x7b, 0x26, 0x8d, 0xe8, 0xc4, 0xc2
 };
+
+//private key
 const uint8_t privKey[] =
 {
     0x70, 0x83, 0x09, 0xa7, 0x44, 0x9e, 0x15, 0x6b, 0x0d, 0xb7, 0x0e, 0x5b, 0x52, 0xe6, 0x06, 0xc7,
     0xe0, 0x94, 0xed, 0x67, 0x6c, 0xe8, 0x95, 0x3b, 0xf6, 0xc1, 0x47, 0x57, 0xc8, 0x26, 0xf5, 0x90
 };
+
+//public key
 const uint8_t pubKey[] =
 {
     0x29, 0x57, 0x8c, 0x7a, 0xb6, 0xce, 0x0d, 0x11, 0x49, 0x3c, 0x95, 0xd5, 0xea, 0x05, 0xd2, 0x99,
@@ -110,11 +117,15 @@ const uint8_t pubKey[] =
     0x08, 0xc8, 0x04, 0x98, 0x79, 0xc6, 0x27, 0x8b, 0x22, 0x73, 0x34, 0x84, 0x74, 0x15, 0x85, 0x15,
     0xac, 0xca, 0xa3, 0x83, 0x44, 0x10, 0x6e, 0xf9, 0x68, 0x03, 0xc5, 0xa0, 0x5a, 0xdc, 0x48, 0x00
 };
-const uint8_t knownRandom[] = /* = k - 1 */
+
+//known random values
+const uint8_t knownRandom[] =
 {
     0x58, 0xf7, 0x41, 0x77, 0x16, 0x20, 0xbd, 0xc4, 0x28, 0xe9, 0x1a, 0x32, 0xd8, 0x6d, 0x23, 0x08,
     0x73, 0xe9, 0x14, 0x03, 0x36, 0xfc, 0xfb, 0x1e, 0x12, 0x28, 0x92, 0xee, 0x1d, 0x50, 0x1b, 0xdb
 };
+
+//signature of known random values
 const uint8_t knownSign[] =
 {
     0x4a, 0x19, 0x27, 0x44, 0x29, 0xe4, 0x05, 0x22, 0x23, 0x4b, 0x87, 0x85, 0xdc, 0x25, 0xfc, 0x52,
@@ -123,13 +134,15 @@ const uint8_t knownSign[] =
     0x25, 0x9e, 0x76, 0x0f, 0x0f, 0x71, 0x8b, 0xa9, 0x33, 0xfd, 0x09, 0x8f, 0x6f, 0x75, 0xd4, 0xb7
 };
 
-cmox_ecc_handle_t hECC;
-uint8_t eccBuffer[2000];
 
-uint32_t arrRandom[8];
-uint8_t hash[CMOX_SHA224_SIZE];
-uint8_t signature[CMOX_ECC_SECP256R1_SIG_LEN];
+cmox_ecc_handle_t hECC;     //ECC context handle
+uint8_t eccBuffer[2000];    //ECC buffer
 
+uint32_t arrRandom[8];                          //buffer for TRNG values
+uint8_t hash[CMOX_SHA224_SIZE];                 //hash buffer
+uint8_t signature[CMOX_ECC_SECP256R1_SIG_LEN];  //signature buffer
+
+//1. calculate hash for data
 bool CalculateHash(const uint8_t* data, size_t dataLen, uint8_t* hash)
 {
   cmox_hash_retval_t retVal;
@@ -137,21 +150,21 @@ bool CalculateHash(const uint8_t* data, size_t dataLen, uint8_t* hash)
 
   //calculate hash
   retVal = cmox_hash_compute(
-      CMOX_SHA224_ALGO,       //SHA224
-      data,                   //source
-      dataLen,           //source length
-      hash,                   //hash buffer
-      CMOX_SHA224_SIZE,       //hash length
-      &outputLen);            //output length
+      CMOX_SHA224_ALGO,         //SHA224
+      data,                     //source
+      dataLen,                  //source length
+      hash,                     //hash buffer
+      CMOX_SHA224_SIZE,         //hash length
+      &outputLen);              //output length
 
   //check the result
-  if( (retVal != CMOX_HASH_SUCCESS) ||
-      (outputLen != CMOX_SHA224_SIZE) ) return false;
+  if( (retVal != CMOX_HASH_SUCCESS) || (outputLen != CMOX_SHA224_SIZE) ) return false;
 
   return true;
 }
 
-bool SignDataWithPrivKey(const uint8_t* data, size_t dataLen, const uint8_t* privKey, size_t privKeyLen, const uint8_t* hash, size_t hashLen, uint8_t* signature)
+//2. generate signature with random, hash and private key
+bool SignDataWithPrivKey(const uint8_t* random, size_t randomLen, const uint8_t* privKey, size_t privKeyLen, const uint8_t* hash, size_t hashLen, uint8_t* signature)
 {
   cmox_ecc_retval_t retVal;
   size_t outputLen;
@@ -159,21 +172,21 @@ bool SignDataWithPrivKey(const uint8_t* data, size_t dataLen, const uint8_t* pri
   //allocate resources
   cmox_ecc_construct(&hECC, CMOX_ECC256_MATH_FUNCS, eccBuffer, sizeof(eccBuffer));
 
-  //sign knownRandom
+  //sign data
   retVal = cmox_ecdsa_sign(
       &hECC,
-      CMOX_ECC_CURVE_SECP256R1,   //SECP256R1 curve
-      data,                       //source
-      dataLen,               //source length
-      privKey,                    //private key to sign
-      privKeyLen,            //length of private key
-      hash,                       //hash output
-      hashLen,           //length of hash
-      signature,                  //signature output
-      &outputLen);                //output length
+      CMOX_ECC_CURVE_SECP256R1,     //SECP256R1 curve
+      random,                       //random
+      randomLen,                    //random length
+      privKey,                      //private key to sign
+      privKeyLen,                   //length of private key
+      hash,                         //hash output
+      hashLen,                      //length of hash
+      signature,                    //signature output
+      &outputLen);                  //output length
 
   //check the result
-  if ((retVal != CMOX_ECC_SUCCESS) || (outputLen != sizeof(knownSign)) ) return false;
+  if(retVal != CMOX_ECC_SUCCESS) return false;
 
   //clean up resources
   cmox_ecc_cleanup(&hECC);
@@ -181,6 +194,7 @@ bool SignDataWithPrivKey(const uint8_t* data, size_t dataLen, const uint8_t* pri
   return true;
 }
 
+//3. verify signature with hash and public key
 bool VerifySignatureWithPubKey(const uint8_t* pubKey, size_t pubKeyLen, const uint8_t* hash, size_t hashLen, const uint8_t* signature, size_t signatureLen)
 {
   cmox_ecc_retval_t retVal;
@@ -244,7 +258,7 @@ int main(void)
   MX_RNG_Init();
   /* USER CODE BEGIN 2 */
 
-  /* Initialize cryptographic library */
+  //initialize cmox
   if (cmox_initialize(NULL) != CMOX_INIT_SUCCESS)
   {
     Error_Handler();
@@ -254,10 +268,10 @@ int main(void)
   printHexArray((uint8_t*)message, sizeof(message));
   printf("\r\n");
 
-  /********** Calculate Hash Example **********/
+  //1. Calculate hash
   if(!CalculateHash(message, sizeof(message), hash))
   {
-    HAL_GPIO_WritePin(LD2_GPIO_Port, LD2_Pin, GPIO_PIN_SET);
+    Error_Handler();
   }
   else
   {
@@ -266,58 +280,75 @@ int main(void)
     printf("\r\n");
   }
 
-  /********** Sign & Verify Known Random Value Example **********/
+  //2. Use known random number & calculate signature by random number + hash + private key
   if(!SignDataWithPrivKey(knownRandom, sizeof(knownRandom), privKey, sizeof(privKey), hash, sizeof(hash), signature))
   {
-    HAL_GPIO_WritePin(LD2_GPIO_Port, LD2_Pin, GPIO_PIN_SET);
-  }
-
-  if(!VerifySignatureWithPubKey(pubKey, sizeof(pubKey), hash, sizeof(hash), signature, sizeof(signature)))
-  {
-    HAL_GPIO_WritePin(LD2_GPIO_Port, LD2_Pin, GPIO_PIN_SET);
+    Error_Handler();
   }
   else
   {
     if(memcmp(knownSign, signature, sizeof(knownSign)) != 0)
     {
-      HAL_GPIO_WritePin(LD2_GPIO_Port, LD2_Pin, GPIO_PIN_SET);
+      Error_Handler();
     }
+    else
+    {
+      printf("Print the hash.\r\n");
+      printHexArray(hash, sizeof(hash));
+      printf("\r\n");
 
-    printf("Print the hash of known random.\r\n");
-    printHexArray(hash, sizeof(hash));
-    printf("\r\n");
+      printf("Print the signature.\r\n");
+      printHexArray(signature, sizeof(signature));
+      printf("\r\n");
 
-    printf("Print the signature of known random.\r\n");
-    printHexArray(signature, sizeof(signature));
-    printf("\r\n");
-
-    printf("Print the knownSign of known random.\r\n");
-    printHexArray((uint8_t*)knownSign, sizeof(knownSign));
-    printf("\r\n");
+      printf("Print the known signature.\r\n");
+      printHexArray((uint8_t*)knownSign, sizeof(knownSign));
+      printf("\r\n");
+    }
   }
 
-  /********** Sign & Verify Generated Random Value Example **********/
-  if(!SignDataWithPrivKey((const uint8_t*)arrRandom, sizeof(arrRandom), privKey, sizeof(privKey), hash, sizeof(hash), signature))
-  {
-    HAL_GPIO_WritePin(LD2_GPIO_Port, LD2_Pin, GPIO_PIN_SET);
-  }
-
+  //3. Verify signature with public key and hash
   if(!VerifySignatureWithPubKey(pubKey, sizeof(pubKey), hash, sizeof(hash), signature, sizeof(signature)))
   {
-    HAL_GPIO_WritePin(LD2_GPIO_Port, LD2_Pin, GPIO_PIN_SET);
+    Error_Handler();
   }
   else
   {
-    printf("Print the hash of generated random.\r\n");
+    printf("signature is verified.\r\n\r\n");
+  }
+
+  //2. Generate random number & calculate signature by random number + hash + private key
+  for (uint32_t i = 0; i < sizeof(arrRandom) / sizeof(uint32_t); i++)
+  {
+    HAL_RNG_GenerateRandomNumber(&hrng, &arrRandom[i]);
+  }
+
+  if(!SignDataWithPrivKey((const uint8_t*)arrRandom, sizeof(arrRandom), privKey, sizeof(privKey), hash, sizeof(hash), signature))
+  {
+    Error_Handler();
+  }
+  else
+  {
+    printf("Print the hash.\r\n");
     printHexArray(hash, sizeof(hash));
     printf("\r\n");
 
-    printf("Print the signature of generated random.\r\n");
+    printf("Print the signature.\r\n");
     printHexArray(signature, sizeof(signature));
     printf("\r\n");
   }
 
-  /* No more need of cryptographic services, finalize cryptographic library */
+  //3. Verify signature with public and hash
+  if(!VerifySignatureWithPubKey(pubKey, sizeof(pubKey), hash, sizeof(hash), signature, sizeof(signature)))
+  {
+    Error_Handler();
+  }
+  else
+  {
+    printf("signature is verified.\r\n\r\n");
+  }
+
+  //finalize cmox
   if (cmox_finalize(NULL) != CMOX_INIT_SUCCESS)
   {
     Error_Handler();
@@ -400,6 +431,7 @@ void Error_Handler(void)
   __disable_irq();
   while (1)
   {
+    HAL_GPIO_WritePin(LD2_GPIO_Port, LD2_Pin, GPIO_PIN_SET);
   }
   /* USER CODE END Error_Handler_Debug */
 }

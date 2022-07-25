@@ -1,7 +1,7 @@
 LaunchTargetManager/org.eclipse.launchbar.core.launchTargetType.local,Local/arch=x86_64
 LaunchTargetManager/org.eclipse.launchbar.core.launchTargetType.local,Local/name=Local
 LaunchTargetManager/org.eclipse.launchbar.core.launchTargetType.local,Local/os=win32
-configDescList=org.eclipse.cdt.dsf.gdb.gdbRemotedescriptorType\:STM32_HAL_CRYPTOLIB_ECDH Debug
+configDescList=org.eclipse.cdt.dsf.gdb.gdbRemotedescriptorType\:STM32_HAL_CRYPTOLIB_ECDSA Debug
 eclipse.preferences.version=1
 org.eclipse.cdt.dsf.gdb.gdbRemotedescriptorType\:STM32L5_HAL_TRUSTZONE_NonSecure\ Debug/activeLaunchMode=run
 org.eclipse.cdt.dsf.gdb.gdbRemotedescriptorType\:STM32L5_HAL_TRUSTZONE_NonSecure\ Debug/activeLaunchTarget=null\:---
@@ -11,6 +11,7 @@ org.eclipse.cdt.dsf.gdb.gdbRemotedescriptorType\:STM32_HAL_CRYPTOLIB_AES\ Debug/
 org.eclipse.cdt.dsf.gdb.gdbRemotedescriptorType\:STM32_HAL_CRYPTOLIB_AES\ Debug/activeLaunchTarget=null\:---
 org.eclipse.cdt.dsf.gdb.gdbRemotedescriptorType\:STM32_HAL_CRYPTOLIB_ECDH\ Debug/activeLaunchMode=run
 org.eclipse.cdt.dsf.gdb.gdbRemotedescriptorType\:STM32_HAL_CRYPTOLIB_ECDH\ Debug/activeLaunchTarget=null\:---
+org.eclipse.cdt.dsf.gdb.gdbRemotedescriptorType\:STM32_HAL_CRYPTOLIB_ECDSA\ Debug/activeLaunchMode=run
 org.eclipse.cdt.dsf.gdb.gdbRemotedescriptorType\:STM32_HAL_FIREWALL\ Debug/activeLaunchMode=run
 org.eclipse.cdt.dsf.gdb.gdbRemotedescriptorType\:STM32_HAL_FIREWALL/activeLaunchMode=run
 org.eclipse.cdt.dsf.gdb.gdbRemotedescriptorType\:STM32_HAL_FIREWALL/activeLaunchTarget=null\:---
