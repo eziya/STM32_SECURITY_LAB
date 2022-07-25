@@ -6,14 +6,18 @@
 		<item key="wholeword" value="false"/>
 		<item key="incremental" value="false"/>
 		<item key="isRegEx" value="false"/>
-		<item key="selection" value="UART"/>
+		<item key="selection" value="bobPubKey"/>
 		<list key="findhistory">
+			<item value="remotePubKey"/>
+			<item value="myPrivKey"/>
 			<item value="UART"/>
 			<item value="LPU"/>
 			<item value="USER_VECT_TAB_ADDRESS"/>
 			<item value="SRAM"/>
 		</list>
 		<list key="replacehistory">
+			<item value="bobPubKey"/>
+			<item value="alicePrivKey"/>
 		</list>
 	</section>
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog_dialogBounds">
