@@ -1,0 +1,32 @@
+## Generate ecc private key with NIST p256 curve 
+openssl ecparam -name prime256v1 -genkey -out ecc.key
+
+## Generate ecc public key from private key
+openssl pkey -in ecc.key -pubout > ecc_pub.key
+
+## Convert public key to byte array for c header file
+openssl.exe ec -pubin -in ecc_pub.key -text -noout |grep ":"|grep "    "|sed 's/    /-/g'|sed 's/:/,:/g'|awk -F ":" "{ print $1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15}"|sed 's/-04,//'|sed 's/  //g'| sed 's/ / 0x/g' |sed 's/-/0x/g'
+
+## Print the private and public key content
+openssl ec -in ecc.key -text
+
+## Generate sha256 hash digest 
+openssl dgst -sha256 -binary %binary_with_padding%  > hash.bin
+
+## Sign the sha256 digest with ecc private key, verify with public key (pkeyutl) 
+openssl.exe pkeyutl -sign -in hash.bin -inkey ecc.key -pkeyopt digest:sha256 -out ecdsa_sig.bin
+openssl.exe pkeyutl -verify -pubin -inkey ecc_pub.key -sigfile ecdsa_sig.bin -in hash.bin
+
+## Sign the padded binary with sha256 and ecdsa using ecc private key, verify with public key (dgst) 
+openssl.exe dgst -sha256 -sign ecc.key -out ecc_sign.bin %binary_with_padding%
+openssl.exe dgst -sha256 -verify ecc_pub.key -signature ecc_sign.bin %binary_with_padding%
+
+## Show the signature r,s value
+openssl asn1parse -in ecdsa_sig.bin -inform DER
+openssl asn1parse -in ecc_sign.bin -inform DER
+
+## Program binary to the board using CubeProgrammer CLI command
+STM32_Programmer_CLI.exe -c port=swd -d $binfile 0x08000000
+
+## Revert RDP and WRP settings
+STM32_Programmer_CLI.exe -c port=swd -ob rdp=0xaa WRP1A_STRT=0xf WRP1A_END=0x0
