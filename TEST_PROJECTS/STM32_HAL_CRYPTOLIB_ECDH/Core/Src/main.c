@@ -84,16 +84,18 @@ void printHexArray(uint8_t* arr, size_t len)
   printf("\r\n");
 }
 
-cmox_ecc_handle_t hECC;
-uint8_t eccBuffer[2000];
+cmox_ecc_handle_t hECC;     //ECC context handle
+uint8_t eccBuffer[2000];    //ECC working buffer
 
-const uint8_t myPrivKey[] =
+//alice private key
+const uint8_t alicePrivKey[] =
 {
     0x4b, 0x30, 0xe7, 0xba, 0xd9, 0x69, 0x97, 0xb3, 0xe7, 0x80, 0x3e, 0x9c, 0x1a, 0x8b, 0xe4, 0xd9,
     0x8f, 0xdc, 0x73, 0x67, 0x6b, 0x8f, 0xa1, 0x57, 0x27, 0xe1, 0x81, 0x45, 0x7f, 0xd7, 0x8f, 0x80
 };
 
-const uint8_t remotePubKey[] =
+//bob public key
+const uint8_t bobPubKey[] =
 {
     0x81, 0xe4, 0xa6, 0x3a, 0x53, 0x7d, 0x71, 0x7a, 0xac, 0x12, 0xf2, 0xc2, 0xcc, 0xf8, 0x18, 0x53,
     0x43, 0x30, 0x60, 0x17, 0x9a, 0x07, 0x02, 0x0a, 0xeb, 0x33, 0xbe, 0x99, 0x55, 0x2f, 0xe0, 0xb1,
@@ -107,10 +109,11 @@ const uint8_t expectedSecret[] =
     0x33, 0x5a, 0xd2, 0x4a, 0xb2, 0x6e, 0x9d, 0x9e, 0xc2, 0xac, 0xba, 0xf9, 0xfb, 0x3a, 0x9a, 0x89
 };
 
-//openssl returns 32 bytes not 64 bytes
+//openssl returns 32 bytes but CMOX_ECC_SECP256R1_SECRET_LEN is 64 bytes???
 uint8_t sharedSecret[CMOX_ECC_SECP256R1_SECRET_LEN] = {0,};
 
-bool MakeECDHSecret(void)
+//make secret
+bool MakeECDHSecret(uint8_t* secretBuffer)
 {
   cmox_ecc_retval_t retVal;
   size_t outputLen;
@@ -124,17 +127,15 @@ bool MakeECDHSecret(void)
   retVal = cmox_ecdh(
       &hECC,                      //ECC handle
       CMOX_ECC_CURVE_SECP256R1,   //SECP256R1 ECC curve
-      myPrivKey,                  //private key
-      sizeof(myPrivKey),          //size of private key
-      remotePubKey,               //remote public key
-      sizeof(remotePubKey),       //size of remote public key
-      sharedSecret,               //secret buffer pointer
+      alicePrivKey,               //private key
+      sizeof(alicePrivKey),       //size of private key
+      bobPubKey,                  //remote public key
+      sizeof(bobPubKey),          //size of remote public key
+      secretBuffer,               //secret buffer pointer
       &outputLen);                //size of secret
 
   //check the result
-  if( (retVal != CMOX_ECC_SUCCESS) ||
-      (outputLen != sizeof(sharedSecret)) ||
-      (memcmp(sharedSecret, expectedSecret, sizeof(expectedSecret)) != 0)) return false;
+  if(retVal != CMOX_ECC_SUCCESS) return false;
 
   //clean up resources
   cmox_ecc_cleanup(&hECC);
@@ -179,36 +180,42 @@ int main(void)
   MX_USART2_UART_Init();
   /* USER CODE BEGIN 2 */
 
-  printf("Print myPrivKey.\r\n");
-  printHexArray((uint8_t*)myPrivKey, sizeof(myPrivKey));
+  printf("Print alicePrivKey.\r\n");
+  printHexArray((uint8_t*)alicePrivKey, sizeof(alicePrivKey));
   printf("\r\n");
 
-  printf("Print remotePubKey.\r\n");
-  printHexArray((uint8_t*)remotePubKey, sizeof(remotePubKey));
+  printf("Print bobPubKey.\r\n");
+  printHexArray((uint8_t*)bobPubKey, sizeof(bobPubKey));
   printf("\r\n");
 
   printf("Print expectedSecret.\r\n");
   printHexArray((uint8_t*)expectedSecret, sizeof(expectedSecret));
   printf("\r\n");
 
-  /* Initialize cryptographic library */
+  //initialize cmox
   if(cmox_initialize(NULL) != CMOX_INIT_SUCCESS)
   {
     Error_Handler();
   }
 
   //test ECDH
-  if(!MakeECDHSecret())
+  if(!MakeECDHSecret(sharedSecret))
   {
-    HAL_GPIO_WritePin(LD2_GPIO_Port, LD2_Pin, GPIO_PIN_SET);
+    Error_Handler();
+  }
+  else
+  {
+    if(memcmp(sharedSecret, expectedSecret, sizeof(expectedSecret)) != 0)
+    {
+      Error_Handler();
+    }
   }
 
-  /* No more need of cryptographic services, finalize cryptographic library */
+  //finalize cmox
   if (cmox_finalize(NULL) != CMOX_INIT_SUCCESS)
   {
     Error_Handler();
   }
-
 
   /* USER CODE END 2 */
 
@@ -287,6 +294,7 @@ void Error_Handler(void)
   __disable_irq();
   while (1)
   {
+    HAL_GPIO_WritePin(LD2_GPIO_Port, LD2_Pin, GPIO_PIN_SET);
   }
   /* USER CODE END Error_Handler_Debug */
 }
