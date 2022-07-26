@@ -65,7 +65,7 @@ int __io_putchar (int ch)
   return ch;
 }
 
-void printHexArray(uint8_t* arr, size_t len)
+void printHexArray(const uint8_t* arr, const size_t len)
 {
   for(size_t i = 0; i < len; i++)
   {
