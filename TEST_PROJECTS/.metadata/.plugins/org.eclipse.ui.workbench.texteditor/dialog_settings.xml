@@ -6,8 +6,16 @@
 		<item key="wholeword" value="false"/>
 		<item key="incremental" value="false"/>
 		<item key="isRegEx" value="false"/>
-		<item key="selection" value="bobPubKey"/>
+		<item key="selection" value="ctxSHA256"/>
 		<list key="findhistory">
+			<item value="sha256_ctx"/>
+			<item value="hash_ctx"/>
+			<item value="hHash"/>
+			<item value="computed_size"/>
+			<item value="retval"/>
+			<item value="computed_hash"/>
+			<item value="Expected_Hash"/>
+			<item value="Message"/>
 			<item value="remotePubKey"/>
 			<item value="myPrivKey"/>
 			<item value="UART"/>
@@ -16,6 +24,13 @@
 			<item value="SRAM"/>
 		</list>
 		<list key="replacehistory">
+			<item value="ctxSHA256"/>
+			<item value="ctxHash"/>
+			<item value="outputLen"/>
+			<item value="retVal"/>
+			<item value="hash"/>
+			<item value="expectedHash"/>
+			<item value="message"/>
 			<item value="bobPubKey"/>
 			<item value="alicePrivKey"/>
 		</list>
@@ -23,8 +38,8 @@
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog_dialogBounds">
 		<item key="DIALOG_X_ORIGIN" value="871"/>
 		<item key="DIALOG_Y_ORIGIN" value="295"/>
-		<item key="DIALOG_WIDTH" value="322"/>
-		<item key="DIALOG_HEIGHT" value="385"/>
-		<item key="DIALOG_FONT_NAME" value="1|맑은 고딕|9.0|0|WINDOWS|1|-15|0|0|0|400|0|0|0|1|0|0|0|0|맑은 고딕"/>
+		<item key="DIALOG_WIDTH" value="270"/>
+		<item key="DIALOG_HEIGHT" value="343"/>
+		<item key="DIALOG_FONT_NAME" value="1|맑은 고딕|9.0|0|WINDOWS|1|-12|0|0|0|400|0|0|0|1|0|0|0|0|맑은 고딕"/>
 	</section>
 </section>
