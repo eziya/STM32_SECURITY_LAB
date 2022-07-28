@@ -2345,3 +2345,40 @@ Command-line arguments:  -os win32 -ws win32 -arch x86_64
 
 !ENTRY com.st.stm32cube.ide.mcu.ide 1 1 2022-07-28 19:51:25.163
 !MESSAGE Started RMI Server, listening on port 41337
+!SESSION 2022-07-28 20:40:03.251 -----------------------------------------------
+eclipse.buildId=Version 1.10.1
+java.version=11.0.14.1
+java.vendor=Eclipse Adoptium
+BootLoader constants: OS=win32, ARCH=x86_64, WS=win32, NL=ko_KR
+Framework arguments:  E:\Workspace\STM32_SECURITY_LAB\TEST_PROJECTS\STM32_HAL_SECURE_BOOT_APP\.project
+Command-line arguments:  -os win32 -ws win32 -arch x86_64 E:\Workspace\STM32_SECURITY_LAB\TEST_PROJECTS\STM32_HAL_SECURE_BOOT_APP\.project
+
+!ENTRY com.st.stm32cube.ide.mcu.informationcenter 4 4 2022-07-28 20:40:09.784
+!MESSAGE CubeMX plugin appears to be active, Log4j initialization might be too late.
+
+!ENTRY com.st.stm32cube.ide.mcu.informationcenter 1 1 2022-07-28 20:40:09.834
+!MESSAGE Log4j initialized with config file E:\Workspace\STM32_SECURITY_LAB\TEST_PROJECTS\.metadata\.log4j.xml
+
+!ENTRY com.st.stm32cube.ide.mcu.ide 1 1 2022-07-28 20:40:12.726
+!MESSAGE Started RMI Server, listening on port 41337
+
+!ENTRY org.eclipse.cdt.core 1 0 2022-07-28 20:40:18.203
+!MESSAGE Indexed 'STM32_HAL_SECURE_BOOT_APP' (26 sources, 116 headers) in 3.5 sec: 10,870 declarations; 43,013 references; 7 unresolved inclusions; 1,298 syntax errors; 1,426 unresolved names (2.6%)
+
+!ENTRY org.eclipse.cdt.core 1 0 2022-07-28 20:43:16.854
+!MESSAGE Indexed 'STM32_HAL_SECURE_BOOT_APP' (28 sources, 120 headers) in 2.08 sec: 10,916 declarations; 45,781 references; 5 unresolved inclusions; 26 syntax errors; 171 unresolved names (0.3%)
+!SESSION 2022-07-28 21:32:22.404 -----------------------------------------------
+eclipse.buildId=Version 1.10.1
+java.version=11.0.14.1
+java.vendor=Eclipse Adoptium
+BootLoader constants: OS=win32, ARCH=x86_64, WS=win32, NL=ko_KR
+Command-line arguments:  -os win32 -ws win32 -arch x86_64
+
+!ENTRY com.st.stm32cube.ide.mcu.informationcenter 4 4 2022-07-28 21:32:28.815
+!MESSAGE CubeMX plugin appears to be active, Log4j initialization might be too late.
+
+!ENTRY com.st.stm32cube.ide.mcu.informationcenter 1 1 2022-07-28 21:32:28.871
+!MESSAGE Log4j initialized with config file E:\Workspace\STM32_SECURITY_LAB\TEST_PROJECTS\.metadata\.log4j.xml
+
+!ENTRY com.st.stm32cube.ide.mcu.ide 1 1 2022-07-28 21:32:34.054
+!MESSAGE Started RMI Server, listening on port 41337

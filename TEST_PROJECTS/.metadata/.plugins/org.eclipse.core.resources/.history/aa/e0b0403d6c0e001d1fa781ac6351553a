@@ -1,0 +1,31 @@
+/*
+ * app.c
+ *
+ *  Created on: 2022. 7. 28.
+ *      Author: eziya76@gmail.com
+ */
+
+#include "app.h"
+
+void AppConfigStaticProtection(void)
+{
+
+}
+
+void AppHashVerify(void)
+{
+
+}
+
+void AppRun(void)
+{
+  printf("\r\n ========= %s ==========\r\n", __FUNCTION__);
+  APP_Test_Prot_Run();
+
+  while(1)
+  {
+
+  }
+
+}
+

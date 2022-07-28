@@ -10,7 +10,7 @@
 	<item key="org.eclipse.cdt.uiformatter_pagemodify_dialog.preferred_y" value="0"/>
 	<item key="LastUsedSourceTemplate" value="Default C source template"/>
 	<item key="LastUsedHeaderTemplate" value="Default C header template"/>
-	<item key="org.eclipse.cdt.utils.ui.controls.FileListControl" value=":libSTM32Cryptographic_CM4.a"/>
+	<item key="org.eclipse.cdt.utils.ui.controls.FileListControl" value=":libSTM32Cryptographic_CM3.a"/>
 	<section name="completion_proposal_size">
 	</section>
 	<section name="org.eclipse.cdt.ui.text.hover.CMacroExpansionExploration">

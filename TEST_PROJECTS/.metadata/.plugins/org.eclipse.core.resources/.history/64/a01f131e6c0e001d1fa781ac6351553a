@@ -1,0 +1,24 @@
+/*
+ * app.c
+ *
+ *  Created on: 2022. 7. 28.
+ *      Author: eziya76@gmail.com
+ */
+
+
+void AppConfigStaticProtection(void)
+{
+
+}
+
+void AppHashVerify(void)
+{
+
+}
+
+void AppRun(void)
+{
+  printf()
+
+}
+
