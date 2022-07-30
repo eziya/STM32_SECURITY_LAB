@@ -182,4 +182,11 @@ SECTIONS
   }
 
   .ARM.attributes 0 : { *(.ARM.attributes) }
+  
+  .firmware :
+  {
+    __FW_SECTION_END = .;
+    
+  } >FLASH
+  
 }

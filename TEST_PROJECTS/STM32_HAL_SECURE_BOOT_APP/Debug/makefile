@@ -60,8 +60,8 @@ all: main-build
 main-build: STM32_HAL_SECURE_BOOT_APP.elf secondary-outputs
 
 # Tool invocations
-STM32_HAL_SECURE_BOOT_APP.elf STM32_HAL_SECURE_BOOT_APP.map: $(OBJS) $(USER_OBJS) E:\Workspace\STM32_SECURITY_LAB\TEST_PROJECTS\STM32_HAL_SECURE_BOOT_APP\STM32G071RBTX_FLASH.ld makefile objects.list $(OPTIONAL_TOOL_DEPS)
-	arm-none-eabi-gcc -o "STM32_HAL_SECURE_BOOT_APP.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m0plus -T"E:\Workspace\STM32_SECURITY_LAB\TEST_PROJECTS\STM32_HAL_SECURE_BOOT_APP\STM32G071RBTX_FLASH.ld" --specs=nosys.specs -Wl,-Map="STM32_HAL_SECURE_BOOT_APP.map" -Wl,--gc-sections -static -L"E:\Workspace\STM32_SECURITY_LAB\TEST_PROJECTS\STM32_HAL_SECURE_BOOT_APP\Middlewares\ST\STM32_Cryptographic\lib" --specs=nano.specs -mfloat-abi=soft -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+STM32_HAL_SECURE_BOOT_APP.elf STM32_HAL_SECURE_BOOT_APP.map: $(OBJS) $(USER_OBJS) D:\Workspace\STM32\STM32_SECURITY_LAB\TEST_PROJECTS\STM32_HAL_SECURE_BOOT_APP\STM32G071RBTX_FLASH.ld makefile objects.list $(OPTIONAL_TOOL_DEPS)
+	arm-none-eabi-gcc -o "STM32_HAL_SECURE_BOOT_APP.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m0plus -T"D:\Workspace\STM32\STM32_SECURITY_LAB\TEST_PROJECTS\STM32_HAL_SECURE_BOOT_APP\STM32G071RBTX_FLASH.ld" --specs=nosys.specs -Wl,-Map="STM32_HAL_SECURE_BOOT_APP.map" -Wl,--gc-sections -static -L"D:\Workspace\STM32\STM32_SECURITY_LAB\TEST_PROJECTS\STM32_HAL_SECURE_BOOT_APP\Middlewares\ST\STM32_Cryptographic\lib" --specs=nano.specs -mfloat-abi=soft -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
 	@echo 'Finished building target: $@'
 	@echo ' '
 

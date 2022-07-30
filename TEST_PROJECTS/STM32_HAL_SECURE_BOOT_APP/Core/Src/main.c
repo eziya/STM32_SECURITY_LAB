@@ -111,13 +111,14 @@ int main(void)
     Error_Handler();
   }
 
-  AppRun();
-
+  AppHashVerify();
 
   if(cmox_finalize(NULL) != CMOX_INIT_SUCCESS)
   {
     Error_Handler();
   }
+
+  AppRun();
 
   /* USER CODE END 2 */
 
@@ -193,6 +194,7 @@ void Error_Handler(void)
   __disable_irq();
   while (1)
   {
+    HAL_GPIO_WritePin(LED_GREEN_GPIO_Port, LED_GREEN_Pin, GPIO_PIN_SET);
   }
   /* USER CODE END Error_Handler_Debug */
 }

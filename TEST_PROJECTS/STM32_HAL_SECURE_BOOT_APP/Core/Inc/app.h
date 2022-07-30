@@ -10,7 +10,6 @@
 
 #include "main.h"
 
-void AppConfigStaticProtection(void);
 void AppHashVerify(void);
 void AppRun(void);
 

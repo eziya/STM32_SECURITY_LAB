@@ -1,6 +1,0 @@
-../Core/Src/app.c:17:6:AppConfigStaticProtection	8	static
-../Core/Src/app.c:22:6:AppHashVerify	8	static
-../Core/Src/app.c:27:6:AppRun	8	static
-../Core/Src/app.c:39:13:AppPrintMenu	8	static
-../Core/Src/app.c:48:13:AppHandleMenu	16	static
-../Core/Src/app.c:79:13:AppReadSecureMem	80	static
