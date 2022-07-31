@@ -106,18 +106,22 @@ int main(void)
   MX_USART2_UART_Init();
   /* USER CODE BEGIN 2 */
 
+  //initialize cmox
   if(cmox_initialize(NULL) != CMOX_INIT_SUCCESS)
   {
     Error_Handler();
   }
 
+  //verify hash
   AppHashVerify();
 
+  //finalize cmox
   if(cmox_finalize(NULL) != CMOX_INIT_SUCCESS)
   {
     Error_Handler();
   }
 
+  //run application
   AppRun();
 
   /* USER CODE END 2 */

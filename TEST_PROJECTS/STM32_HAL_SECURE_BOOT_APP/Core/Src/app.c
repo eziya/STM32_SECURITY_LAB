@@ -9,16 +9,20 @@
 
 #define FW_START_ADD            (FLASH_BASE)
 #define FW_SIZE                 (FW_END - FLASH_BASE)
+//page aligned firmware size
 #define FW_SIZE_PAGE_ALIGNED    (FW_SIZE % FLASH_PAGE_SIZE == 0 ? \
-                                FW_SIZE : (FW_SIZE/FLASH_PAGE_SIZE+1)*FLASH_PAGE_SIZE)
+                                FW_SIZE : (FW_SIZE/FLASH_PAGE_SIZE+1) * FLASH_PAGE_SIZE)
 #define FW_END                  (uint32_t)((uint8_t*)& __FW_SECTION_END)
 
+//hash area is located at the next page of firmware
 #define HASH_ADD                (FW_START_ADD + FW_SIZE_PAGE_ALIGNED)
 #define HASH_SIZE               (CMOX_SHA256_SIZE)
 
+//write protection for hash area
 #define WRP_START_OFFSET        ((HASH_ADD - FLASH_BASE) / FLASH_PAGE_SIZE)
 #define WRP_END_OFFSET          WRP_START_OFFSET
 
+//WRP offsets can't be modified without RDP regression
 #define RDP_LEVEL_CONFIG        OB_RDP_LEVEL_1
 
 extern UART_HandleTypeDef huart2;
@@ -38,11 +42,11 @@ void AppHashVerify(void)
   size_t digestLen;
   bool result = false;
 
-  printf("\r\nStart FW Hash Check...\r\n");
-  printf("\tFW start address: 0x%08lx\r\n", FW_START_ADD);
-  printf("\tFW size: 0x%08lx\r\n", FW_SIZE_PAGE_ALIGNED);
-  printf("\tFW HASH address: 0x%08lx\r\n", HASH_ADD);
-  printf("\tFW HASH SIZE: %u\r\n", HASH_SIZE);
+  printf("Start FW Hash Check...\r\n");
+  printf("FW start address: 0x%08lx\r\n", FW_START_ADD);
+  printf("FW size: 0x%08lx\r\n", FW_SIZE_PAGE_ALIGNED);
+  printf("FW HASH address: 0x%08lx\r\n", HASH_ADD);
+  printf("FW HASH SIZE: %u\r\n", HASH_SIZE);
 
   result = SingleCallSHA256(
       (uint8_t*)FW_START_ADD,
@@ -58,14 +62,13 @@ void AppHashVerify(void)
     printf("\r\nExpected HASH Result: \r\n");
     printHexArray((const uint8_t*)HASH_ADD, HASH_SIZE);
 
-    printf("\r\n");
     if (memcmp((const uint8_t*)HASH_ADD, digest, HASH_SIZE) == 0)
     {
-      printf("\r\nFW Hash check pass\r\n");
+      printf("\r\nFW Hash check pass.\r\n");
     }
     else
     {
-      printf("\r\nFW Hash check fail\r\n");
+      printf("\r\nFW Hash check fail.\r\n");
       goto ERROR;
     }
   }
@@ -102,6 +105,7 @@ static void AppHandleMenu(void)
 
   while(exit == 0U)
   {
+    //clear data register
     __HAL_UART_FLUSH_DRREGISTER(&huart2);
 
     HAL_UART_Receive(&huart2, &key, 1U, HAL_MAX_DELAY);
@@ -145,6 +149,7 @@ static void AppReadSecureMem(void)
 {
   FLASH_OBProgramInitTypeDef optionBytes;
 
+  //unlock
   HAL_FLASH_Unlock();
   HAL_FLASH_OB_Unlock();
 
@@ -152,14 +157,14 @@ static void AppReadSecureMem(void)
   __HAL_FLASH_CLEAR_FLAG(FLASH_FLAG_OPTVERR);
 
   //read option bytes
-  optionBytes.WRPArea = OB_WRPAREA_ZONE_A;
   HAL_FLASHEx_OBGetConfig(&optionBytes);
 
+  //lock
   HAL_FLASH_OB_Lock();
   HAL_FLASH_Lock();
 
-  //configure secure memory address
-  volatile uint32_t *pdata[] = {(uint32_t*)0x08000000, (uint32_t*)0x080061FC};
+  //read secure memory address
+  volatile uint32_t *pdata[] = {(uint32_t*)FLASH_BASE, (uint32_t*)HASH_ADD};
 
   //print secure memory information
   printf("====== Test Protection: Secure User Memory =================\r\n\n");
@@ -180,23 +185,24 @@ static void AppEnableOBWRP(void)
   HAL_FLASH_Unlock();
   HAL_FLASH_OB_Unlock();
 
+  //read option bytes
   __HAL_FLASH_CLEAR_FLAG(FLASH_FLAG_OPTVERR);
   optionBytes.WRPArea = OB_WRPAREA_ZONE_A;
   HAL_FLASHEx_OBGetConfig(&optionBytes);
 
   if (optionBytes.RDPLevel == OB_RDP_LEVEL_2)
   {
-    //you're not able to modify option bytes when RDP is level 2
     if((optionBytes.WRPStartOffset > WRP_START_OFFSET) ||
         (optionBytes.WRPEndOffset < WRP_END_OFFSET))
     {
+      printf("Unable to write WRP offset when RDP level is 2.\r\n");
       goto ERROR;
     }
   }
   else
   {
-    if((optionBytes.WRPStartOffset > WRP_START_OFFSET) ||
-        (optionBytes.WRPEndOffset < WRP_END_OFFSET))
+    //configure WRP offset
+    if((optionBytes.WRPStartOffset > WRP_START_OFFSET) || (optionBytes.WRPEndOffset < WRP_END_OFFSET))
     {
       optionBytes.WRPStartOffset = WRP_START_OFFSET;
       optionBytes.WRPEndOffset = WRP_END_OFFSET;
@@ -207,8 +213,10 @@ static void AppEnableOBWRP(void)
 
       if(HAL_FLASHEx_OBProgram(&optionBytes) != HAL_OK)
       {
+        printf("Fail to program option bytes.\r\n");
         goto ERROR;
       }
+
       isOBChangeToApply++;
     }
     printf("\r\nWRP already applied from page [%08lx] to [%08lx]\r\n",
@@ -226,7 +234,7 @@ static void AppEnableOBWRP(void)
 
   return;
 
-  ERROR:
+ERROR:
   HAL_FLASH_OB_Lock();
   HAL_FLASH_Lock();
 
@@ -249,7 +257,7 @@ static void AppEnableOBRDP(void)
 
   if (optionBytes.RDPLevel == OB_RDP_LEVEL_2)
   {
-    //you're not able to modify option bytes when RDP is level 2
+    printf("Unable to modify RDP level when RDP level is 2.\r\n");
     goto ERROR;
   }
   else
@@ -260,6 +268,7 @@ static void AppEnableOBRDP(void)
       optionBytes.RDPLevel = RDP_LEVEL_CONFIG;
       if (HAL_FLASHEx_OBProgram(&optionBytes) != HAL_OK)
       {
+        printf("Fail to program option bytes.\r\n");
         goto ERROR;
       }
 
@@ -282,7 +291,7 @@ static void AppEnableOBRDP(void)
 
   return;
 
-  ERROR:
+ERROR:
   HAL_FLASH_OB_Lock();
   HAL_FLASH_Lock();
 
