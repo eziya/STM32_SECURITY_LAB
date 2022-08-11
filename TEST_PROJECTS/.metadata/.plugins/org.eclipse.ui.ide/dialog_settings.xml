@@ -7,6 +7,7 @@
 		<item key="WizardProjectsImportPage.STORE_CLOSE_CREATED_PROJECTS_ID" value="false"/>
 		<item key="WizardProjectsImportPage.STORE_HIDE_CONFLICTING_PROJECTS_ID" value="false"/>
 		<list key="WizardProjectsImportPage.STORE_DIRECTORIES">
+			<item value="E:\Workspace\STM32_SECURITY_LAB\TEST_PROJECTS\STM32_HAL_INTEGRITY"/>
 			<item value="E:\Workspace\STM32_SECURITY_LAB\TEST_PROJECTS\STM32_HAL_CRYPTOLIB_ECDSA"/>
 			<item value="D:\Workspace\STM32\STM32_SECURITY_LAB\TEST_PROJECTS\STM32_HAL_CRYPTOLIB_ECDH"/>
 			<item value="E:\Workspace\STM32_SECURITY_LAB\TEST_PROJECTS\STM32_HAL_CRYPTOLIB_AES"/>

@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<session version="1.0">
+<refactoring comment="Delete resource &apos;STM32_HAL_SECURE_BOOT_APP&apos;" deleteContents="true" description="Delete resource &apos;STM32_HAL_SECURE_BOOT_APP&apos;" element1="/STM32_HAL_SECURE_BOOT_APP" flags="7" id="org.eclipse.ltk.core.refactoring.delete.resources" resources="1" stamp="1660226881150"/>
+</session>
