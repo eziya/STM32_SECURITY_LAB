@@ -1,0 +1,9 @@
+../Core/Src/app.c:49:6:AppHashVerify	56	static
+../Core/Src/app.c:96:6:AppSignatureVerify	24	static
+../Core/Src/app.c:135:6:AppRun	8	static
+../Core/Src/app.c:147:13:AppHandleMenu	16	static
+../Core/Src/app.c:182:13:AppPrintMenu	8	static
+../Core/Src/app.c:192:13:AppEnableOBWRP	72	static
+../Core/Src/app.c:258:13:AppEnableOBRDP	72	static
+../Core/Src/app.c:315:13:SingleCallSHA256	48	static
+../Core/Src/app.c:332:6:VerifySignatureWithPubKey	64	static

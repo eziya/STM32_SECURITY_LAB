@@ -55,25 +55,25 @@ void AppHashVerify(void)
 
   if(result == true && digestLen == HASH_SIZE)
   {
-    printf("\r\nFW HASH Result: \r\n");
+    printf("FW HASH Result: \r\n");
     printHexArray(digest, sizeof(digest));
 
-    printf("\r\nExpected HASH Result: \r\n");
+    printf("Expected HASH Result: \r\n");
     printHexArray((const uint8_t*)HASH_ADD, HASH_SIZE);
 
     if (memcmp((const uint8_t*)HASH_ADD, digest, HASH_SIZE) == 0)
     {
-      printf("\r\nFW Hash check pass.\r\n");
+      printf("FW Hash check pass.\r\n");
     }
     else
     {
-      printf("\r\nFW Hash check fail.\r\n");
+      printf("FW Hash check fail.\r\n");
       goto ERROR;
     }
   }
   else
   {
-    printf("\r\nFW Hash computation fail!\r\n");
+    printf("FW Hash computation fail!\r\n");
     goto ERROR;
   }
   return;
@@ -171,7 +171,7 @@ static void AppEnableOBWRP(void)
       optionBytes.WRPStartOffset = WRP_START_OFFSET;
       optionBytes.WRPEndOffset = WRP_END_OFFSET;
 
-      printf("\r\nTry to apply WRP from page [%08lx] to [%08lx]\r\n",
+      printf("Try to apply WRP from page [%08lx] to [%08lx]\r\n",
           optionBytes.WRPStartOffset,
           optionBytes.WRPEndOffset);
 
@@ -183,7 +183,7 @@ static void AppEnableOBWRP(void)
 
       isOBChangeToApply++;
     }
-    printf("\r\nWRP already applied from page [%08lx] to [%08lx]\r\n",
+    printf("WRP already applied from page [%08lx] to [%08lx]\r\n",
         optionBytes.WRPStartOffset,
         optionBytes.WRPEndOffset);
 
@@ -236,12 +236,12 @@ static void AppEnableOBRDP(void)
         goto ERROR;
       }
 
-      printf("\r\nSet RDP to [0x%02lx], please power off and power on again.\r\n", optionBytes.RDPLevel);
+      printf("Set RDP to [0x%02lx], please power off and power on again.\r\n", optionBytes.RDPLevel);
       isOBChangeToApply++;
     }
     else
     {
-      printf("\r\nRDP level set to [0x%02lx]\r\n", optionBytes.RDPLevel);
+      printf("RDP level set to [0x%02lx]\r\n", optionBytes.RDPLevel);
     }
 
     if(isOBChangeToApply > 0)
