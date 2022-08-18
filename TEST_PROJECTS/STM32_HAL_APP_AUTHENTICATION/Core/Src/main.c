@@ -109,10 +109,16 @@ int main(void)
   }
 
   //verify hash
-  AppHashVerify();
+  if(!AppHashVerify())
+  {
+    Error_Handler();
+  }
 
   //verify authentication
-  AppSignatureVerify();
+  if(!AppSignatureVerify())
+  {
+    Error_Handler();
+  }
 
   //finalize cmox
   if(cmox_finalize(NULL) != CMOX_INIT_SUCCESS)
@@ -197,6 +203,7 @@ void Error_Handler(void)
   __disable_irq();
   while (1)
   {
+    HAL_GPIO_WritePin(LED_GREEN_GPIO_Port, LED_GREEN_Pin, GPIO_PIN_SET);
   }
   /* USER CODE END Error_Handler_Debug */
 }

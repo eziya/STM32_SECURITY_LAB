@@ -10,8 +10,8 @@
 
 #include "main.h"
 
-void AppHashVerify(void);
-void AppSignatureVerify(void);
+bool AppHashVerify(void);
+bool AppSignatureVerify(void);
 void AppRun(void);
 
 #endif /* INC_APP_H_ */

@@ -8,28 +8,25 @@
 #include "app.h"
 #include "ecc_pub_key.h"
 
+//FW address & size
 #define FW_START_ADD            (FLASH_BASE)
 #define FW_SIZE                 (FW_END - FLASH_BASE)
-//page aligned firmware size
-#define FW_SIZE_PAGE_ALIGNED    (FW_SIZE % FLASH_PAGE_SIZE == 0 ? \
-                                FW_SIZE : (FW_SIZE/FLASH_PAGE_SIZE+1) * FLASH_PAGE_SIZE)
+#define FW_SIZE_PAGE_ALIGNED    (FW_SIZE % FLASH_PAGE_SIZE == 0 ? FW_SIZE : (FW_SIZE/FLASH_PAGE_SIZE+1) * FLASH_PAGE_SIZE)
 #define FW_END                  (uint32_t)((uint8_t*)& __FW_SECTION_END)
 
-//hash area is located at the next page of firmware
+//hash digest, signature, public key location & size
 #define HASH_ADD                (FW_START_ADD + FW_SIZE_PAGE_ALIGNED)
 #define HASH_SIZE               (CMOX_SHA256_SIZE)
-
 #define SIG_ADD                 (HASH_ADD + HASH_SIZE)
-#define SIG_SIZE                (64)
-
+#define SIG_SIZE                (64U)
 #define ECC_PUB_ADD             (SIG_ADD + SIG_SIZE)
-#define ECC_PUB_SIZE            (64)
+#define ECC_PUB_SIZE            (64U)
 
-//write protection for hash area
+//WRP offset
 #define WRP_START_OFFSET        ((HASH_ADD - FLASH_BASE) / FLASH_PAGE_SIZE)
 #define WRP_END_OFFSET          WRP_START_OFFSET
 
-//WRP offsets can't be modified without RDP regression
+//RDP level
 #define RDP_LEVEL_CONFIG        OB_RDP_LEVEL_1
 
 extern UART_HandleTypeDef huart2;
@@ -45,8 +42,8 @@ static void AppEnableOBRDP(void);
 static bool SingleCallSHA256(const uint8_t* message, const size_t messageLen, uint8_t* digest, size_t* digestLen);
 static bool VerifySignatureWithPubKey(const uint8_t* pubKey, size_t pubKeyLen, const uint8_t* hash, size_t hashLen, const uint8_t* signature, size_t signatureLen);
 
-//verify hash
-void AppHashVerify(void)
+//verify hash digest
+bool AppHashVerify(void)
 {
   uint8_t digest[HASH_SIZE];
   size_t digestLen;
@@ -79,56 +76,53 @@ void AppHashVerify(void)
     else
     {
       printf("FW Hash check fail.\r\n");
-      goto ERROR;
+      return false;
     }
   }
   else
   {
     printf("FW Hash computation fail!\r\n");
-    goto ERROR;
+    return false;
   }
-  return;
 
-ERROR:
-  Error_Handler();
+  return true;
 }
 
-void AppSignatureVerify(void)
+//verify signature
+bool AppSignatureVerify(void)
 {
-  printf("Start FW Signature Check...\r\n");
-  printf("FW HASH address: 0x%08lx\r\n", HASH_ADD);
-  printf("FW HASH size: %u\r\n", HASH_SIZE);
+  printf("Start FW signature check...\r\n");
   printf("FW Signature address: 0x%08lx\r\n", SIG_ADD);
   printf("FW Signature SIZE: %u\r\n", SIG_SIZE);
-
-  int i;
-  printf("FW HASH Result: \r\n");
-  printHexArray((const uint8_t*)HASH_ADD, HASH_SIZE);
 
   printf("FW SIGNATURE data: \r\n");
   printHexArray((const uint8_t*)SIG_ADD, SIG_SIZE);
 
-  /* verify ECC public key -- compare with the one stored after signature */
-  for ( i = 0; i < SIG_SIZE; i++ )
+  //verify public key
+  if(memcmp((const uint8_t*)ECC_PUB_ADD, (uint8_t*)SIGN_ECC_PUB_KEY, ECC_PUB_SIZE) != 0)
   {
-    uint8_t *pPubkey = (uint8_t*)ECC_PUB_ADD;
-    if ( pPubkey[i] != SIGN_ECC_PUB_KEY[i])
-    {
-      printf("Public key inconsistent!\r\n");
-      goto ERROR;
-    }
+    printf("Public key comparison failed!\r\n");
+    return false;
+  }
+  else
+  {
+    printf("ECC Public Key: \r\n");
+    printHexArray((const uint8_t*)ECC_PUB_ADD, ECC_PUB_SIZE);
+    printf("Public key comparison pass.\r\n");
   }
 
-  printf("\r\n\r\n");
+  //verify signature
   if(!VerifySignatureWithPubKey((const uint8_t*)ECC_PUB_ADD, ECC_PUB_SIZE, (const uint8_t*)HASH_ADD, HASH_SIZE, (const uint8_t*)SIG_ADD, SIG_SIZE))
   {
     printf("Signature verification failed!\r\n");
-    goto ERROR;
+    return false;
+  }
+  else
+  {
+      printf("Signature verification pass.\r\n");
   }
 
-ERROR:
-    Error_Handler();
-
+  return true;
 }
 
 //toggle led
