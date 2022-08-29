@@ -1,0 +1,20 @@
+21:02:25 **** Incremental Build of configuration Debug for project STM32_HAL_SB_APP ****
+make -j12 all 
+arm-none-eabi-gcc "../Core/Src/main.c" -mcpu=cortex-m0plus -std=gnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32G071xx -c -I../Core/Inc -I../Drivers/STM32G0xx_HAL_Driver/Inc -I../Drivers/STM32G0xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32G0xx/Include -I../Drivers/CMSIS/Include -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -MMD -MP -MF"Core/Src/main.d" -MT"Core/Src/main.o" --specs=nano.specs -mfloat-abi=soft -mthumb -o "Core/Src/main.o"
+arm-none-eabi-gcc -o "STM32_HAL_SB_APP.elf" @"objects.list"   -mcpu=cortex-m0plus -T"E:\Workspace\STM32_SECURITY_LAB\TEST_PROJECTS\STM32_HAL_SB_APP\STM32G071RBTX_FLASH.ld" --specs=nosys.specs -Wl,-Map="STM32_HAL_SB_APP.map" -Wl,--gc-sections -static --specs=nano.specs -mfloat-abi=soft -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+Finished building target: STM32_HAL_SB_APP.elf
+ 
+arm-none-eabi-size   STM32_HAL_SB_APP.elf 
+arm-none-eabi-objdump -h -S  STM32_HAL_SB_APP.elf  > "STM32_HAL_SB_APP.list"
+arm-none-eabi-objcopy  -O binary  STM32_HAL_SB_APP.elf  "STM32_HAL_SB_APP.bin"
+   text	   data	    bss	    dec	    hex	filename
+  14528	    120	   1736	  16384	   4000	STM32_HAL_SB_APP.elf
+Finished building: default.size.stdout
+ 
+Finished building: STM32_HAL_SB_APP.bin
+Finished building: STM32_HAL_SB_APP.list
+ 
+ 
+
+21:02:26 Build Finished. 0 errors, 0 warnings. (took 812ms)
+

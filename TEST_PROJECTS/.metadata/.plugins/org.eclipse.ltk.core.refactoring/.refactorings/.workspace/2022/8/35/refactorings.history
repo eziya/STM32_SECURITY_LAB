@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<session version="1.0">
+<refactoring comment="Delete 7 resources" deleteContents="false" description="Delete 7 resources" element1="/STM32_HAL_APP_AUTHENTICATION/Debug/RawSig.txt" element2="/STM32_HAL_APP_AUTHENTICATION/Debug/STM32_HAL_APP_AUTHENTICATION_PAD_HASH_SIG_PUBK.bin" element3="/STM32_HAL_APP_AUTHENTICATION/Debug/STM32_HAL_APP_AUTHENTICATION_PAD.bin" element4="/STM32_HAL_APP_AUTHENTICATION/Debug/TempHash.sha" element5="/STM32_HAL_APP_AUTHENTICATION/Debug/TempPubK.pub" element6="/STM32_HAL_APP_AUTHENTICATION/Debug/TempPubK.txt" element7="/STM32_HAL_APP_AUTHENTICATION/Debug/TempSig.sig" flags="7" id="org.eclipse.ltk.core.refactoring.delete.resources" resources="7" stamp="1661253141053"/>
+</session>

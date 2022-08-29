@@ -1,0 +1,2 @@
+../Core/Src/cmox_low_level.c:28:20:cmox_ll_init	24	static
+../Core/Src/cmox_low_level.c:42:20:cmox_ll_deInit	16	static

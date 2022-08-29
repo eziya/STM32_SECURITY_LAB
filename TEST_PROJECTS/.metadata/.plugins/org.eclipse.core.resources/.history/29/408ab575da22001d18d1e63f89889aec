@@ -1,0 +1,195 @@
+/*
+ * boot.c
+ *
+ *  Created on: 2022. 8. 23.
+ *      Author: jihoo
+ */
+#include "boot.h"
+
+MetaBlock *pMetaBlock = (MetaBlock *)META_BLOCK_ADDR;
+cmox_ecc_handle_t hECC;     //ECC context handle
+uint8_t eccBuffer[2000];    //ECC buffer
+
+static void PrintMetaData(void);
+static bool VerifyMetaDataMagicNumber(void);
+static bool VerifyMetaDataHash(void);
+static bool VerifyMetaDataSignature(void);
+static bool VerifyAppHash(void);
+static bool SingleCallSHA256(const uint8_t* message, const size_t messageLen, uint8_t* digest, size_t* digestLen);
+static bool VerifySignatureWithPubKey(const uint8_t* pubKey, size_t pubKeyLen, const uint8_t* hash, size_t hashLen, const uint8_t* signature, size_t signatureLen);
+
+
+bool VerifyApplication(void)
+{
+  PrintMetaData();
+
+  if(!VerifyMetaDataMagicNumber())
+  {
+    printf("VerifyMetaDataMagicNumber failed.\r\n");
+    return false;
+  }
+
+  if(!VerifyMetaDataHash())
+  {
+    printf("VerifyMetaDataHash failed.\r\n");
+    return false;
+  }
+
+  if(!VerifyMetaDataSignature())
+  {
+    printf("VerifyMetaDataSignature failed.\r\n");
+    return false;
+  }
+
+  if(!VerifyAppHash())
+  {
+    printf("VerifyAppHash failed.\r\n");
+    return false;
+  }
+
+  return true;
+}
+
+void jump_to_application(void)
+{
+
+}
+
+static void PrintMetaData(void)
+{
+  printf("Meta data Information...\r\n");
+  printf("Meta data @0x%08x:\r\n", META_BLOCK_ADDR);
+  printf("Magic number: 0x%08lx\r\n", pMetaBlock->magicNum);
+  printf("App size: 0x%08lx\r\n", pMetaBlock->appSize);
+  printf("App version: 0x%08lx\r\n", pMetaBlock->appVer);
+
+  printf("App hash\r\n");
+  printHexArray(pMetaBlock->appHash, HASH_LEN);
+  printf("Meta data hash\r\n");
+  printHexArray(pMetaBlock->metaHash, HASH_LEN);
+  printf("Meta data signature\r\n");
+  printHexArray(pMetaBlock->metaSig, SIG_LEN);
+}
+
+static bool VerifyMetaDataMagicNumber(void)
+{
+  return (pMetaBlock->magicNum == MAGIC_NUMBER) ? true : false;
+}
+
+static bool VerifyMetaDataHash(void)
+{
+  uint8_t digest[HASH_SIZE];
+  size_t digestLen;
+  bool result = false;
+
+  result = SingleCallSHA256(
+      (uint8_t*)META_BLOCK_ADDR,
+      (uint32_t)META_DATA_LEN,
+      digest,
+      &digestLen);
+
+  if(result == true && digestLen == HASH_SIZE)
+  {
+    if(memcmp((const uint8_t*)pMetaBlock->metaHash, digest, HASH_SIZE) == 0)
+    {
+      printf("Meta data hash check pass.\r\n");
+    }
+    else
+    {
+      printf("Meta data hash check fail.\r\n");
+      return false;
+    }
+  }
+  else
+  {
+    printf("Meta data hash computation fail!\r\n");
+    return false;
+  }
+
+  return true;
+}
+
+static bool VerifyMetaDataSignature(void)
+{
+  return true;
+}
+
+static bool VerifyAppHash(void)
+{
+  uint8_t digest[HASH_SIZE];
+  size_t digestLen;
+  bool result = false;
+
+  result = SingleCallSHA256(
+      (uint8_t*)META_BLOCK_ADDR,
+      (uint32_t)META_DATA_LEN,
+      digest,
+      &digestLen);
+
+  if(result == true && digestLen == HASH_SIZE)
+  {
+    if(memcmp((const uint8_t*)pMetaBlock->metaHash, digest, HASH_SIZE) == 0)
+    {
+      printf("Meta data hash check pass.\r\n");
+    }
+    else
+    {
+      printf("Meta data hash check fail.\r\n");
+      return false;
+    }
+  }
+  else
+  {
+    printf("Meta data hash computation fail!\r\n");
+    return false;
+  }
+
+  return true;
+}
+
+//calculate SHA256 hash
+static bool SingleCallSHA256(const uint8_t* message, const size_t messageLen, uint8_t* digest, size_t* digestLen)
+{
+  cmox_hash_retval_t retVal;
+
+  retVal = cmox_hash_compute(
+      CMOX_SHA256_ALGO,
+      message, messageLen,
+      digest,
+      CMOX_SHA256_SIZE,
+      digestLen);
+
+  if((retVal != CMOX_HASH_SUCCESS) || (*digestLen != CMOX_SHA256_SIZE)) return false;
+
+  return true;
+}
+
+// verify signature
+bool VerifySignatureWithPubKey(const uint8_t* pubKey, size_t pubKeyLen, const uint8_t* hash, size_t hashLen, const uint8_t* signature, size_t signatureLen)
+{
+  cmox_ecc_retval_t retVal;
+  uint32_t fault_check = CMOX_ECC_AUTH_FAIL;
+
+  cmox_ecc_construct(&hECC, CMOX_ECC256_MATH_FUNCS, eccBuffer, sizeof(eccBuffer));
+
+  retVal = cmox_ecdsa_verify(
+      &hECC,
+      CMOX_ECC_CURVE_SECP256R1,   //SECP256R1
+      pubKey,                     //public key for verification
+      pubKeyLen,                  //public key length
+      hash,                       //hash to compare
+      hashLen,                    //hash length
+      signature,                  //signature to verify
+      signatureLen,               //signature length
+      &fault_check);              //verification result
+
+  if((retVal != CMOX_ECC_AUTH_SUCCESS) || (fault_check != CMOX_ECC_AUTH_SUCCESS))
+  {
+    cmox_ecc_cleanup(&hECC);
+    return false;
+  }
+
+  cmox_ecc_cleanup(&hECC);
+
+  return true;
+}

@@ -1,0 +1,24 @@
+/*
+ * boot.h
+ *
+ *  Created on: 2022. 8. 23.
+ *      Author: jihoo
+ */
+
+#ifndef INC_BOOT_H_
+#define INC_BOOT_H_
+
+typedef struct {
+  uint32_t magic;                       //magic number (0x08192A3C)
+  uint32_t appSize;                     //application size
+  uint32_t appVer;                      //application version
+  uint8_t  appHash[FW_HASH_LEN];        //application hash
+  uint8_t  Reserved[84];                //padding bytes
+  uint8_t  metaHash[FW_HASH_LEN];       //meta data hash
+  uint8_t  metaSig[FW_META_SIG_LEN];    //meta data signature
+}MetaBlock;
+
+bool VerifyApplication(void);
+void jump_to_application(void);
+
+#endif /* INC_BOOT_H_ */

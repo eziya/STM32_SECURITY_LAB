@@ -328,10 +328,8 @@ bool VerifySignatureWithPubKey(const uint8_t* pubKey, size_t pubKeyLen, const ui
   cmox_ecc_retval_t retVal;
   uint32_t fault_check = CMOX_ECC_AUTH_FAIL;
 
-  //allocate resources
   cmox_ecc_construct(&hECC, CMOX_ECC256_MATH_FUNCS, eccBuffer, sizeof(eccBuffer));
 
-  //verify signature
   retVal = cmox_ecdsa_verify(
       &hECC,
       CMOX_ECC_CURVE_SECP256R1,   //SECP256R1
@@ -343,10 +341,12 @@ bool VerifySignatureWithPubKey(const uint8_t* pubKey, size_t pubKeyLen, const ui
       signatureLen,               //signature length
       &fault_check);              //verification result
 
-  //check the result
-  if((retVal != CMOX_ECC_AUTH_SUCCESS) || (fault_check != CMOX_ECC_AUTH_SUCCESS)) return false;
+  if((retVal != CMOX_ECC_AUTH_SUCCESS) || (fault_check != CMOX_ECC_AUTH_SUCCESS))
+  {
+    cmox_ecc_cleanup(&hECC);
+    return false;
+  }
 
-  //clean up resources
   cmox_ecc_cleanup(&hECC);
 
   return true;

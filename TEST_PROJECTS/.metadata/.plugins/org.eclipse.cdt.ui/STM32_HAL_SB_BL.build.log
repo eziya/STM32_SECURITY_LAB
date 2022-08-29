@@ -1,0 +1,10 @@
+20:59:08 **** Incremental Build of configuration Debug for project STM32_HAL_SB_BL ****
+make -j12 all 
+arm-none-eabi-size   STM32_HAL_SB_BL.elf 
+   text	   data	    bss	    dec	    hex	filename
+  39660	    188	   3796	  43644	   aa7c	STM32_HAL_SB_BL.elf
+Finished building: default.size.stdout
+ 
+
+20:59:09 Build Finished. 0 errors, 0 warnings. (took 306ms)
+
