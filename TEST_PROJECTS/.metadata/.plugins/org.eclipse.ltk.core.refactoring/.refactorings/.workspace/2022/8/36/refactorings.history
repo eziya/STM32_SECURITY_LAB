@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<session version="1.0">
+<refactoring comment="Delete 9 resources" deleteContents="false" description="Delete 9 resources" element1="/STM32_HAL_SB_BL/Debug/AppHash.bin" element2="/STM32_HAL_SB_BL/Debug/Meta.bin" element3="/STM32_HAL_SB_BL/Debug/MetaBlock.bin" element4="/STM32_HAL_SB_BL/Debug/MetaHash.bin" element5="/STM32_HAL_SB_BL/Debug/MetaInfo.bin" element6="/STM32_HAL_SB_BL/Debug/MetaInfo.txt" element7="/STM32_HAL_SB_BL/Debug/MetaInfoAppHash.bin" element8="/STM32_HAL_SB_BL/Debug/MetaSig.bin" element9="/STM32_HAL_SB_BL/Debug/MetaSig.txt" flags="7" id="org.eclipse.ltk.core.refactoring.delete.resources" resources="9" stamp="1661863611779"/>
+</session>

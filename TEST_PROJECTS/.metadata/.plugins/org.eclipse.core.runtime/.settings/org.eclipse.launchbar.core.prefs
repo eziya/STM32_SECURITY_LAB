@@ -1,7 +1,7 @@
 LaunchTargetManager/org.eclipse.launchbar.core.launchTargetType.local,Local/arch=x86_64
 LaunchTargetManager/org.eclipse.launchbar.core.launchTargetType.local,Local/name=Local
 LaunchTargetManager/org.eclipse.launchbar.core.launchTargetType.local,Local/os=win32
-configDescList=org.eclipse.cdt.dsf.gdb.gdbRemotedescriptorType\:STM32_HAL_APP_AUTHENTICATION,org.eclipse.cdt.dsf.gdb.gdbRemotedescriptorType\:STM32_HAL_SB_BL Debug
+configDescList=org.eclipse.cdt.dsf.gdb.gdbRemotedescriptorType\:STM32_HAL_SB_BL Debug
 eclipse.preferences.version=1
 org.eclipse.cdt.dsf.gdb.gdbRemotedescriptorType\:STM32L5_HAL_TRUSTZONE_NonSecure\ Debug/activeLaunchMode=run
 org.eclipse.cdt.dsf.gdb.gdbRemotedescriptorType\:STM32L5_HAL_TRUSTZONE_NonSecure\ Debug/activeLaunchTarget=null\:---
@@ -29,6 +29,8 @@ org.eclipse.cdt.dsf.gdb.gdbRemotedescriptorType\:STM32_HAL_MPU\ Debug/activeLaun
 org.eclipse.cdt.dsf.gdb.gdbRemotedescriptorType\:STM32_HAL_MPU\ Debug/activeLaunchTarget=null\:---
 org.eclipse.cdt.dsf.gdb.gdbRemotedescriptorType\:STM32_HAL_PCROP\ Debug/activeLaunchMode=run
 org.eclipse.cdt.dsf.gdb.gdbRemotedescriptorType\:STM32_HAL_PCROP\ Debug/activeLaunchTarget=null\:---
+org.eclipse.cdt.dsf.gdb.gdbRemotedescriptorType\:STM32_HAL_SB_BL\ Debug/activeLaunchMode=run
+org.eclipse.cdt.dsf.gdb.gdbRemotedescriptorType\:STM32_HAL_SB_BL\ Debug/activeLaunchTarget=null\:---
 org.eclipse.cdt.dsf.gdb.gdbRemotedescriptorType\:STM32_HAL_SECURE_BOOT_APP\ Debug/activeLaunchMode=run
 org.eclipse.cdt.dsf.gdb.gdbRemotedescriptorType\:STM32_HAL_SECURE_BOOT_APP\ Debug/activeLaunchTarget=null\:---
 org.eclipse.cdt.dsf.gdb.gdbRemotedescriptorType\:STM32_HAL_SECURE_MEM_APP/activeLaunchMode=run

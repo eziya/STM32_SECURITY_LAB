@@ -1,20 +1,20 @@
 /* USER CODE BEGIN Header */
 /**
-  ******************************************************************************
-  * @file           : main.c
-  * @brief          : Main program body
-  ******************************************************************************
-  * @attention
-  *
-  * Copyright (c) 2022 STMicroelectronics.
-  * All rights reserved.
-  *
-  * This software is licensed under terms that can be found in the LICENSE file
-  * in the root directory of this software component.
-  * If no LICENSE file comes with this software, it is provided AS-IS.
-  *
-  ******************************************************************************
-  */
+ ******************************************************************************
+ * @file           : main.c
+ * @brief          : Main program body
+ ******************************************************************************
+ * @attention
+ *
+ * Copyright (c) 2022 STMicroelectronics.
+ * All rights reserved.
+ *
+ * This software is licensed under terms that can be found in the LICENSE file
+ * in the root directory of this software component.
+ * If no LICENSE file comes with this software, it is provided AS-IS.
+ *
+ ******************************************************************************
+ */
 /* USER CODE END Header */
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
@@ -54,17 +54,95 @@ void SystemClock_Config(void);
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
+void AppRun(void);
+void AppHandleMenu(void);
+void AppPrintMenu(void);
+void AppReadSecureMem(void);
+
 int __io_putchar (int ch)
 {
   HAL_UART_Transmit(&huart2, (uint8_t*)&ch, 1, HAL_MAX_DELAY);
   return ch;
 }
+
+void AppRun(void)
+{
+  AppHandleMenu();
+
+  while(1)
+  {
+    HAL_GPIO_TogglePin(LED_GREEN_GPIO_Port, LED_GREEN_Pin);
+    HAL_Delay(100);
+  }
+}
+
+void AppHandleMenu(void)
+{
+  uint8_t key = 0U;
+  uint8_t exit = 0U;
+
+  AppPrintMenu();
+
+  while(exit == 0U)
+  {
+    __HAL_UART_FLUSH_DRREGISTER(&huart2);
+    HAL_UART_Receive(&huart2, &key, 1U, HAL_MAX_DELAY);
+
+    switch (key)
+    {
+    case '1' :
+      AppReadSecureMem();
+      break;
+    case 'x' :
+      exit = 1U;
+      break;
+    default:
+      printf("Invalid key!\r\n");
+      break;
+    }
+
+    AppPrintMenu();
+  }
+}
+
+void AppPrintMenu(void)
+{
+  printf("\r\n\r\n");
+  printf("=================== Test Menu ===========================\r\n");
+  printf("Test Protection: Read Secure Memory ------------------- 1\r\n");
+  printf("Exit Menu & Toggle LED -------------------------------- x\r\n");
+  printf("=========================================================\r\n");
+}
+
+void AppReadSecureMem(void)
+{
+  FLASH_OBProgramInitTypeDef flash_option_bytes;
+
+  HAL_FLASH_Unlock();
+  __HAL_FLASH_CLEAR_FLAG(FLASH_FLAG_OPTVERR);
+  HAL_FLASH_OB_Unlock();
+
+  HAL_FLASHEx_OBGetConfig(&flash_option_bytes);
+
+  HAL_FLASH_OB_Lock();
+  HAL_FLASH_Lock();
+
+  volatile uint32_t *pdata[] = {(uint32_t*)0x08000000, (uint32_t*)0x08009FFF};
+
+  printf("\r\n\r\n");
+  printf("=========== Test Protection: Secure User Memory ============\r\n");
+  printf("Secure User Area size config [0x%08lx]\r\n", (flash_option_bytes.SecSize * FLASH_PAGE_SIZE) + FLASH_BASE);
+  printf("Flash CR SEC_PROT bit value: 0x%lu\r\n", (FLASH->CR & 0x10000000)>>28);
+  printf("Reading from address [0x%08lx], [0x%08lx]\r\n", (uint32_t)pdata[0], (uint32_t)pdata[1]);
+  printf("[0x%08lx] [0x%08lx]\r\n", *pdata[0], *pdata[1]);
+  printf("============================================================\r\n");
+}
 /* USER CODE END 0 */
 
 /**
-  * @brief  The application entry point.
-  * @retval int
-  */
+ * @brief  The application entry point.
+ * @retval int
+ */
 int main(void)
 {
   /* USER CODE BEGIN 1 */
@@ -92,10 +170,7 @@ int main(void)
   MX_USART2_UART_Init();
   /* USER CODE BEGIN 2 */
 
-  printf("\r\n\r\n");
-  printf("######################################################################\r\n");
-  printf("Application started.\r\n");
-  printf("Start blinking LED\r\n");
+  AppRun();
 
   /* USER CODE END 2 */
 
@@ -103,8 +178,6 @@ int main(void)
   /* USER CODE BEGIN WHILE */
   while (1)
   {
-    HAL_GPIO_TogglePin(LED_GREEN_GPIO_Port, LED_GREEN_Pin);
-    HAL_Delay(100);
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
@@ -113,21 +186,21 @@ int main(void)
 }
 
 /**
-  * @brief System Clock Configuration
-  * @retval None
-  */
+ * @brief System Clock Configuration
+ * @retval None
+ */
 void SystemClock_Config(void)
 {
   RCC_OscInitTypeDef RCC_OscInitStruct = {0};
   RCC_ClkInitTypeDef RCC_ClkInitStruct = {0};
 
   /** Configure the main internal regulator output voltage
-  */
+   */
   HAL_PWREx_ControlVoltageScaling(PWR_REGULATOR_VOLTAGE_SCALE1);
 
   /** Initializes the RCC Oscillators according to the specified parameters
-  * in the RCC_OscInitTypeDef structure.
-  */
+   * in the RCC_OscInitTypeDef structure.
+   */
   RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_HSI;
   RCC_OscInitStruct.HSIState = RCC_HSI_ON;
   RCC_OscInitStruct.HSIDiv = RCC_HSI_DIV1;
@@ -145,9 +218,9 @@ void SystemClock_Config(void)
   }
 
   /** Initializes the CPU, AHB and APB buses clocks
-  */
+   */
   RCC_ClkInitStruct.ClockType = RCC_CLOCKTYPE_HCLK|RCC_CLOCKTYPE_SYSCLK
-                              |RCC_CLOCKTYPE_PCLK1;
+      |RCC_CLOCKTYPE_PCLK1;
   RCC_ClkInitStruct.SYSCLKSource = RCC_SYSCLKSOURCE_PLLCLK;
   RCC_ClkInitStruct.AHBCLKDivider = RCC_SYSCLK_DIV1;
   RCC_ClkInitStruct.APB1CLKDivider = RCC_HCLK_DIV1;
@@ -163,9 +236,9 @@ void SystemClock_Config(void)
 /* USER CODE END 4 */
 
 /**
-  * @brief  This function is executed in case of error occurrence.
-  * @retval None
-  */
+ * @brief  This function is executed in case of error occurrence.
+ * @retval None
+ */
 void Error_Handler(void)
 {
   /* USER CODE BEGIN Error_Handler_Debug */
@@ -179,12 +252,12 @@ void Error_Handler(void)
 
 #ifdef  USE_FULL_ASSERT
 /**
-  * @brief  Reports the name of the source file and the source line number
-  *         where the assert_param error has occurred.
-  * @param  file: pointer to the source file name
-  * @param  line: assert_param error line source number
-  * @retval None
-  */
+ * @brief  Reports the name of the source file and the source line number
+ *         where the assert_param error has occurred.
+ * @param  file: pointer to the source file name
+ * @param  line: assert_param error line source number
+ * @retval None
+ */
 void assert_failed(uint8_t *file, uint32_t line)
 {
   /* USER CODE BEGIN 6 */

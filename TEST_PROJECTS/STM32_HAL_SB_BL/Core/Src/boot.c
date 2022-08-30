@@ -11,9 +11,6 @@ MetaBlock *pMetaBlock = (MetaBlock *)META_BLOCK_ADDR;
 cmox_ecc_handle_t hECC;     //ECC context handle
 uint8_t eccBuffer[2000];    //ECC buffer
 
-extern uint32_t _sdata;
-extern uint32_t _eRAM;
-
 static void PrintMetaData(void);
 static bool VerifyMetaDataMagicNumber(void);
 static bool VerifyMetaDataHash(void);
@@ -24,19 +21,18 @@ static bool VerifySignatureWithPubKey(const uint8_t* pubKey, size_t pubKeyLen, c
 static bool AppEnableOBSecureMem(void);
 static bool AppEnableOBRDP(void);
 
-
-#define OB_SECMEM_ENABLE
-//#define OB_RDP_ENABLE
+#define OB_RDP_ENABLE       //for easy debugging, you could disable RDP protection
 
 bool ApplyOptionBytesProtections(void)
 {
-#ifdef OB_SECMEM_ENABLE
+  printf("\r\n");
+  printf("Applying option bytes protections.\r\n");
+
   if(!AppEnableOBSecureMem())
   {
     printf("AppEnableOBSecureMem failed.\r\n");
     return false;
   }
-#endif
 
 #ifdef OB_RDP_ENABLE
   if(!AppEnableOBRDP())
@@ -98,13 +94,14 @@ void jump_to_application(void)
   pFunction JumpToApplication;
   uint32_t JumpAddress;
 
-  //erase SRAM
+  //erase SRAM before you jump to application
   for (uint32_t *pRam = (uint32_t *)BL_SRAM1_START; pRam < (uint32_t *)BL_SRAM1_END; pRam++)
   {
     *pRam = 0U;
   }
 
-  /* Jump to user application */
+  // Jump to ExitSecureMemory function with parameters (Magic Number & Application address)
+  // refer to AN2606
   JumpAddress = *(__IO uint32_t*) (BL_EXIT_STICKY + 4);
   JumpToApplication = (pFunction) JumpAddress;
   JumpToApplication(JumpAddress, MAGIC_NUMBER, APP_ADDR);
@@ -112,12 +109,14 @@ void jump_to_application(void)
 
 static void PrintMetaData(void)
 {
+  printf("\r\n");
   printf("Meta data Information...\r\n");
   printf("Meta data @0x%08x:\r\n", META_BLOCK_ADDR);
   printf("Magic number: 0x%08lx\r\n", pMetaBlock->magicNum);
   printf("App size: 0x%08lx\r\n", pMetaBlock->appSize);
   printf("App version: 0x%08lx\r\n", pMetaBlock->appVer);
 
+  printf("\r\n");
   printf("App hash\r\n");
   printHexArray(pMetaBlock->appHash, HASH_LEN);
   printf("Meta data hash\r\n");
@@ -137,6 +136,7 @@ static bool VerifyMetaDataHash(void)
   size_t digestLen;
   bool result = false;
 
+  //calculate the hash of meta(128B) and compare it with the written value.
   result = SingleCallSHA256(
       (uint8_t*)META_BLOCK_ADDR,
       (uint32_t)META_DATA_LEN,
@@ -145,6 +145,8 @@ static bool VerifyMetaDataHash(void)
 
   if(result == true && digestLen == HASH_LEN)
   {
+    printf("\r\n");
+
     if(memcmp((const uint8_t*)pMetaBlock->metaHash, digest, HASH_LEN) == 0)
     {
       printf("Meta data hash check pass.\r\n");
@@ -183,6 +185,7 @@ static bool VerifyAppHash(void)
   size_t digestLen;
   bool result = false;
 
+  //calculate the hash of application and compare it with the written value.
   result = SingleCallSHA256(
       (uint8_t*)APP_ADDR,
       (uint32_t)pMetaBlock->appSize,
@@ -210,7 +213,6 @@ static bool VerifyAppHash(void)
   return true;
 }
 
-//calculate SHA256 hash
 static bool SingleCallSHA256(const uint8_t* message, const size_t messageLen, uint8_t* digest, size_t* digestLen)
 {
   cmox_hash_retval_t retVal;
@@ -227,7 +229,6 @@ static bool SingleCallSHA256(const uint8_t* message, const size_t messageLen, ui
   return true;
 }
 
-// verify signature
 bool VerifySignatureWithPubKey(const uint8_t* pubKey, size_t pubKeyLen, const uint8_t* hash, size_t hashLen, const uint8_t* signature, size_t signatureLen)
 {
   cmox_ecc_retval_t retVal;
@@ -253,11 +254,10 @@ bool VerifySignatureWithPubKey(const uint8_t* pubKey, size_t pubKeyLen, const ui
   }
 
   cmox_ecc_cleanup(&hECC);
-
   return true;
 }
 
-//enable Secre Memory protection
+
 static bool AppEnableOBSecureMem(void)
 {
   FLASH_OBProgramInitTypeDef optionBytes;
@@ -266,8 +266,10 @@ static bool AppEnableOBSecureMem(void)
   HAL_FLASH_Unlock();
   HAL_FLASH_OB_Unlock();
 
+  //get option bytes
   HAL_FLASHEx_OBGetConfig(&optionBytes);
 
+  //if SEC_SIZE is not correct
   if(optionBytes.SecSize != SEC_SIZE)
   {
     optionBytes.OptionType = OPTIONBYTE_SEC;
@@ -282,9 +284,10 @@ static bool AppEnableOBSecureMem(void)
     else
     {
       HAL_FLASH_OB_Launch();
-      printf("Set secure memory to [0x%02lx], please power off and power on again.\r\n", optionBytes.SecSize);
     }
   }
+
+  printf("Secure memory is enabled: [0x%08lx]\r\n", (FLASH_BASE + (optionBytes.SecSize * FLASH_PAGE_SIZE)));
 
   HAL_FLASH_OB_Lock();
   HAL_FLASH_Lock();
@@ -328,14 +331,11 @@ static bool AppEnableOBRDP(void)
       else
       {
         HAL_FLASH_OB_Launch();
-        printf("Set RDP to [0x%02lx], please power off and power on again.\r\n", optionBytes.RDPLevel);
       }
     }
-    else
-    {
-      printf("RDP level set to [0x%02lx]\r\n", optionBytes.RDPLevel);
-    }
   }
+
+  printf("RDP level is [0x%02lx]\r\n", optionBytes.RDPLevel);
 
   HAL_FLASH_OB_Lock();
   HAL_FLASH_Lock();

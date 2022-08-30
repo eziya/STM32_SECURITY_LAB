@@ -10,30 +10,34 @@
 
 #include "main.h"
 
-#define MAGIC_NUMBER        (0x08192A3C)
-#define META_BLOCK_ADDR     (0x800A000)
-#define META_DATA_LEN       (128U)
-#define META_BLOCK_LEN      (0x200)
+extern uint32_t _sdata;
+extern uint32_t _eRAM;
+#define BL_SRAM1_START      ((uint32_t)&_sdata)     //linker script
+#define BL_SRAM1_END        ((uint32_t)&_eRAM)      //linker script
 
-#define APP_ADDR            (META_BLOCK_ADDR+META_BLOCK_LEN)
-#define SEC_SIZE            ((APP_ADDR - FLASH_BASE) / FLASH_PAGE_SIZE)
+#define META_BLOCK_ADDR     (0x800A000)     //0x8000000 + 0xA000(BL length)
+#define META_DATA_LEN       (128U)          //meta = meta_info + app_hash + padding
+#define META_BLOCK_LEN      (0x200)         //meta_block = meta + meta_hash + meta_sig + padding
 
-#define HASH_LEN            (32U)
-#define SIG_LEN             (64U)
-#define ECC_PUB_LEN         (64U)
+#define APP_ADDR            (META_BLOCK_ADDR+META_BLOCK_LEN)                //0x800A200
+#define SEC_SIZE            ((APP_ADDR - FLASH_BASE) / FLASH_PAGE_SIZE)     //0xA200 / 2048 = 14
 
-#define BL_SRAM1_START ((uint32_t)&_sdata)
-#define BL_SRAM1_END ((uint32_t)&_eRAM)
-#define BL_EXIT_STICKY 0x1FFF6800
+#define HASH_LEN            (32U)       //SHA256
+#define SIG_LEN             (64U)       //ECDSA
+#define ECC_PUB_LEN         (64U)       //ECC prime256v1
+
+
+#define BL_EXIT_STICKY      (0x1FFF6800)        //exit secure memory address
+#define MAGIC_NUMBER        (0x08192A3C)        //magic number for hash & system bootloader
 
 typedef struct {
-  uint32_t magicNum;                    //magic number
-  uint32_t appSize;                     //application size
-  uint32_t appVer;                      //application version
-  uint8_t  appHash[HASH_LEN];           //application hash
-  uint8_t  Reserved[84];                //padding bytes
-  uint8_t  metaHash[HASH_LEN];          //meta data hash
-  uint8_t  metaSig[SIG_LEN];            //meta data signature
+  uint32_t magicNum;                    //magic number          (4bytes)
+  uint32_t appSize;                     //application size      (4bytes)
+  uint32_t appVer;                      //application version   (4bytes)
+  uint8_t  appHash[HASH_LEN];           //application hash      (32bytes)
+  uint8_t  Reserved[84];                //padding bytes         (84bytes)
+  uint8_t  metaHash[HASH_LEN];          //meta data hash        (32bytes)
+  uint8_t  metaSig[SIG_LEN];            //meta data signature   (64bytes)
 }MetaBlock;
 
 bool ApplyOptionBytesProtections(void);
