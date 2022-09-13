@@ -1,0 +1,5 @@
+if(HAL_GPIO_ReadPin(BUTTON_GPIO_Port, BUTTON_Pin) == GPIO_PIN_SET)
+{
+  Toggle_Pin();
+}
+HAL_Delay(200);
