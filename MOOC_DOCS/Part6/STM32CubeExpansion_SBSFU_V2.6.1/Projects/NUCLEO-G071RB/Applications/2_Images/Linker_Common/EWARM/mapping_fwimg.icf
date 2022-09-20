@@ -1,3 +1,29 @@
-version https://git-lfs.github.com/spec/v1
-oid sha256:74695b316a86db1228a303b4f80710b1b02aaa6c2a61134f69cc66c12a6767d4
-size 1448
+/*###ICF### Set of symbols used in SE and SB_SFU projects ****/
+
+/* Slots must be aligned on 2048 bytes (0x800) */
+
+/* swap (4 Kbytes) */
+define exported symbol  __ICFEDIT_SWAP_start__  = 0x08017000;
+define exported symbol  __ICFEDIT_SWAP_end__    = 0x08017FFF;
+
+/* Active slot #1 (28 Kbytes) */
+define exported symbol  __ICFEDIT_SLOT_Active_1_start__ = 0x08010000;
+define exported symbol  __ICFEDIT_SLOT_Active_1_end__   = 0x08016FFF;
+define exported symbol  __ICFEDIT_SLOT_Active_1_header__= __ICFEDIT_SLOT_Active_1_start__;
+
+/* Dwl slot #1 (28 Kbytes) */
+define exported symbol  __ICFEDIT_SLOT_Dwl_1_start__= 0x08018000;
+define exported symbol  __ICFEDIT_SLOT_Dwl_1_end__  = 0x0801EFFF;
+
+/* Slots not configured */
+define exported symbol  __ICFEDIT_SLOT_Active_2_header__= 0x00000000;
+define exported symbol  __ICFEDIT_SLOT_Active_2_start__ = 0x00000000;
+define exported symbol  __ICFEDIT_SLOT_Active_2_end__   = 0x00000000;
+define exported symbol  __ICFEDIT_SLOT_Active_3_header__= 0x00000000;
+define exported symbol  __ICFEDIT_SLOT_Active_3_start__ = 0x00000000;
+define exported symbol  __ICFEDIT_SLOT_Active_3_end__   = 0x00000000;
+define exported symbol  __ICFEDIT_SLOT_Dwl_2_start__    = 0x00000000;
+define exported symbol  __ICFEDIT_SLOT_Dwl_2_end__      = 0x00000000;
+define exported symbol  __ICFEDIT_SLOT_Dwl_3_start__    = 0x00000000;
+define exported symbol  __ICFEDIT_SLOT_Dwl_3_end__      = 0x00000000;
+

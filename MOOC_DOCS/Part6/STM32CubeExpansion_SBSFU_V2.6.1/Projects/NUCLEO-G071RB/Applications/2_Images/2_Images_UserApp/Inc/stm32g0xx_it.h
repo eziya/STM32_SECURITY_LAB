@@ -1,3 +1,61 @@
-version https://git-lfs.github.com/spec/v1
-oid sha256:235c73ae3d20aa51cb0877eb95754663c26744f95cc1c9d0ffa082baa8e50e39
-size 1653
+/**
+  ******************************************************************************
+  * @file    stm32g0xx_it.h
+  * @author  MCD Application Team
+  * @brief   This file contains the headers of the interrupt handlers.
+  ******************************************************************************
+  * @attention
+  *
+  * Copyright (c) 2017 STMicroelectronics.
+  * All rights reserved.
+  *
+  * This software is licensed under terms that can be found in the LICENSE file in
+  * the root directory of this software component.
+  * If no LICENSE file comes with this software, it is provided AS-IS.
+  *
+  ******************************************************************************
+  */
+
+/* Define to prevent recursive inclusion -------------------------------------*/
+#ifndef STM32G0xx_IT_H
+#define STM32G0xx_IT_H
+
+/** @addtogroup USER_APP User App Example
+  * @{
+  */
+
+/** @addtogroup USER_APP_COMMON Common
+  * @{
+  */
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+/* Includes ------------------------------------------------------------------*/
+/* Exported types ------------------------------------------------------------*/
+/* Exported constants --------------------------------------------------------*/
+/* Exported macro ------------------------------------------------------------*/
+/* Exported functions ------------------------------------------------------- */
+
+void NMI_Handler(void);
+void HardFault_Handler(void);
+void SVC_Handler(void);
+void PendSV_Handler(void);
+void SysTick_Handler(void);
+void FLASH_IRQHandler(void);
+void RTC_TAMP_IRQHandler(void);
+
+/**
+  * @}
+  */
+
+/**
+  * @}
+  */
+
+#ifdef __cplusplus
+}
+#endif
+
+#endif /* STM32G0xx_IT_H */

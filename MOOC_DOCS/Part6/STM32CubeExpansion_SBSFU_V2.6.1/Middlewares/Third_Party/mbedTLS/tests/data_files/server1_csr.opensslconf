@@ -1,3 +1,10 @@
-version https://git-lfs.github.com/spec/v1
-oid sha256:411617f9bdcd6b9789b0a04754446d77c9af87f3cdb4af6557ab7b8f9c44341d
-size 229
+[ req ]
+distinguished_name = req_distinguished_name
+prompt             = no
+# Restrict to non-UTF8 PrintableStrings.
+string_mask        = nombstr
+
+[ req_distinguished_name ]
+C  = NL
+O  = PolarSSL
+CN = PolarSSL Server 1

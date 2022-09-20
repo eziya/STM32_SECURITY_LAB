@@ -1,3 +1,25 @@
-version https://git-lfs.github.com/spec/v1
-oid sha256:9f408e1f5463465aee785e6038343dabdf8817e0f1df5fcebdd92d7921a52cef
-size 839
+/**
+******************************************************************************
+* @file    pal_if.h
+* @author  BLE Mesh Team
+* @brief   Header file for platform dependent functions  
+******************************************************************************
+* @attention
+*
+* Copyright (c) 2018-2021 STMicroelectronics.
+* All rights reserved.
+*
+* This software is licensed under terms that can be found in the LICENSE file
+* in the root directory of this software component.
+* If no LICENSE file comes with this software, it is provided AS-IS.
+*
+******************************************************************************
+*/
+
+#ifndef __PAL_IF_H
+#define __PAL_IF_H
+
+/* Exported Functions Prototypes ---------------------------------------------*/
+MOBLE_RESULT PalNvmProcess(void);
+
+#endif /* __PAL_IF_H */

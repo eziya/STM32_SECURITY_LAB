@@ -1,3 +1,8 @@
-version https://git-lfs.github.com/spec/v1
-oid sha256:7ab6652540be20afdb0632555c71ef1ef159640923c00fe1e5124bb6eecaef6b
-size 192
+add_subdirectory(aes)
+add_subdirectory(hash)
+add_subdirectory(pkey)
+add_subdirectory(random)
+add_subdirectory(ssl)
+add_subdirectory(test)
+add_subdirectory(x509)
+add_subdirectory(util)

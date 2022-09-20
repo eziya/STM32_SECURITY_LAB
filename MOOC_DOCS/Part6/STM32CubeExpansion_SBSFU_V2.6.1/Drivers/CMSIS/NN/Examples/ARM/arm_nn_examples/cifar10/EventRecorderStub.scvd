@@ -1,3 +1,9 @@
-version https://git-lfs.github.com/spec/v1
-oid sha256:c0bc76c307786ae399f79bf32d410f7d6c46e0ac1208cc882f60ac2649cba601
-size 339
+<?xml version="1.0" encoding="utf-8"?>
+
+<component_viewer schemaVersion="0.1" xmlns:xs="http://www.w3.org/2001/XMLSchema-instance" xs:noNamespaceSchemaLocation="Component_Viewer.xsd">
+
+<component name="EventRecorderStub" version="1.0.0"/>       <!--name and version of the component-->
+  <events>
+  </events>
+
+</component_viewer>

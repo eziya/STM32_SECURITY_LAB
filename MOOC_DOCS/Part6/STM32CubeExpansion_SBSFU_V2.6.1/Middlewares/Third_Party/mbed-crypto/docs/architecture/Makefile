@@ -1,3 +1,19 @@
-version https://git-lfs.github.com/spec/v1
-oid sha256:5d6967e1c237db383f8dbfd80ffa59015c6a90589c9dbb5d0edaaa262ff58190
-size 337
+PANDOC = pandoc
+
+default: all
+
+all_markdown = \
+	       mbed-crypto-storage-specification.md \
+	       # This line is intentionally left blank
+
+html: $(all_markdown:.md=.html)
+pdf: $(all_markdown:.md=.pdf)
+all: html pdf
+
+.SUFFIXES:
+.SUFFIXES: .md .html .pdf
+
+.md.html:
+	$(PANDOC) -o $@ $<
+.md.pdf:
+	$(PANDOC) -o $@ $<

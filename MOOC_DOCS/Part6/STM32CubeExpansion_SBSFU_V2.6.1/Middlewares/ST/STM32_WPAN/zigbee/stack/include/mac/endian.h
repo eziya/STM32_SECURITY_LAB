@@ -1,3 +1,15 @@
-version https://git-lfs.github.com/spec/v1
-oid sha256:cdaac90e490c32ca8d7a82faf134d6e9e40e2270d12fffc46de1235e7413079c
-size 380
+/* Copyright [2019] Exegin Technologies Limited. All rights reserved. */
+
+#ifndef ZIGBEE_ENDIAN_H
+#define ZIGBEE_ENDIAN_H
+
+#ifndef BIG_ENDIAN
+# define BIG_ENDIAN                         4321
+#endif
+#ifndef LITTLE_ENDIAN
+# define LITTLE_ENDIAN                      1234
+#endif
+
+#define BYTE_ORDER                          LITTLE_ENDIAN
+
+#endif /* ZIGBEE_ENDIAN_H */

@@ -1,3 +1,5 @@
-version https://git-lfs.github.com/spec/v1
-oid sha256:fffccd433b0afc964379a123f47a20f8689989257649cbc1049a4b316e503a0f
-size 115
+[v3_ext]
+basicConstraints = CA:false
+subjectKeyIdentifier=hash
+authorityKeyIdentifier=keyid
+nsCertType=server

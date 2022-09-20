@@ -1,3 +1,4 @@
-version https://git-lfs.github.com/spec/v1
-oid sha256:e38f1a267d0d28756eb3f2acfebd2060a16f95a5402c24eb35837690fbfd8b27
-size 170
+var searchData=
+[
+  ['round_5frobin_1',['round_robin',['../struct_u_t_i_l___s_e_q___priority__t.html#a10895a689ca10b69554ba4a822329f54',1,'UTIL_SEQ_Priority_t']]]
+];

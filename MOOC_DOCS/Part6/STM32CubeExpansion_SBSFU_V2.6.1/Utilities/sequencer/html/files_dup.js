@@ -1,3 +1,5 @@
-version https://git-lfs.github.com/spec/v1
-oid sha256:2f41801c87e08946155a5e904ca7da2e2f4b8a4b95b393a46794ed5797970410
-size 147
+var files_dup =
+[
+    [ "stm32_seq.c", "stm32__seq_8c.html", "stm32__seq_8c" ],
+    [ "stm32_seq.h", "stm32__seq_8h.html", "stm32__seq_8h" ]
+];

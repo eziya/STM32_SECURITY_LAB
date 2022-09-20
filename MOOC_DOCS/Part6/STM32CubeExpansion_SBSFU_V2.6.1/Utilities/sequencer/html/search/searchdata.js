@@ -1,3 +1,33 @@
-version https://git-lfs.github.com/spec/v1
-oid sha256:cb05118231c89a961f5d10317e5015d407bc3a222735022120ac98746a29b7ba
-size 432
+var indexSectionsWithContent =
+{
+  0: "prsu",
+  1: "u",
+  2: "s",
+  3: "su",
+  4: "pr",
+  5: "u",
+  6: "s"
+};
+
+var indexSectionNames =
+{
+  0: "all",
+  1: "classes",
+  2: "files",
+  3: "functions",
+  4: "variables",
+  5: "typedefs",
+  6: "groups"
+};
+
+var indexSectionLabels =
+{
+  0: "All",
+  1: "Data Structures",
+  2: "Files",
+  3: "Functions",
+  4: "Variables",
+  5: "Typedefs",
+  6: "Modules"
+};
+

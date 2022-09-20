@@ -1,3 +1,4 @@
-version https://git-lfs.github.com/spec/v1
-oid sha256:5a848971c501fe8b0a51d06283ce52304860cdcd4b89c3f0076e9c63b45919d7
-size 140
+CMSIS DSP_Lib example arm_nnexample_nn_test for
+  Cortex-M3, Cortex-M4 and Cortex-M7.
+
+The example is configured for uVision Simulator.

@@ -1,3 +1,12 @@
-version https://git-lfs.github.com/spec/v1
-oid sha256:02dcc50abee46b8dd180daed39840a6e40d0ec7bf5b86a0d4d12eaa3aaea90bd
-size 521
+add_executable(gen_random_havege gen_random_havege.c)
+target_link_libraries(gen_random_havege mbedcrypto)
+
+add_executable(gen_random_ctr_drbg gen_random_ctr_drbg.c)
+target_link_libraries(gen_random_ctr_drbg mbedcrypto)
+
+add_executable(gen_entropy gen_entropy.c)
+target_link_libraries(gen_entropy mbedcrypto)
+
+install(TARGETS gen_random_havege gen_random_ctr_drbg gen_entropy
+        DESTINATION "bin"
+        PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE GROUP_READ GROUP_EXECUTE WORLD_READ WORLD_EXECUTE)

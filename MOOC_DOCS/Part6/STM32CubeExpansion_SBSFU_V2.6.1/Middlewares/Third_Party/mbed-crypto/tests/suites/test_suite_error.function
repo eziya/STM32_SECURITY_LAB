@@ -1,3 +1,21 @@
-version https://git-lfs.github.com/spec/v1
-oid sha256:b9e1263aaf45cb539d821dfa3c3d0e98a54db4d58a04badba1366db4fc7aaa10
-size 399
+/* BEGIN_HEADER */
+#include "mbedtls/error.h"
+/* END_HEADER */
+
+/* BEGIN_DEPENDENCIES
+ * depends_on:MBEDTLS_ERROR_C
+ * END_DEPENDENCIES
+ */
+
+/* BEGIN_CASE */
+void error_strerror( int code, char * result_str )
+{
+    char buf[500];
+
+    memset( buf, 0, sizeof( buf ) );
+
+    mbedtls_strerror( code, buf, 500 );
+
+    TEST_ASSERT( strcmp( buf, result_str ) == 0 );
+}
+/* END_CASE */

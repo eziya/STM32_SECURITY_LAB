@@ -1,3 +1,7 @@
-version https://git-lfs.github.com/spec/v1
-oid sha256:a5f49f38d5cbe94f2feb848cfbc6591607e5e5f3f4b4b3a6b7fa1664b5409fe5
-size 150
+<?xml version="1.0" encoding="UTF-8"?>
+<workspace>
+  <project>
+    <path>$WS_DIR$\Project.ewp</path>
+  </project>
+  <batchBuild/>
+</workspace>

@@ -1,3 +1,1 @@
-version https://git-lfs.github.com/spec/v1
-oid sha256:c7f330add3cbddfa90c148c006e00b887730326181746efe406513b667f13e94
-size 72
+This is just to make sure files that don't parse as certs are ignored.

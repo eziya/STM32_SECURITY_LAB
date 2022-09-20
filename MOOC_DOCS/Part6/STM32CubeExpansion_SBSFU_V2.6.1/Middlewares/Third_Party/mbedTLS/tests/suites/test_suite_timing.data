@@ -1,3 +1,17 @@
-version https://git-lfs.github.com/spec/v1
-oid sha256:44dc52924dfccbc8e499b4bed5fc9d1e81ec3f2cc2286d84591a735faa2b50b4
-size 270
+Timing: hardclock
+timing_hardclock:
+
+Timing: get timer
+timing_get_timer:
+
+Timing: set alarm with no delay
+timing_set_alarm:0:
+
+Timing: set alarm with 1s delay
+timing_set_alarm:1:
+
+Timing: delay 0ms
+timing_delay:0:
+
+Timing: delay 100ms
+timing_delay:100:

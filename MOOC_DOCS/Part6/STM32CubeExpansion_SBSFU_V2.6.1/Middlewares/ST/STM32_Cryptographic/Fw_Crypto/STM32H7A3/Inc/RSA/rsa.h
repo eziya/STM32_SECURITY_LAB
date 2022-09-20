@@ -1,3 +1,31 @@
-version https://git-lfs.github.com/spec/v1
-oid sha256:d29d5798040f65c5e68e00184186f2e969a64c3ac96a8fef71f874e59ea31426
-size 1478
+/**
+  ******************************************************************************
+  * @file    rsa.h
+  * @author  MCD Application Team
+  * @brief   Provides RSA operations with support for PKCS#1v1.5
+  ******************************************************************************
+  * @attention
+  *
+  * <h2><center>&copy; Copyright (c) 2015 STMicroelectronics.
+  * All rights reserved.</center></h2>
+  *
+  * This software component is licensed by ST under Image license SLA0044,
+  * the "License"; You may not use this file except in compliance with the
+  * License. You may obtain a copy of the License at:
+  *                        http://www.st.com/SLA0044
+  *
+  ******************************************************************************
+  */
+
+/* Includes ------------------------------------------------------------------*/
+#include "PKCS#1v15/rsa_pkcs1v15.h"
+#include "LowLevel/rsa_low_level.h"
+/* Private typedef -----------------------------------------------------------*/
+/* Private define ------------------------------------------------------------*/
+/* Private macro -------------------------------------------------------------*/
+/* Private variables ---------------------------------------------------------*/
+/* Private function prototypes -----------------------------------------------*/
+/* Private functions ---------------------------------------------------------*/
+
+
+/************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/

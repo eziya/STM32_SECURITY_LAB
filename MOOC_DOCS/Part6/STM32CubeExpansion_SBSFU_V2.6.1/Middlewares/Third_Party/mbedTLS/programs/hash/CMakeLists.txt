@@ -1,3 +1,9 @@
-version https://git-lfs.github.com/spec/v1
-oid sha256:913f28f7e80d5787f4bc52a0128ca3c190a82c92ebcc0c903a6485dc3588a018
-size 331
+add_executable(hello hello.c)
+target_link_libraries(hello mbedtls)
+
+add_executable(generic_sum generic_sum.c)
+target_link_libraries(generic_sum mbedtls)
+
+install(TARGETS hello generic_sum
+        DESTINATION "bin"
+        PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE GROUP_READ GROUP_EXECUTE WORLD_READ WORLD_EXECUTE)

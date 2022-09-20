@@ -1,3 +1,1 @@
-version https://git-lfs.github.com/spec/v1
-oid sha256:f9b100d42f3d6f0e94f1544482c7c30f679e11b10814bf9d88f36c375fe37ac4
-size 22
+SE_APP_GetActiveFwInfo

@@ -1,3 +1,31 @@
-version https://git-lfs.github.com/spec/v1
-oid sha256:81feabfe5833a14620b2476670d5a99503f94d88fc2c1bd8c4ed82055b5603d1
-size 1054
+/**
+  ******************************************************************************
+  * @file    tdes.h
+  * @author  MCD Application Team
+  * @brief   Container for the TDES functionalities
+  ******************************************************************************
+  * @attention
+  *
+  * <h2><center>&copy; Copyright (c) 2015 STMicroelectronics.
+  * All rights reserved.</center></h2>
+  *
+  * This software component is licensed by ST under Ultimate Liberty license
+  * SLA0044, the "License"; You may not use this file except in compliance with
+  * the License. You may obtain a copy of the License at:
+  *                             www.st.com/SLA0044
+  *
+  ******************************************************************************
+  */
+
+/* Includes ------------------------------------------------------------------*/
+#include "Common/tdes_common.h"
+
+#ifdef INCLUDE_ECB
+#include "ECB/tdes_ecb.h"
+#endif
+
+#ifdef INCLUDE_CBC
+#include "CBC/tdes_cbc.h"
+#endif
+
+/************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/

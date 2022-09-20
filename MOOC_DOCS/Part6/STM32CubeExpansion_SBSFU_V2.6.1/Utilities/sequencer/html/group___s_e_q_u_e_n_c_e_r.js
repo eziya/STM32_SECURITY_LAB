@@ -1,3 +1,10 @@
-version https://git-lfs.github.com/spec/v1
-oid sha256:25af954ee140e10389d6b5f5f673c67998d87c83077603ebb3763fcd3b8738eb
-size 967
+var group___s_e_q_u_e_n_c_e_r =
+[
+    [ "SEQUENCER private type", "group___s_e_q_u_e_n_c_e_r___private__type.html", "group___s_e_q_u_e_n_c_e_r___private__type" ],
+    [ "SEQUENCER private defines", "group___s_e_q_u_e_n_c_e_r___private__define.html", "group___s_e_q_u_e_n_c_e_r___private__define" ],
+    [ "SEQUENCER private variables", "group___s_e_q_u_e_n_c_e_r___private__varaible.html", null ],
+    [ "SEQUENCER private functions", "group___s_e_q_u_e_n_c_e_r___private__function.html", "group___s_e_q_u_e_n_c_e_r___private__function" ],
+    [ "SEQUENCER exported types", "group___s_e_q_u_e_n_c_e_r___exported__type.html", "group___s_e_q_u_e_n_c_e_r___exported__type" ],
+    [ "SEQUENCER exported constants", "group___s_e_q_u_e_n_c_e_r___exported__const.html", "group___s_e_q_u_e_n_c_e_r___exported__const" ],
+    [ "SEQUENCER exported functions", "group___s_e_q_u_e_n_c_e_r___exported__function.html", "group___s_e_q_u_e_n_c_e_r___exported__function" ]
+];

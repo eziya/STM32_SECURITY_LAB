@@ -1,0 +1,29 @@
+/*###ICF### Set of symbols used in SE and SB_SFU projects ****/
+
+/* Slots must be aligned on sector size */
+
+/* Swap sector in sector 0 of Bank2 : 16 kbytes */
+define exported symbol  __ICFEDIT_SWAP_start__ = 0x08104000;
+define exported symbol  __ICFEDIT_SWAP_end__   = 0x08107FFF;
+
+/* Active slot #1 in Sector 1 to 7 of Bank1; 976 kbytes */
+define exported symbol  __ICFEDIT_SLOT_Active_1_start__ = 0x08010000;
+define exported symbol  __ICFEDIT_SLOT_Active_1_end__   = 0x08103FFF;
+define exported symbol  __ICFEDIT_SLOT_Active_1_header__= __ICFEDIT_SLOT_Active_1_start__;
+
+/* Dwl slot #1 in sector 1 to 7 of Bank2 : 976 kbytes */
+define exported symbol  __ICFEDIT_SLOT_Dwl_1_start__= 0x08108000;
+define exported symbol  __ICFEDIT_SLOT_Dwl_1_end__  = 0x081FBFFF;
+
+/* Slots not configured */
+define exported symbol  __ICFEDIT_SLOT_Active_2_header__= 0x00000000;
+define exported symbol  __ICFEDIT_SLOT_Active_2_start__ = 0x00000000;
+define exported symbol  __ICFEDIT_SLOT_Active_2_end__   = 0x00000000;
+define exported symbol  __ICFEDIT_SLOT_Active_3_header__= 0x00000000;
+define exported symbol  __ICFEDIT_SLOT_Active_3_start__ = 0x00000000;
+define exported symbol  __ICFEDIT_SLOT_Active_3_end__   = 0x00000000;
+define exported symbol  __ICFEDIT_SLOT_Dwl_2_start__    = 0x00000000;
+define exported symbol  __ICFEDIT_SLOT_Dwl_2_end__      = 0x00000000;
+define exported symbol  __ICFEDIT_SLOT_Dwl_3_start__    = 0x00000000;
+define exported symbol  __ICFEDIT_SLOT_Dwl_3_end__      = 0x00000000;
+

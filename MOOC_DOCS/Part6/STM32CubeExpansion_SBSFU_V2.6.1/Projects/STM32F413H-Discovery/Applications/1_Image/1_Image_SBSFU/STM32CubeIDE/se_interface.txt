@@ -1,0 +1,2 @@
+SE_APP_GetActiveFwInfo
+SE_APP_SVC_Handler

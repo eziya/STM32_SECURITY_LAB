@@ -1,3 +1,6 @@
-version https://git-lfs.github.com/spec/v1
-oid sha256:4f6a30afec4aa6008482665504f489d9d9c36ba62fff04e9dce5a4d0bac46a14
-size 381
+This software component is provided to you as part of a software package and
+applicable license terms are in the  Package_license file. If you received this
+software component outside of a package or without applicable license terms,
+the terms of the BSD-3-Clause license shall apply. 
+You may obtain a copy of the BSD-3-Clause at:
+https://opensource.org/licenses/BSD-3-Clause

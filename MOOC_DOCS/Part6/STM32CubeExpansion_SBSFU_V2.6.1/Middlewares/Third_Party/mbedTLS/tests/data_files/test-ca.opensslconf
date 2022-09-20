@@ -1,3 +1,28 @@
-version https://git-lfs.github.com/spec/v1
-oid sha256:51ad6cf6802f07ea67f19b957165ef13e4b7fa36f7e2d7983699ae280d89bb61
-size 519
+[req]
+x509_extensions = v3_ca
+distinguished_name = req_dn
+
+[req_dn]
+countryName = NL
+organizationalUnitName = PolarSSL
+commonName = PolarSSL Test CA
+
+[v3_ca]
+subjectKeyIdentifier=hash
+authorityKeyIdentifier=keyid:always,issuer:always
+basicConstraints = CA:true
+
+[noext_ca]
+basicConstraints = CA:true
+
+[test_ca]
+database = /dev/null
+
+[crl_ext_idp]
+issuingDistributionPoint=critical, @idpdata
+
+[crl_ext_idp_nc]
+issuingDistributionPoint=@idpdata
+
+[idpdata]
+fullname=URI:http://pki.example.com/

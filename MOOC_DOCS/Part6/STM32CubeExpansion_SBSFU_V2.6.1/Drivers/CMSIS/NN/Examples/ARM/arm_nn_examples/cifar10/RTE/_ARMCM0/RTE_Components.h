@@ -1,3 +1,24 @@
-version https://git-lfs.github.com/spec/v1
-oid sha256:77f7e4cd37494a5cb587bed34eae11959e48a1b21c477a3763b53459b5079765
-size 593
+
+/*
+ * Auto generated Run-Time-Environment Component Configuration File
+ *      *** Do not modify ! ***
+ *
+ * Project: 'arm_nnexamples_cifar10' 
+ * Target:  'ARMCM0' 
+ */
+
+#ifndef RTE_COMPONENTS_H
+#define RTE_COMPONENTS_H
+
+
+/*
+ * Define the Device Header File: 
+ */
+#define CMSIS_device_header "ARMCM0.h"
+
+#define RTE_Compiler_EventRecorder
+          #define RTE_Compiler_EventRecorder_DAP
+#define RTE_Compiler_IO_STDOUT          /* Compiler I/O: STDOUT */
+          #define RTE_Compiler_IO_STDOUT_EVR      /* Compiler I/O: STDOUT EVR */
+
+#endif /* RTE_COMPONENTS_H */

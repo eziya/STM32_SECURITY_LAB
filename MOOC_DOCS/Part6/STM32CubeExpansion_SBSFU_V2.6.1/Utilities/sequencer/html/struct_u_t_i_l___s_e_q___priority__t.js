@@ -1,3 +1,5 @@
-version https://git-lfs.github.com/spec/v1
-oid sha256:26bc6350b61ab40d651d870c444fe7fe4d7c675c5f71ac953e062b42bc13b338
-size 263
+var struct_u_t_i_l___s_e_q___priority__t =
+[
+    [ "priority", "struct_u_t_i_l___s_e_q___priority__t.html#a59563315cdb7b76c8a482160851cac3f", null ],
+    [ "round_robin", "struct_u_t_i_l___s_e_q___priority__t.html#a10895a689ca10b69554ba4a822329f54", null ]
+];

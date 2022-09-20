@@ -1,3 +1,5 @@
-version https://git-lfs.github.com/spec/v1
-oid sha256:979808dc94a34cacc4bf9038596f58efab6545d34fb66d9369eb30cdc2b61303
-size 50
+pycryptodome
+pycryptodomex
+ecdsa
+pyelftools
+numpy

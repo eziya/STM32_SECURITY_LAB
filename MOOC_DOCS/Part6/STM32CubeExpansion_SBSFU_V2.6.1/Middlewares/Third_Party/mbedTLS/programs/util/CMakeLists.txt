@@ -1,3 +1,13 @@
-version https://git-lfs.github.com/spec/v1
-oid sha256:3e2188f456d42064cc67253ca0ea010f6562e3c80528ae49dddc802f69fc14bf
-size 355
+set(libs
+    mbedtls
+)
+
+add_executable(strerror strerror.c)
+target_link_libraries(strerror ${libs})
+
+add_executable(pem2der pem2der.c)
+target_link_libraries(pem2der ${libs})
+
+install(TARGETS strerror pem2der
+        DESTINATION "bin"
+        PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE GROUP_READ GROUP_EXECUTE WORLD_READ WORLD_EXECUTE)

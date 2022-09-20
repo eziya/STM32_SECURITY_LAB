@@ -1,3 +1,35 @@
-version https://git-lfs.github.com/spec/v1
-oid sha256:6e144e95e6437ed3fb28b91a9f644d1c3fd52897b7de86dc880032ea6b7e1d51
-size 836
+#!/usr/bin/env perl
+
+use warnings;
+use strict;
+
+use utf8;
+use open qw(:std utf8);
+
+-d 'include/mbedtls' or die "$0: must be run from root\n";
+
+@ARGV = grep { ! /compat-1\.3\.h/ } <include/mbedtls/*.h>;
+
+my @consts;
+my $state = 'out';
+while (<>)
+{
+    if( $state eq 'out' and /^(typedef )?enum \{/ ) {
+        $state = 'in';
+    } elsif( $state eq 'out' and /^(typedef )?enum/ ) {
+        $state = 'start';
+    } elsif( $state eq 'start' and /{/ ) {
+        $state = 'in';
+    } elsif( $state eq 'in' and /}/ ) {
+        $state = 'out';
+    } elsif( $state eq 'in' ) {
+        s/=.*//; s!/\*.*!!; s/,.*//; s/\s+//g; chomp;
+        push @consts, $_ if $_;
+    }
+}
+
+open my $fh, '>', 'enum-consts' or die;
+print $fh "$_\n" for sort @consts;
+close $fh or die;
+
+printf "%8d enum-consts\n", scalar @consts;

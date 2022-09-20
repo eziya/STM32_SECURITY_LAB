@@ -1,3 +1,4 @@
-version https://git-lfs.github.com/spec/v1
-oid sha256:0af26901cccd0f4d544e4157be49db5cc5a7b751c447190f2480003a162cfd68
-size 176
+#<SYMDEFS># ARM Linker, 6140002: Last Updated: Tue Oct  5 19:32:39 2021
+0x08007001 T SE_APP_GetActiveFwInfo
+0x08007099 T SE_APP_ValidateFw
+0x08007049 T SE_APP_GetActiveFwState

@@ -1,3 +1,22 @@
-version https://git-lfs.github.com/spec/v1
-oid sha256:794a5e010a8708ec553fbd5d1e5c1326c772f8c75fdb13314e0e79ab2049720a
-size 794
+;******************************************************************************
+;* File Name          : SE_CORE_Bin.s
+;* Author             : MCD Application Team
+;* Description        : Include SECoreBin binary.
+;*******************************************************************************
+;*
+;* Copyright (c) 2017 STMicroelectronics.
+;* All rights reserved.
+;*
+;* This software is licensed under terms that can be found in the LICENSE file in
+;* the root directory of this software component.
+;* If no LICENSE file comes with this software, it is provided AS-IS.
+;*
+;*******************************************************************************
+;
+;
+
+ AREA SE_CORE_Bin, CODE, READONLY
+ INCBIN  ../../2_Images_SECoreBin/MDK-ARM/STM32L476RG_NUCLEO_2_Images_SECoreBin/SECoreBin.bin
+ END
+ 
+		

@@ -1,3 +1,29 @@
-version https://git-lfs.github.com/spec/v1
-oid sha256:3f2a994f5a681e1eb4fb5488cea35f408eb66625ede93b03e032ed082eb92759
-size 957
+/**
+  ******************************************************************************
+  * @file    main.h
+  * @author  MCD Application Team
+  * @brief   Header for main.c module
+  ******************************************************************************
+  * @attention
+  *
+  * Copyright (c) 2017 STMicroelectronics.
+  * All rights reserved.
+  *
+  * This software is licensed under terms that can be found in the LICENSE file in
+  * the root directory of this software component.
+  * If no LICENSE file comes with this software, it is provided AS-IS.
+  *
+  ******************************************************************************
+  */
+
+/* Define to prevent recursive inclusion -------------------------------------*/
+#ifndef MAIN_H
+#define MAIN_H
+
+/* Includes ------------------------------------------------------------------*/
+#include "stm32g0xx_hal.h"
+#include "stm32g0xx_nucleo.h"
+#include "app_sfu.h"
+#include "app_hw.h"
+
+#endif /* MAIN_H */

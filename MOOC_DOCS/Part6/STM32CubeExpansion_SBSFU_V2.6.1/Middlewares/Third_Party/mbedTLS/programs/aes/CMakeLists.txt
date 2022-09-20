@@ -1,3 +1,9 @@
-version https://git-lfs.github.com/spec/v1
-oid sha256:715ff65bbe96587c4d94f2ea327a02d059058b0f2eab65bb9360486498f604bc
-size 359
+add_executable(aescrypt2 aescrypt2.c)
+target_link_libraries(aescrypt2 mbedtls)
+
+add_executable(crypt_and_hash crypt_and_hash.c)
+target_link_libraries(crypt_and_hash mbedtls)
+
+install(TARGETS aescrypt2 crypt_and_hash
+        DESTINATION "bin"
+        PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE GROUP_READ GROUP_EXECUTE WORLD_READ WORLD_EXECUTE)

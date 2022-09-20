@@ -1,3 +1,15 @@
-version https://git-lfs.github.com/spec/v1
-oid sha256:603d9033814ccd06c7c34386b62200d7dba60662537bb99e935aebbd76720331
-size 375
+Check compiletime library version
+check_compiletime_version:"2.17.0"
+
+Check runtime library version
+check_runtime_version:"2.17.0"
+
+Check for MBEDTLS_VERSION_C
+check_feature:"MBEDTLS_VERSION_C":0
+
+Check for MBEDTLS_AES_C when already present
+depends_on:MBEDTLS_AES_C
+check_feature:"MBEDTLS_AES_C":0
+
+Check for unknown define
+check_feature:"MBEDTLS_UNKNOWN":-1

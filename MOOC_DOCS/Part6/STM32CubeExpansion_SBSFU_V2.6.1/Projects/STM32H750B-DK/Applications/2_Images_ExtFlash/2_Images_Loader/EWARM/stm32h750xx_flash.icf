@@ -1,0 +1,31 @@
+/*###ICF### Set of symbols used in UserApp project ****/
+
+define memory mem with size = 4G;
+
+/******************************************************************************/
+/*       Include of SBSFU symbols file                                        */
+/*   (Project>Options>Linker>Extra Options --config_search option is used to  */
+/*   specify the the directory to search for include files                    */
+/******************************************************************************/
+include "mapping_sbsfu.icf";
+include "mapping_fwimg.icf";
+
+/*-Specials-*/
+define exported symbol __ICFEDIT_intvec_start__ = __ICFEDIT_LOADER_region_ROM_start__;
+
+/*-Sizes-*/
+define symbol __ICFEDIT_size_cstack__ = 0x1000;
+define symbol __ICFEDIT_size_heap__   = 0;
+
+define block CSTACK    with alignment = 8, size = __ICFEDIT_size_cstack__   { };
+define block HEAP      with alignment = 8, size = __ICFEDIT_size_heap__     { };
+
+initialize by copy { readwrite };
+do not initialize  { section .noinit };
+
+/******************************************************************************/
+/*                          placement instructions                            */
+/******************************************************************************/
+place at address mem:__ICFEDIT_intvec_start__ { readonly section .intvec };
+place in LOADER_ROM_region    { readonly };
+place in LOADER_RAM_region  { readwrite, block CSTACK, block HEAP };

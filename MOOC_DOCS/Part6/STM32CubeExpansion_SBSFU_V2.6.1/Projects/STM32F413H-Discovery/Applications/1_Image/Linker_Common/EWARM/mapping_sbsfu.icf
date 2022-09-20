@@ -1,0 +1,55 @@
+/*###ICF### Set of symbols used in SE and SB_SFU projects ****/
+
+/******************************************************************************/
+/*                              ROM section                                   */
+/******************************************************************************/
+
+/* SE Code region  */
+define exported symbol __ICFEDIT_SE_Code_region_ROM_start__       = 0x08000200;
+define exported symbol __ICFEDIT_SE_CallGate_region_ROM_start__   = __ICFEDIT_SE_Code_region_ROM_start__+ 4;
+define exported symbol __ICFEDIT_SE_CallGate_Region_ROM_End__     = __ICFEDIT_SE_Code_region_ROM_start__ + 0x1FF;
+
+/* SE key region */
+define exported symbol __ICFEDIT_SE_Key_region_ROM_start__        = __ICFEDIT_SE_CallGate_Region_ROM_End__ + 1;
+define exported symbol __ICFEDIT_SE_Key_region_ROM_end__          = __ICFEDIT_SE_Key_region_ROM_start__ + 0xFF;
+
+/* SE Startup: call before enabling  prottection                                 */
+define exported symbol __ICFEDIT_SE_Startup_region_ROM_start__    = __ICFEDIT_SE_Key_region_ROM_end__ + 1;
+define exported symbol __ICFEDIT_SE_Code_nokey_region_ROM_start__ = __ICFEDIT_SE_Startup_region_ROM_start__ + 0x100;
+/* Aligned SE End at the end of the 1st 32Kbytes of flash, MPU protection isolation constraints */
+define exported symbol __ICFEDIT_SE_Code_region_ROM_end__         =  0x08007FFF;
+
+/* SE IF ROM: used to locate Secure Engine interface code  */
+define exported symbol __ICFEDIT_SE_IF_region_ROM_start__         = __ICFEDIT_SE_Code_region_ROM_end__ + 1;
+define exported symbol __ICFEDIT_SE_IF_region_ROM_end__           = __ICFEDIT_SE_IF_region_ROM_start__ + 0x8FF;
+
+/* SBSFU Code region */
+define exported symbol __ICFEDIT_SB_region_ROM_start__            = __ICFEDIT_SE_IF_region_ROM_end__ + 1;
+/* Aligned SBSFU  end at the end of the 1st 64Kbytes of FLASH, MPU protection isolation constraints */
+define exported symbol __ICFEDIT_SB_region_ROM_end__              = 0x0800ffff;
+
+/* ROM regions definition : ordered  */
+define region SE_Entry_Secure_ROM_Region = mem:[from __ICFEDIT_SE_Code_region_ROM_start__ to __ICFEDIT_SE_CallGate_Region_ROM_End__];
+define region SE_Key_ROM_region          = mem:[from __ICFEDIT_SE_Key_region_ROM_start__ to __ICFEDIT_SE_Key_region_ROM_end__];
+define region SE_ROM_region              = mem:[from __ICFEDIT_SE_Code_nokey_region_ROM_start__ to __ICFEDIT_SE_Code_region_ROM_end__];
+define region SE_IF_ROM_region           = mem:[from __ICFEDIT_SE_IF_region_ROM_start__ to __ICFEDIT_SE_IF_region_ROM_end__];
+define region SB_ROM_region              = mem:[from __ICFEDIT_SB_region_ROM_start__ to __ICFEDIT_SB_region_ROM_end__];
+
+/******************************************************************************/
+/*                              RAM section                                   */
+/*                                                                            */
+/******************************************************************************/
+
+/* SE RAM1 region protected area */
+/* it is protected by MPU which requires an alignment on a MPU possible subregion is required*/
+define exported symbol __ICFEDIT_SE_region_RAM_start__     = 0x20000000;
+define exported symbol __ICFEDIT_SE_region_RAM_stack_top__ = 0x20000400; /* Secure Engine's private stack */
+define exported symbol __ICFEDIT_SE_region_RAM_end__       = 0x20000FFF;
+
+/* SBSFU RAM1 region */
+define exported symbol __ICFEDIT_SB_region_RAM_start__ = __ICFEDIT_SE_region_RAM_end__ + 1;
+define exported symbol __ICFEDIT_SB_region_RAM_end__   = 0x2003FFFF;
+
+/* RAM regions definition */
+define region SE_RAM_region    = mem:[from __ICFEDIT_SE_region_RAM_stack_top__ to __ICFEDIT_SE_region_RAM_end__];
+define region SB_RAM_region    = mem:[from __ICFEDIT_SB_region_RAM_start__ to __ICFEDIT_SB_region_RAM_end__];
