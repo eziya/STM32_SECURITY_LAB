@@ -1,4 +1,4 @@
-22:36:05 **** Clean-only build of configuration Debug for project NUCLEO-G071RB_2_Images_SECoreBin ****
+23:57:51 **** Clean-only build of configuration Debug for project NUCLEO-G071RB_2_Images_SECoreBin ****
 make clean 
 rm -rf ./Middlewares/STM32_Secure_Engine/se_callgate.d ./Middlewares/STM32_Secure_Engine/se_callgate.o ./Middlewares/STM32_Secure_Engine/se_callgate.su ./Middlewares/STM32_Secure_Engine/se_crypto_common.d ./Middlewares/STM32_Secure_Engine/se_crypto_common.o ./Middlewares/STM32_Secure_Engine/se_crypto_common.su ./Middlewares/STM32_Secure_Engine/se_exception.d ./Middlewares/STM32_Secure_Engine/se_exception.o ./Middlewares/STM32_Secure_Engine/se_exception.su ./Middlewares/STM32_Secure_Engine/se_fwimg.d ./Middlewares/STM32_Secure_Engine/se_fwimg.o ./Middlewares/STM32_Secure_Engine/se_fwimg.su ./Middlewares/STM32_Secure_Engine/se_startup.d ./Middlewares/STM32_Secure_Engine/se_startup.o ./Middlewares/STM32_Secure_Engine/se_startup.su ./Middlewares/STM32_Secure_Engine/se_user_application.d ./Middlewares/STM32_Secure_Engine/se_user_application.o ./Middlewares/STM32_Secure_Engine/se_user_application.su ./Middlewares/STM32_Secure_Engine/se_utils.d ./Middlewares/STM32_Secure_Engine/se_utils.o ./Middlewares/STM32_Secure_Engine/se_utils.su
 rm -rf ./Drivers/STM32G0xx_HAL_Driver/stm32g0xx_hal_crc.d ./Drivers/STM32G0xx_HAL_Driver/stm32g0xx_hal_crc.o ./Drivers/STM32G0xx_HAL_Driver/stm32g0xx_hal_crc.su ./Drivers/STM32G0xx_HAL_Driver/stm32g0xx_hal_crc_ex.d ./Drivers/STM32G0xx_HAL_Driver/stm32g0xx_hal_crc_ex.o ./Drivers/STM32G0xx_HAL_Driver/stm32g0xx_hal_crc_ex.su ./Drivers/STM32G0xx_HAL_Driver/stm32g0xx_hal_flash.d ./Drivers/STM32G0xx_HAL_Driver/stm32g0xx_hal_flash.o ./Drivers/STM32G0xx_HAL_Driver/stm32g0xx_hal_flash.su ./Drivers/STM32G0xx_HAL_Driver/stm32g0xx_hal_flash_ex.d ./Drivers/STM32G0xx_HAL_Driver/stm32g0xx_hal_flash_ex.o ./Drivers/STM32G0xx_HAL_Driver/stm32g0xx_hal_flash_ex.su
@@ -7,5 +7,5 @@ rm -rf ./Application/Startup/se_key.d ./Application/Startup/se_key.o
 rm -rf SECoreBin.bin SECoreBin.elf SECoreBin.list SECoreBin.map default.size.stdout
  
 
-22:36:05 Build Finished. 0 errors, 0 warnings. (took 172ms)
+23:57:51 Build Finished. 0 errors, 0 warnings. (took 165ms)
 
