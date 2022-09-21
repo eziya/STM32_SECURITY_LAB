@@ -101,12 +101,15 @@ SE_ErrorStatus SE_Init(SE_StatusTypeDef *peSE_Status, uint32_t uSystemCoreClock)
   SET_CALLGATE();
 
   /* Enter Secure Mode */
+  //SE 접근을 위해서 보호 모드로 전환
   SE_EnterSecureMode(&primask_bit);
 
   /* Secure Engine Call */
+  //SE 초기화 호출
   e_ret_status = (*SE_CallGatePtr)(SE_INIT_ID, peSE_Status, primask_bit, uSystemCoreClock);
 
   /* Exit Secure Mode */
+  //보호모드 탈출
   SE_ExitSecureMode(primask_bit);
 
 

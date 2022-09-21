@@ -185,18 +185,23 @@ SFU_BOOT_InitErrorTypeDef SFU_BOOT_RunSecureBootService()
    * initialize Secure Engine variable as secure Engine is managed as a completely separate binary - not
    * "automatically" managed by SBSFU compiler command
    */
+  //secure engine 시작
   if (SE_Startup() == SE_SUCCESS)
   {
     /* Security Configuration */
+    //정적 동적 보호기능 활성화
     if (SFU_BOOT_SystemSecurity_Config() == SFU_SUCCESS)
     {
       /* Board BSP  Configuration */
+      //LED 및 버튼 설정
       SFU_BOOT_BspConfiguration();
 
       /* Configure the Secure Boot and start the State machine */
+      //각종 secure boot 초기화 기능 수행
       if (SFU_BOOT_Init() == SFU_SUCCESS)
       {
         /* Start the Secure Boot State Machine */
+        //SB state machine 구동하면서 동작
         (void) SFU_BOOT_SM_Run();
       }
       else
@@ -259,12 +264,14 @@ static SFU_ErrorStatus SFU_BOOT_Init(void)
   initialDeviceStatusCheck = 1U;
 
   /* Call the Hardware Abstraction Layer Init implemented for the specific MCU */
+  //low level 초기화, 현재는 CRC 초기화 기능만 포함
   if (SFU_LL_Init() != SFU_SUCCESS)
   {
     return SFU_ERROR;
   }
 
   /* Flash interface initialization */
+  //내부 외부 flash 초기화, 특별한 기능 없음
   if (SFU_LL_FLASH_Init() != SFU_SUCCESS)
   {
     return SFU_ERROR;
@@ -273,6 +280,7 @@ static SFU_ErrorStatus SFU_BOOT_Init(void)
   /* The COM modules is required only if the trace or the local download is enabled */
 #if (SECBOOT_LOADER == SECBOOT_USE_LOCAL_LOADER) || defined(SFU_DEBUG_MODE) || defined(SFU_TEST_PROTECTION)
   /* Call the COM module Init (already handled in SFU_BOOT_SystemSecurity_Config) */
+  //통신 관련 초기화, 현재는 UART 초기화
   if (SFU_COM_Init() != SFU_SUCCESS)
   {
     return SFU_ERROR;
@@ -281,6 +289,7 @@ static SFU_ErrorStatus SFU_BOOT_Init(void)
 
 #if (SECBOOT_LOADER == SECBOOT_USE_LOCAL_LOADER)
   /* Call the SFU_LOADER module Init */
+  //Loader 초기화, 현재는 YModem 패킷의 alignment 확인
   if (SFU_LOADER_Init() != SFU_SUCCESS)
   {
     return SFU_ERROR;
@@ -288,12 +297,14 @@ static SFU_ErrorStatus SFU_BOOT_Init(void)
 #endif /* SECBOOT_USE_LOCAL_LOADER */
 
   /* Call the Exception module Init */
+  //SFU 예외 초기화, 현재 특별한 기능 없음
   if (SFU_EXCPT_Init() != SFU_SUCCESS)
   {
     return SFU_ERROR;
   }
 
   /* Call the image handling Init  */
+  //액티브, 다운로드 슬롯관련 점검 및 설정 확인
   if (SFU_IMG_InitImageHandling() != SFU_IMG_INIT_OK)
   {
     return SFU_ERROR;
@@ -312,6 +323,7 @@ static SFU_ErrorStatus SFU_BOOT_Init(void)
   TRACE("\r\n\r\n");
 
   /* Initialize the Secure Engine that will be used for all the most critical operations */
+  //secure engine 초기화
   if (SE_Init(&e_se_status, SystemCoreClock) != SE_SUCCESS)
   {
     TRACE("\r\n= [SBOOT] SECURE ENGINE INITIALIZATION CRITICAL FAILURE!");
@@ -393,6 +405,7 @@ static SFU_ErrorStatus SFU_BOOT_SM_Run(void)
 {
   SFU_ErrorStatus  e_ret_status = SFU_SUCCESS;
   void (*fnStateMachineFunction)(void);
+  //SM 상태별 함수 정의 테이블
   static void (* fnStateMachineTable[])(void) = {SFU_BOOT_SM_CheckStatusOnReset,
 #if (SECBOOT_LOADER == SECBOOT_USE_LOCAL_LOADER) || (SECBOOT_LOADER == SECBOOT_USE_STANDALONE_LOADER)
                                                  SFU_BOOT_SM_CheckNewFwToDownload,
@@ -412,12 +425,14 @@ static SFU_ErrorStatus SFU_BOOT_SM_Run(void)
   while (e_ret_status == SFU_SUCCESS)
   {
     /* Always execute a security/safety check before moving to the next state */
+    //동작시마다 시큐리티 체크, 현재는 IWDG 워치독 refresh 기능만 사용
     if (SFU_BOOT_SecuritySafetyCheck() == SFU_SUCCESS)
     {
       /* Get the right StateMachine function according to the current state */
       fnStateMachineFunction = fnStateMachineTable[(uint8_t)m_StateMachineContext.CurrState];
 
       /* Call the State Machine function associated to the current state */
+      //현재 상태에 따른 함수 호출
       fnStateMachineFunction();
     }
     else
@@ -429,9 +444,11 @@ static SFU_ErrorStatus SFU_BOOT_SM_Run(void)
   /* If the State Machine cannot evolve anymore, reboot is the only option */
 
   /* Set the error before forcing a reboot */
+  //에러 발생 시 에러 처리
   SFU_EXCPT_SetError(SFU_EXCPT_UNKNOWN);
 
   /* This is the last operation executed. Force a System Reset */
+  //에러 발생 시 재부팅
   SFU_BOOT_ForceReboot();
 
   return e_ret_status;
@@ -447,11 +464,13 @@ static void SFU_BOOT_SM_CheckStatusOnReset(void)
   TRACE("\r\n= [SBOOT] STATE: CHECK STATUS ON RESET");
 
   /* Check the wakeup sources */
+  //RCC 플래그를 확인하여 재기동 원인 확인
   SFU_BOOT_ManageResetSources();
 
 
 #if (SECBOOT_LOADER == SECBOOT_USE_LOCAL_LOADER) || (SECBOOT_LOADER == SECBOOT_USE_STANDALONE_LOADER)
   /* When the local loader feature is supported we need to check if a local download is requested */
+  //다운로드 체크 상태로 전환
   SFU_SET_SM_CURR_STATE(SFU_STATE_CHECK_NEW_FW_TO_DOWNLOAD);
 #else
   /* When the local loader feature is disabled go directly to the check of the FW status */
@@ -488,9 +507,11 @@ static void SFU_BOOT_SM_CheckNewFwToDownload(void)
   }
 #endif /* (SECBOOT_LOADER == SECBOOT_USE_STANDALONE_LOADER) */
 
+  //최초 진입인지 확인
   if (initialDeviceStatusCheck == 1U)
   {
     /* At boot-up, before checking the FW status, a local download can be forced thanks to the user button */
+    //최초 진입인 경우 버튼 입력상태를 확인하여 다운로드 상태로 갈지 아니면 FW 체크 상태로 갈지 선택
     TRACE("\r\n= [SBOOT] STATE: CHECK NEW FIRMWARE TO DOWNLOAD");
     if (0U != BUTTON_PUSHED())
     {
@@ -512,6 +533,7 @@ static void SFU_BOOT_SM_CheckNewFwToDownload(void)
   }
 
   /* Set the next State Machine state according to the success of the failure of e_ret_status */
+  //입력 결과에 따라 SM 상태 선택
   SFU_SET_SM_IF_CURR_STATE(e_ret_status, SFU_STATE_DOWNLOAD_NEW_USER_FW, SFU_STATE_VERIFY_USER_FW_STATUS);
 
 }
@@ -565,6 +587,7 @@ static void SFU_BOOT_SM_CheckUserFwStatus(void)
 #endif /* SECBOOT_LOADER == SECBOOT_USE_STANDALONE_LOADER */
 
   /* Check if there is a pending action related to a FW update procedure */
+  //설치 시작 후 중지 상태인지, 설치 중 중지 상태인지 아니면 설치된 FW 가 없는 상태인지 확인
   e_PendingInstallStatus = SFU_IMG_CheckPendingInstallation(&m_DwlSlotToInstall, &m_ActiveSlotToResume,
                                                             &m_ActiveSlotToRollback);
 
@@ -577,15 +600,18 @@ static void SFU_BOOT_SM_CheckUserFwStatus(void)
        * As example : new image installed in SLOT_ACTIVE_2. Previous image was backed-up in SLOT_DWL_2
        */
       /* Identify corresponding backed-up slot */
+      //롤백 필요시, 별도 정의를 하지 않는 경우 미사용
       m_DwlSlotToInstall = m_ActiveSlotToRollback - SLOT_ACTIVE_1 + SLOT_DWL_1;
       TRACE("\r\n\t  Installation not validated: rollback procedure initiated (SLOT_ACTIVE_%d / SLOT_DWL_%d)",
             m_ActiveSlotToRollback, m_DwlSlotToInstall - SLOT_DWL_1 + 1U);
       SFU_SET_SM_CURR_STATE(SFU_STATE_ROLLBACK_PREV_USER_FW);
       break;
 
+
     case SFU_IMG_FWUPDATE_STOPPED:
       /* The installation of a downloaded FW has been interrupted */
       /* We perform a resume of the installation */
+      //설치 중에 중단된 경우, 설치 중에 중단된 경우에는 설치 재개 상태로 전환
       TRACE("\r\n\t  Installation Failed: resume installation procedure initiated (SLOT_ACTIVE_%d / SLOT_DWL_%d)",
             m_ActiveSlotToResume, m_DwlSlotToInstall - SLOT_DWL_1 + 1U);
       SFU_SET_SM_CURR_STATE(SFU_STATE_RESUME_INSTALL_NEW_USER_FW);
@@ -595,6 +621,7 @@ static void SFU_BOOT_SM_CheckUserFwStatus(void)
       /*
        * A new FW is detected in the dwl slot and ready to be installed
        */
+      //다운로드 슬롯에 FW 가 있고 설치를 위해 재부팅한 경우 설치 실작
       TRACE("\r\n\t  New Fw to be installed from slot SLOT_DWL_%d", m_DwlSlotToInstall - SLOT_DWL_1 + 1U);
       SFU_SET_SM_CURR_STATE(SFU_STATE_INSTALL_NEW_USER_FW);
       break;
@@ -608,11 +635,13 @@ static void SFU_BOOT_SM_CheckUserFwStatus(void)
        *
        * This strategy can be adapted by removing for example execution of step2 ==> focus only on MASTER_SLOT.
        */
+      //설치중이거나 설치할 FW 가 없는 경우
       m_ActiveSlotToExecute = 0U;
 
       /* 1- Priority to MASTER_SLOT : check if a firmware is detected */
       if (MASTER_SLOT != 0xFFU)
       {
+        //마스터 슬롯에 FW 가 있는지 확인하고 FW 가 있는 경우에는 signature 검증 상태로 전환
         if (SFU_SUCCESS == SFU_IMG_DetectFW(MASTER_SLOT))
         {
           m_ActiveSlotToExecute = MASTER_SLOT;
@@ -622,12 +651,14 @@ static void SFU_BOOT_SM_CheckUserFwStatus(void)
       }
 
       /* 2- No firmware identified : verify other slots and start execution on the last detected firmware */
+      //마스터 슬롯에 FW 가 없고 다중 슬롯을 사용하는 경우에는 다른 액티브 슬롯에 FW 가 존재하는지 확인
       if (m_ActiveSlotToExecute == 0U)
       {
         for (i = 0U; i < SFU_NB_MAX_ACTIVE_IMAGE; i++)
         {
           if (SlotStartAdd[SLOT_ACTIVE_1 + i] != 0U)         /* Slot configured ? */
           {
+            //다른 액티브 슬롯에 FW 가 존재하는 경우 다른 액티브 슬롯을 실행 슬롯으로 지정하고 검증 상태로 전환
             if (SFU_SUCCESS == SFU_IMG_DetectFW(SLOT_ACTIVE_1 + i))
             {
               m_ActiveSlotToExecute = SLOT_ACTIVE_1 + i;
@@ -639,6 +670,7 @@ static void SFU_BOOT_SM_CheckUserFwStatus(void)
       }
 
       /* 3- No active firmware candidate for execution ==> Local download */
+      //모든 액티브 슬롯에 실행할 FW 가 없는 경우
       if (m_ActiveSlotToExecute == 0U)
       {
         /* Control if all active slot are empty */
@@ -646,12 +678,14 @@ static void SFU_BOOT_SM_CheckUserFwStatus(void)
         {
           if (SlotStartAdd[SLOT_ACTIVE_1 + i] != 0U)       /* Slot configured ? */
           {
+            //액티브 슬롯들에 코드들이 들어 있는지 검증하고 코드들이 들어 있는 경우 삭제
             if (SFU_IMG_VerifyEmptyActiveSlot(SLOT_ACTIVE_1 + i) != SFU_SUCCESS)
             {
               /*
                * We should never reach this code.
                * Could come from an attack ==> as an example we invalidate current firmware.
                */
+              //의도하지 않는 코드가 들어가 있는 경우 해당 액티브 슬롯 삭제
               TRACE("\r\n\t  Slot SLOT_ACTIVE_%d not empty : erasing ...", SLOT_ACTIVE_1 + i);
               (void)SFU_IMG_InvalidateCurrentFirmware(SLOT_ACTIVE_1 + i); /* If this fails we continue anyhow */
             }
@@ -662,6 +696,8 @@ static void SFU_BOOT_SM_CheckUserFwStatus(void)
          * No valid FW is present in the active slot
          * and there is no FW to be installed in UserApp download area: local download (when possible)
          */
+        //최초 점검 루틴이라면 initialDeviceStatusCheck flag 를 clear 하고 FW 다운로드 점검 상태로 전환
+        //다운로드 점검상태로 다시 돌아가면 이번에는 FW 가 없기 때문에 자동으로 다운로드 모드로 이동하게 된다.
         if (1U == initialDeviceStatusCheck)
         {
           TRACE("\r\n\t  No valid FW found in the active slots nor new FW to be installed");
@@ -709,6 +745,7 @@ static void SFU_BOOT_SM_CheckUserFwStatus(void)
     default:
       TRACE("\r\n\t  Flash State Unknown, Critical failure");
       /* If not in one of the previous state, something bad occurred */
+      //정의되지 않은 상태 오류
       SFU_SET_SM_CURR_STATE(SFU_STATE_HANDLE_CRITICAL_FAILURE);
       break;
   }
@@ -1465,6 +1502,7 @@ static void SFU_BOOT_ManageResetSources(void)
   SFU_RESET_IdTypeDef e_wakeup_source_id = SFU_RESET_UNKNOWN;
 
   /* Check the wakeup sources */
+  //RCC 플래그 확인
   SFU_LL_SECU_GetResetSources(&e_wakeup_source_id);
   switch (e_wakeup_source_id)
   {

@@ -211,22 +211,26 @@ static SFU_ErrorStatus CheckTrailerMagic(uint32_t DwlSlot)
   (void) memset(erased_flash_pattern, 0xFF, MAGIC_LENGTH);
 
   /* Read trailer fields : TRAILER_HDR_VALID, TRAILER_HDR_TEST, MAGIC, CLEAN */
+  //다운로드 슬롯 트레일러의 valid 헤더의 signature 에서 1/2을 읽어온다.
   if (SFU_LL_FLASH_Read(signature_valid,
                         (uint8_t *)((uint32_t)TRAILER_HDR_VALID(DwlSlot) + SE_FW_AUTH_LEN + (MAGIC_LENGTH / 2U)),
                         sizeof(signature_valid)) != SFU_SUCCESS)
   {
     return SFU_ERROR;
   }
+  //다운로드 슬롯 트레일러의 test 헤더의 signature 에서 1/2을 읽어온다.
   if (SFU_LL_FLASH_Read(signature_test,
                         (uint8_t *)((uint32_t) TRAILER_HDR_TEST(DwlSlot) + SE_FW_AUTH_LEN + (MAGIC_LENGTH / 2U)),
                         sizeof(signature_test)) != SFU_SUCCESS)
   {
     return SFU_ERROR;
   }
+  //다운로드 슬롯 트레일러의 SWAP 위치에 값을 읽어본다.
   if (SFU_LL_FLASH_Read(magic, TRAILER_SWAP_ADDR(DwlSlot), MAGIC_LENGTH) != SFU_SUCCESS)
   {
     return SFU_ERROR;
   }
+  //다운로드 슬롯 트레일러의 CLEAN 위치의 값을 읽어본다.
   if (SFU_LL_FLASH_Read(clean, TRAILER_CLEAN_ADDR(DwlSlot), MAGIC_LENGTH) != SFU_SUCCESS)
   {
     return SFU_ERROR;
@@ -241,6 +245,8 @@ static SFU_ErrorStatus CheckTrailerMagic(uint32_t DwlSlot)
    *  Check clean tag not set :
    *  - should be erased flash pattern but not clean-up paatern (0x55 0x55 ...)
    */
+  //magic 값이 valid signature 와 test signature 가 merge 된 값과 동일한지 확인한다.
+  //clean 값이 0xFF 인지 확인한다. (clean 값은 설치가 완료되면 0x55로 써진다)
   if ((memcmp(magic, signature_valid, sizeof(signature_valid)) != 0)
       || (memcmp(&magic[MAGIC_LENGTH / 2U], signature_test, sizeof(signature_test)) != 0)
       || (memcmp(magic, erased_flash_pattern, MAGIC_LENGTH) == 0)
@@ -1260,10 +1266,12 @@ static SFU_ErrorStatus  FirmwareToResume(uint32_t ActiveSlot, uint32_t DwlSlot, 
    */
 
   /* check trailer Magic */
+  //다운로드 슬롯 트레일러를 점검한다.(설치를 위해서 트레일러에 값이 정상적으로 써 있고 clean 값은 써있지 않은 상태)
   e_ret_status = CheckTrailerMagic(DwlSlot);
   if (e_ret_status == SFU_SUCCESS)
   {
     /* Populate the pTestHeader and verify it the active slot is correct */
+    //다운로드 트레일러의 test 헤더를 읽어온다.
     e_ret_status = SFU_LL_FLASH_Read(fw_header_trailer_test, TRAILER_HDR_TEST(DwlSlot), sizeof(fw_header_trailer_test));
     STATUS_FWIMG(e_ret_status == SFU_ERROR, SFU_IMG_FLASH_READ_FAILED);
   }
@@ -1271,6 +1279,7 @@ static SFU_ErrorStatus  FirmwareToResume(uint32_t ActiveSlot, uint32_t DwlSlot, 
   if (e_ret_status == SFU_SUCCESS)
   {
     /* Populate pTestHeader parameter */
+    //다운로드 트레일러의 test 헤더를 읽어온다. (test 헤더는 새로 설치하는 FW 의 헤더이다.)
     e_ret_status = ParseFWInfo(pTestHeader, fw_header_trailer_test);
   }
 
@@ -1278,9 +1287,11 @@ static SFU_ErrorStatus  FirmwareToResume(uint32_t ActiveSlot, uint32_t DwlSlot, 
   {
     /* Active slot number correct ?
        As example : if magic is SFU2 active slot should be SLOT_ACTIVE_2 */
+    //테스트 헤더의 magic 값을 확인해서 슬롯 번호가 액티브 슬롯의 번호와 일치하는지 확인한다.
     if (ActiveSlot == SFU_IMG_GetFwImageSlot(pTestHeader))
     {
       /* Check header test field in trailer is signed */
+      //테스트헤더가 정상적으로 signing 되어 있는지 확인한다.
       e_ret_status = VerifyHeaderSignature((SE_FwRawHeaderTypeDef *)(uint32_t)fw_header_trailer_test);
     }
     else
@@ -1298,6 +1309,7 @@ static SFU_ErrorStatus  FirmwareToResume(uint32_t ActiveSlot, uint32_t DwlSlot, 
   }
 
   /* Read header in active slot if any */
+  //현재 액티브 슬롯의 헤더를 읽어온다.
   e_ret_status = SFU_LL_FLASH_Read(fw_header_active_slot, (uint8_t *) SlotHeaderAdd[ActiveSlot],
                                    sizeof(fw_header_active_slot));
   STATUS_FWIMG(e_ret_status == SFU_ERROR, SFU_IMG_FLASH_READ_FAILED);
@@ -1305,6 +1317,7 @@ static SFU_ErrorStatus  FirmwareToResume(uint32_t ActiveSlot, uint32_t DwlSlot, 
   if (e_ret_status == SFU_SUCCESS)
   {
     /* Verify the header signature in active slot */
+    //현재 액티브 슬롯의 헤더가 정상적으로 signing 되어 있는지 확인한다.
     e_ret_status = VerifyHeaderSignature((SE_FwRawHeaderTypeDef *)(uint32_t)fw_header_active_slot);
   }
   if (e_ret_status == SFU_SUCCESS)
@@ -1312,11 +1325,14 @@ static SFU_ErrorStatus  FirmwareToResume(uint32_t ActiveSlot, uint32_t DwlSlot, 
     /* Header in active slot is signed and validated, in protected area: it can be trusted. */
 
     /* Populate pValidHeader parameter */
+    //현재 액티브 헤더의 FW 정보를 확인한다.
     e_ret_status = ParseFWInfo(pValidHeader, fw_header_active_slot);
 
     if (e_ret_status == SFU_SUCCESS)
     {
       /* Read header valid field in trailer */
+      //다운로드 트레일러의 valid 헤더 정보를 읽어온다. 트레일러의 valid 헤더 정보는 다운로드 시 액티브 슬롯의 헤더 정보이다.
+      //따라서 정상적으로 설치중에 중단된 상태라면 현재 액티브 헤더와 트레일러의 valid 헤더는 동일해야 한다.
       e_ret_status = SFU_LL_FLASH_Read(fw_header_trailer_valid, TRAILER_HDR_VALID(DwlSlot),
                                        sizeof(fw_header_trailer_valid));
       STATUS_FWIMG(e_ret_status == SFU_ERROR, SFU_IMG_FLASH_READ_FAILED);
@@ -1325,6 +1341,7 @@ static SFU_ErrorStatus  FirmwareToResume(uint32_t ActiveSlot, uint32_t DwlSlot, 
     if (e_ret_status == SFU_SUCCESS)
     {
       /* Check if header in active slot is same as header valid in trailer */
+      //트레일러의 valid 헤더와 현재 액티브 슬롯의 헤더가 동일한지 확인한다.
       if (memcmp(fw_header_active_slot, fw_header_trailer_valid, SE_FW_AUTH_LEN) != 0)
       {
         /*
@@ -1341,6 +1358,9 @@ static SFU_ErrorStatus  FirmwareToResume(uint32_t ActiveSlot, uint32_t DwlSlot, 
       else
       {
         /* Check candidate image version */
+        //설치할 test 헤더의 FW 버전과 valid 헤더의 FW 버전을 비교하여 버전이 동일하거나 올라가는지 확인한다.
+        //코드에는 valid 헤더 버전을 비교하고 있지만 사실 상 액티브 헤더와 앞서 동일함을 확인하였으므로
+        //사실상 액티브 헤더의 버전과 test 헤더의 버전을 확인하는 것과 같다.
         e_ret_status = SFU_IMG_CheckFwVersion(ActiveSlot, pValidHeader->FwVersion, pTestHeader->FwVersion);
       }
     }
@@ -1358,13 +1378,17 @@ static SFU_ErrorStatus  FirmwareToResume(uint32_t ActiveSlot, uint32_t DwlSlot, 
      * If header test field in trailer is signed and with proper version, we resume install.
      */
 
+    //액티브 헤더가 정상적이지 않은 경우
+
     /* Read header valid field in trailer */
+    //다운로드 트레일러의 valid 헤더를 읽어온다.
     e_ret_status = SFU_LL_FLASH_Read(fw_header_trailer_valid, TRAILER_HDR_VALID(DwlSlot),
                                      sizeof(fw_header_trailer_valid));
     STATUS_FWIMG(e_ret_status == SFU_ERROR, SFU_IMG_FLASH_READ_FAILED);
     if (e_ret_status == SFU_SUCCESS)
     {
       /* Check header valid field in trailer is signed */
+      //valid 헤더의 signature 를 검증한다.
       e_ret_status = VerifyHeaderSignature((SE_FwRawHeaderTypeDef *)(uint32_t)fw_header_trailer_valid);
 
       if (e_ret_status == SFU_SUCCESS)
@@ -1372,11 +1396,13 @@ static SFU_ErrorStatus  FirmwareToResume(uint32_t ActiveSlot, uint32_t DwlSlot, 
         /* active slot was containing an active image */
 
         /* Populate pValidHeader parameter */
+        //valid 헤더의 FW 정보를 읽어온다.
         e_ret_status = ParseFWInfo(pValidHeader, fw_header_trailer_valid);
 
         if (e_ret_status == SFU_SUCCESS)
         {
           /* Check candidate image version */
+          //액티브 헤더가 비정상이므로 valid 헤더의 FW 버전과 test 헤더의 FW 버전을 비교하여 설치 가능한지 확인한다.
           e_ret_status = SFU_IMG_CheckFwVersion(ActiveSlot, pValidHeader->FwVersion, pTestHeader->FwVersion);
         }
       }
@@ -1479,23 +1505,29 @@ static SFU_ErrorStatus FirmwareToInstall(uint32_t DwlSlot, SE_FwRawHeaderTypeDef
      */
 
   /*  check swap header */
+  //swap 영역에 올바른 헤더 정보가 있는지 확인한다.
   e_ret_status = CheckAndGetFWHeader(SLOT_SWAP, pFwImageHeader);
   if (e_ret_status == SFU_SUCCESS)
   {
     /*  compare the header in dwl slot with the header in swap */
+    // 다운로드 영역의 헤더정보를 읽는다.
     p_header_swap = (uint8_t *) pFwImageHeader;
     e_ret_status = SFU_LL_FLASH_Read(fw_header_dwl_slot, (uint8_t *) SlotStartAdd[DwlSlot],
                                      sizeof(fw_header_dwl_slot));
     if (e_ret_status == SFU_SUCCESS)
     {
       /* image header in dwl slot not consistent with swap header */
+      //이미지 끝의 주소를 계산한다. (다운로드 슬롯의 시작 주소 + 이미지 offset + FW 크기)
       end_of_test_image = (SlotStartAdd[DwlSlot] + pFwImageHeader->FwSize +
                            SFU_IMG_IMAGE_OFFSET);
 
       /* the header in swap must be the same as the header in dwl slot */
+      //다운로드 슬롯의 헤더와 swap 영역의 헤더가 동일한지 확인한다.
+      //(FW 다운로드 후에 설치 시작 여부를 확인하기 위해서 다운로드 헤더를 swap 영역에 복사해 놓음)
       ret = memcmp(fw_header_dwl_slot, p_header_swap, SE_FW_HEADER_TOT_LEN);
 
       /* Check if there is enough room for the trailers */
+      // FW 코드가 너무 커서 트레일러 영역을 침범하지 않는지 확인
       if ((trailer_begin < end_of_test_image) || (ret != 0))
       {
         /*
@@ -1759,6 +1791,7 @@ SFU_IMG_InitStatusTypeDef SFU_IMG_CheckSwapImageHandling(void)
    * Sanity check: let's make sure the slot sizes are correct
    * to avoid discrepancies between linker definitions and constants in sfu_fwimg_regions.h
    */
+  //액티브 슬롯의 크기가 swap 영역 크기와 align 되어 있는지 확인
   for (i = 0U; i < SFU_NB_MAX_ACTIVE_IMAGE; i++)
   {
     if (SlotStartAdd[SLOT_ACTIVE_1 + i] != 0U)
@@ -1772,6 +1805,7 @@ SFU_IMG_InitStatusTypeDef SFU_IMG_CheckSwapImageHandling(void)
     }
   }
 
+  //다운로드 슬롯의 크기가 swap 영역 크기와 align 되어 있는지 확인
   for (i = 0U; i < SFU_NB_MAX_DWL_AREA; i++)
   {
     if (SlotStartAdd[SLOT_DWL_1 + i] != 0U)
@@ -1789,6 +1823,7 @@ SFU_IMG_InitStatusTypeDef SFU_IMG_CheckSwapImageHandling(void)
    * Sanity check: let's make sure the slot size is correct with regards to the swap procedure constraints.
    * The swap procedure cannot succeed if the trailer info size is bigger than what a chunk used for swapping can carry.
    */
+  //트레일러의 크기가 chunk 크기보다 작은지 확인
   for (i = 0U; i < SFU_NB_MAX_DWL_AREA; i++)
   {
     if (SlotStartAdd[SLOT_DWL_1 + i] != 0U)
@@ -1806,6 +1841,7 @@ SFU_IMG_InitStatusTypeDef SFU_IMG_CheckSwapImageHandling(void)
    * Sanity check: let's make sure the swap size is correct with regards to the swap procedure constraints.
    * The swap size must be a multiple of the chunks size used to do the swap.
    */
+  //swap 영역 크기와 swap chunk 크기의 alignment 확인
 #if defined(__GNUC__)
   __IO uint32_t swap_size = SLOT_SIZE(SLOT_SWAP), swap_chunk = SFU_IMG_CHUNK_SIZE;
   if (0U != ((uint32_t)(swap_size % swap_chunk)))
@@ -1822,6 +1858,7 @@ SFU_IMG_InitStatusTypeDef SFU_IMG_CheckSwapImageHandling(void)
    * Sanity check: let's make sure the chunks used for the swap procedure are big enough with regards to the offset
    * giving the start @ of the firmware
    */
+  //이미지 chunk size 가 offset 보다 큰지 확인, 헤더 정보 때문에 첫번째 chunk 에 헤더가 들어가 있어야 하기 때문인 것으로 판단됨
   if (((int32_t)(SFU_IMG_CHUNK_SIZE - SFU_IMG_IMAGE_OFFSET)) < 0)
   {
     e_ret_status = SFU_IMG_INIT_SWAP_SETTINGS_ERROR;
@@ -1832,7 +1869,7 @@ SFU_IMG_InitStatusTypeDef SFU_IMG_CheckSwapImageHandling(void)
   /*
    * Sanity check: let's make sure SWAP slot is properly aligned with regards to flash constraints
    */
-
+  //swap 영역이 align 되어 있는지 확인
   if (!IS_ALIGNED(SlotStartAdd[SLOT_SWAP]))
   {
     e_ret_status = SFU_IMG_INIT_FLASH_CONSTRAINTS_ERROR;
@@ -1843,6 +1880,7 @@ SFU_IMG_InitStatusTypeDef SFU_IMG_CheckSwapImageHandling(void)
   /*
    * Sanity check: let's make sure the swap area does not overlap SB code area protected by WRP)
    */
+  //swap 영역이 WRP 보호 영역을 침범하지 않는지 확인
   if (((SlotStartAdd[SLOT_SWAP] - FLASH_BASE) / FLASH_PAGE_SIZE) <= SFU_PROTECT_WRP_PAGE_END_1)
   {
     TRACE("\r\n= [FWIMG] SWAP overlaps SBSFU code area protected by WRP\r\n");
@@ -1922,6 +1960,7 @@ SFU_IMG_ImgInstallStateTypeDef SFU_IMG_CheckPendingInstallation(uint32_t *pDwlSl
 
   /* Check image installation stopped or installation to be done
      =========================================================== */
+  //액티브 슬롯에 무엇인가 자료가 있는지 확인
   for (i = 0U; i < SFU_NB_MAX_ACTIVE_IMAGE; i++)
   {
     /* Slot configured ? */
@@ -1943,11 +1982,13 @@ SFU_IMG_ImgInstallStateTypeDef SFU_IMG_CheckPendingInstallation(uint32_t *pDwlSl
 
       /* Check trailer valide : installation stopped ?
          ============================================= */
+      //다운로드 슬롯에 무엇인가 자료가 있는지 확인
       for (j = 0U; j < SFU_NB_MAX_DWL_AREA; j++)
       {
         /* Slot configured ? */
         if (SlotStartAdd[SLOT_DWL_1 + j] != 0U)
         {
+          //액티브 슬롯과 다운로드 슬롯에 자료가 있는 경우 설치 중이었는지 확인
           if (SFU_SUCCESS == FirmwareToResume(SLOT_ACTIVE_1 + i, SLOT_DWL_1 + j, &fw_image_header_validated,
                                                &fw_image_header_to_test))
           {
@@ -1955,6 +1996,7 @@ SFU_IMG_ImgInstallStateTypeDef SFU_IMG_CheckPendingInstallation(uint32_t *pDwlSl
              * fw_image_header_to_test & fw_image_header_validated have been populated
              * Stop at first occurrence : next ones if any will be resumed after reset
              */
+            //실제 설치 중이었던 FW 가 있는 경우에는 SFU_IMG_FWUPDATE_STOPPED 를 반환하여 설치를 Resume 한다.
             *pActiveSlotToResume = SLOT_ACTIVE_1 + i;
             *pDwlSlotToInstall = SLOT_DWL_1 + j;
             return SFU_IMG_FWUPDATE_STOPPED;
@@ -1971,6 +2013,7 @@ SFU_IMG_ImgInstallStateTypeDef SFU_IMG_CheckPendingInstallation(uint32_t *pDwlSl
     /* Slot configured ? */
     if (SlotStartAdd[SLOT_DWL_1 + j] != 0U)
     {
+      //다운로드 슬롯에 자료가 있는 경우에는 설치 시작인지 확인한다. (설치 시작 여부는 swap 영역에 헤더 자료가 있는지 여부로 판단한다)
       if (SFU_SUCCESS == FirmwareToInstall(SLOT_DWL_1 + j, &fw_image_header_to_test))
       {
         /*
@@ -1984,6 +2027,7 @@ SFU_IMG_ImgInstallStateTypeDef SFU_IMG_CheckPendingInstallation(uint32_t *pDwlSl
     }
   }
 
+  //resume 하거나 install 할 FW 가 없는 경우 SFU_IMG_NO_FWUPDATE 반환
   return SFU_IMG_NO_FWUPDATE;
 }
 

@@ -57,9 +57,11 @@ int main(void)
    * security mechanisms will be enabled.
    * The function below should not return (unless a critical failure is encountered).
    */
+  //아래 부트로더에서 모든 작업을 수행하고 에러 발생 시 리턴
   (void)SFU_BOOT_RunSecureBootService(); /* no need to take care of the returned value as we reboot in all cases */
 
   /* Security or SecureBoot initialization failure. Force a System Reset */
+  //에러 발생 시 리턴 되었으므로 재부팅 수행
   SFU_BOOT_ForceReboot();
 
 }

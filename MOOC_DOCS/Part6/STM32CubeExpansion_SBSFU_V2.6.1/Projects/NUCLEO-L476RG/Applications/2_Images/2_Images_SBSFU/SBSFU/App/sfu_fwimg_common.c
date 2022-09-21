@@ -354,11 +354,13 @@ SFU_ErrorStatus CheckAndGetFWHeader(uint32_t SlotNumber, SE_FwRawHeaderTypeDef *
   SFU_ErrorStatus e_ret_status = SFU_ERROR;
 
   /* use api read to detect possible ECC error */
+  //지정된 슬롯의 헤더 정보를 읽는다.
   e_ret_status = SFU_LL_FLASH_Read((uint8_t *) pFwImageHeader, (uint8_t *) SlotHeaderAdd[SlotNumber],
                                    sizeof(SE_FwRawHeaderTypeDef));
   if (e_ret_status == SFU_SUCCESS)
   {
     /* Verify signature */
+    //헤더가 올바르게 signing 되어있는지 검증한다.
     e_ret_status = VerifyHeaderSignature(pFwImageHeader);
   }
   return e_ret_status;
@@ -442,6 +444,7 @@ SFU_ErrorStatus VerifySlot(uint8_t *pSlotBegin, uint32_t uSlotSize, uint32_t uFw
   /* Check is already clean */
   pdata = pSlotBegin + SFU_IMG_IMAGE_OFFSET + uFwSize;
   length = uSlotSize - SFU_IMG_IMAGE_OFFSET - uFwSize;
+  //해당 슬롯이 지워졌거나 아무 것도 쓰여있지 않은 상태인지 확인한다.
   e_ret_status = SFU_LL_FLASH_Compare(pdata, 0x00000000U, 0xFFFFFFFFU, length);
 
   return e_ret_status;
@@ -531,6 +534,7 @@ SFU_IMG_InitStatusTypeDef SFU_IMG_InitImageHandling(void)
   /*
    * Sanity check: let's make sure all actives slots are properly aligned with regards to flash constraints
    */
+  //액티브 슬롯의 alignment 확인
   for (i = 0U; i < SFU_NB_MAX_ACTIVE_IMAGE; i++)
   {
 #if defined(__GNUC__)
@@ -550,6 +554,7 @@ SFU_IMG_InitStatusTypeDef SFU_IMG_InitImageHandling(void)
     }
   }
 
+  //다운로드 슬롯의 alignment 확인
   for (i = 0U; i < SFU_NB_MAX_DWL_AREA; i++)
   {
 #if defined(__GNUC__)
@@ -573,6 +578,7 @@ SFU_IMG_InitStatusTypeDef SFU_IMG_InitImageHandling(void)
   /*
    * Sanity check: let's make sure the MAGIC patterns used by the internal algorithms match the FLASH constraints.
    */
+  //트레일러 magic 의 alignment 확인
   if (0U != (uint32_t)(MAGIC_LENGTH % (uint32_t)sizeof(SFU_LL_FLASH_write_t)))
   {
     e_ret_status = SFU_IMG_INIT_FLASH_CONSTRAINTS_ERROR;
@@ -582,6 +588,7 @@ SFU_IMG_InitStatusTypeDef SFU_IMG_InitImageHandling(void)
   /*
    * Sanity check: let's make sure the Firmware Header Length is fine with regards to FLASH constraints
    */
+  //헤더의 alignment 확인
   if (0U != (uint32_t)(SE_FW_HEADER_TOT_LEN % (uint32_t)sizeof(SFU_LL_FLASH_write_t)))
   {
     /* The code writing the FW header in FLASH requires the FW Header length to match the FLASH constraints */
@@ -592,6 +599,7 @@ SFU_IMG_InitStatusTypeDef SFU_IMG_InitImageHandling(void)
   /*
    * Sanity check: let's make sure the chunks used for decrypt match the FLASH constraints
    */
+  //복호화 시 chunk 크기의 alignment 확인
   if (0U != (uint32_t)(SFU_IMG_CHUNK_SIZE % (uint32_t)sizeof(SFU_LL_FLASH_write_t)))
   {
     /* The size of the chunks used to store the decrypted data must be a multiple of the FLASH write length */
@@ -604,6 +612,7 @@ SFU_IMG_InitStatusTypeDef SFU_IMG_InitImageHandling(void)
    *               This block alignment constraint does not exist for AES GCM but we do not want to specialize the code
    *               for a specific crypto scheme.
    */
+  //chunk 크기와 AES 블록 크기의 alignment 확인
   if (0U != (uint32_t)((uint32_t)SFU_IMG_CHUNK_SIZE % (uint32_t)AES_BLOCK_SIZE))
   {
     /* For AES CBC block encryption/decryption the chunks must be aligned on the AES block size */
@@ -614,6 +623,7 @@ SFU_IMG_InitStatusTypeDef SFU_IMG_InitImageHandling(void)
   /*
    * Sanity check: let's make sure the active slot headers do not overlap SB code area protected by WRP
    */
+  //액티브 슬롯이 WRP 로 보호되는 코드영역을 침범하지 않았는지 확인
   for (i = 0U; i < SFU_NB_MAX_ACTIVE_IMAGE; i++)
   {
 #if defined(__GNUC__)
@@ -635,6 +645,7 @@ SFU_IMG_InitStatusTypeDef SFU_IMG_InitImageHandling(void)
   /*
    * Sanity check: let's make sure the dwl slot does not overlap SB code area protected by WRP
    */
+  //다운로드 슬롯이 WRP 로 보호되는 코드영역을 침범하지 않았는지 확인
   for (i = 0U; i < SFU_NB_MAX_DWL_AREA; i++)
   {
 #if defined(__GNUC__)
@@ -657,6 +668,7 @@ SFU_IMG_InitStatusTypeDef SFU_IMG_InitImageHandling(void)
   /*
    * Sanity check: the firewall NVdata segment must overlap the firewall code segment
    */
+  //firewall 주소값 범위가 올바른지 확인
   if (((SFU_PROTECT_FWALL_NVDATA_ADDR_START - FLASH_BANK_SIZE) > SFU_PROTECT_FWALL_CODE_ADDR_START) ||
       ((SFU_PROTECT_FWALL_NVDATA_ADDR_START + SFU_PROTECT_FWALL_NVDATA_SIZE - FLASH_BANK_SIZE) <
        (SFU_PROTECT_FWALL_CODE_ADDR_START + SFU_PROTECT_FWALL_CODE_SIZE)))
@@ -668,6 +680,7 @@ SFU_IMG_InitStatusTypeDef SFU_IMG_InitImageHandling(void)
   /*
    * Sanity check: let's make sure headers are under the firewall protection
    */
+  //액티브 헤더 영역이 firewall 로 보호되는 영역 내부에 있는지 확인
   for (i = 0U; i < SFU_NB_MAX_ACTIVE_IMAGE; i++)
   {
 #if defined(__GNUC__)
@@ -694,6 +707,7 @@ SFU_IMG_InitStatusTypeDef SFU_IMG_InitImageHandling(void)
   /*
    * Sanity check: specific swap process checks
    */
+  //swap 영역 관련 점검 및 설정 확인
   e_swap_ret_status = SFU_IMG_CheckSwapImageHandling();
   if (e_swap_ret_status != SFU_IMG_INIT_OK)
   {
@@ -920,11 +934,13 @@ SFU_ErrorStatus SFU_IMG_DetectFW(uint32_t SlotNumber)
   SE_FwRawHeaderTypeDef *p_header;
 
   /* Read header */
+  //지정된 슬롯의 헤더를 읽어온다.
   pbuffer = (uint8_t *) SlotHeaderAdd[SlotNumber];
   if (SFU_LL_FLASH_Read(buffer, pbuffer, sizeof(buffer)) == SFU_SUCCESS)
   {
     /* Check if the FW header is authentic : SFU1 / SFU2 / SFU3 */
     p_header = (SE_FwRawHeaderTypeDef *)(uint32_t)buffer;
+    //헤더 정보에서 슬롯 번호가 정상인지 확인한다.
     if (SFU_IMG_GetFwImageSlot(p_header) != SLOT_INACTIVE)
     {
       /*
@@ -933,6 +949,8 @@ SFU_ErrorStatus SFU_IMG_DetectFW(uint32_t SlotNumber)
        * Objective is to detect if the FW image has been erased
        * ==> this is the case after SFU_IMG_InvalidateCurrentFirmware() (could be an attack attempt)
        */
+      //VerifySlot은 지정된 슬롯이 비어있거나 아무것도 쓰여있지 않은지 확인한다.
+      //따라서 무엇인가 슬롯에 FW 가 있다면 SFU_ERROR 를 반환하고 SFU_IMG_DetectFW 는 FW 가 있으므로 SFU_SUCCESS 를 반환한다.
       if (VerifySlot((uint8_t *) SlotStartAdd[SlotNumber], SFU_IMG_IMAGE_OFFSET + 0x20U, 0U) != SFU_SUCCESS)
       {
         e_ret_status = SFU_SUCCESS;
@@ -1020,12 +1038,14 @@ SFU_ErrorStatus SFU_IMG_CheckFwVersion(uint32_t ActiveSlot, uint16_t CurrentVers
   UNUSED(ActiveSlot);
 
   /* If the header of the active firmware is not valid, the CurrentVersion is 0 */
+  //valid 헤더의 버전이 0 인 경우 (기존에 액티브 슬롯에 FW 가 설치된 이력이 없는 경우)
   if (CurrentVersion == 0U)
   {
     /*
      * If the header of the active firmware is not valide (could comes from an attak atempt, we authorize only the
      * installation of a specific version identified by SFU_FW_VERSION_INIT_NUM.
      */
+    //새로 설치하는 FW 버전이 1인 경우만 허용한다. (아무것도 설치하지 않은 상태에서 버전 2 설치는 허용하지 않음)
     if (CandidateVersion == SFU_FW_VERSION_INIT_NUM)
     {
       /* Candidate version is allowed */
@@ -1045,6 +1065,7 @@ SFU_ErrorStatus SFU_IMG_CheckFwVersion(uint32_t ActiveSlot, uint16_t CurrentVers
      * But we authorize the re-installation of the current firmware version.
      * We also check that the candidate version is at least the min. allowed version for this device.
      */
+    //기존에 설치된 버전이 있어던 경우 신규로 설치하는 FW 의 버전은 기존 버전과 같거나 커야한다.
     if ((CandidateVersion >= CurrentVersion) && (CandidateVersion >= SFU_FW_VERSION_START_NUM))
     {
       /* Candidate version is allowed */

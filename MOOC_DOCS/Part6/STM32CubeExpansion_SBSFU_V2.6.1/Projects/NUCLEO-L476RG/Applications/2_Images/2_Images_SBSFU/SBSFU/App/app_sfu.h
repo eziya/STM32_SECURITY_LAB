@@ -58,7 +58,7 @@ extern "C" {
 #define SFU_DEBUG_MODE               /*!< Comment this define to optimize memory footprint (debug mode removed)
                                           No more print on terminal during SBSFU execution */
 
-/*#define SFU_VERBOSE_DEBUG_MODE*/   /*!< Uncomment this define when in verbose Debug mode.
+#define SFU_VERBOSE_DEBUG_MODE   /*!< Uncomment this define when in verbose Debug mode.
                                           this switch activates more debug prints in the console (FSM state info...) */
 
 
@@ -141,7 +141,7 @@ extern "C" {
  *
  */
 
-/*#define SECBOOT_DISABLE_SECURITY_IPS*/  /*!< Disable all security IPs at once when activated */
+#define SECBOOT_DISABLE_SECURITY_IPS  /*!< Disable all security IPs at once when activated */
 
 #if !defined(SECBOOT_DISABLE_SECURITY_IPS)
 
