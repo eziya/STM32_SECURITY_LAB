@@ -306,15 +306,18 @@ static SFU_ErrorStatus WriteTrailerHeader(uint32_t DwlSlot, SE_FwRawHeaderTypeDe
   uint32_t buffer;
 
   /* Write Headers VALID + TEST */
+  //트레일러 영역에 테스트 헤더를 기록한다.
   e_ret_status = SFU_LL_FLASH_Write(&flash_if_info, TRAILER_HDR_TEST(DwlSlot), (uint8_t *) pTestHeader,
                                     SE_FW_HEADER_TOT_LEN);
   if (e_ret_status == SFU_SUCCESS)
   {
+    //트레일러 영역에 valid 헤더를 기록한다.
     e_ret_status = SFU_LL_FLASH_Write(&flash_if_info, TRAILER_HDR_VALID(DwlSlot), (uint8_t *) pValidHeader,
                                       SE_FW_HEADER_TOT_LEN);
   }
 
   /* Write Magic */
+  //test 헤더와 valid 헤더를 반반씩 섞어서 트레일러 SWAP 영역에 기록한다.
   if (e_ret_status == SFU_SUCCESS)
   {
     buffer = (uint32_t) pValidHeader;
@@ -1579,6 +1582,7 @@ static SFU_ErrorStatus PrepareCandidateImageForInstall(uint32_t DwlSlot, SE_FwRa
   /*
     * Control if there is no additional code beyond the firmware image (malicious SW)
     */
+  //현재 다운로드 슬롯에 실제 이미지의 크기 외 다른 영역에 쓰레기 값이 없는지 다시한번 확인한다.
   e_ret_status = VerifySlot((uint8_t *) SlotStartAdd[DwlSlot], SLOT_SIZE(DwlSlot),
                             pFwImageHeader->PartialFwSize + (pFwImageHeader->PartialFwOffset %
                                                              SLOT_SIZE(SLOT_SWAP)));
@@ -1614,6 +1618,7 @@ static SFU_ErrorStatus PrepareCandidateImageForInstall(uint32_t DwlSlot, SE_FwRa
     * <Swap area>  : {Candidate Image Header}
     * </Swap area>
     */
+  //다운로드 슬롯의 이미지를 복호화한다.
   e_ret_status =  DecryptImageInDwlSlot(DwlSlot, pFwImageHeader);
 
   if (e_ret_status != SFU_SUCCESS)
@@ -1640,6 +1645,7 @@ static SFU_ErrorStatus PrepareCandidateImageForInstall(uint32_t DwlSlot, SE_FwRa
     * and a "hole" has been created in dwl slot to be able to swap.
     */
 
+  //복호화가 완료된 이미지를 이용하여 다시한번 fw 의 signature 를 검증한다.
   e_ret_status = VerifyFwSignatureAfterDecrypt(&e_se_status, DwlSlot, pFwImageHeader);
   if (e_ret_status != SFU_SUCCESS)
   {
@@ -1681,6 +1687,7 @@ static SFU_ErrorStatus InstallNewVersion(uint32_t ActiveSlot, uint32_t DwlSlot, 
     */
 
   /* erase "swap area" size at the end of dwl slot */
+  //다운로드 슬롯에 트레일러 영역을 erase 한다.
   e_ret_status = EraseSlotIndex(DwlSlot, (TRAILER_INDEX(DwlSlot) - 1U));
   if (e_ret_status !=  SFU_SUCCESS)
   {
@@ -1707,6 +1714,8 @@ static SFU_ErrorStatus InstallNewVersion(uint32_t ActiveSlot, uint32_t DwlSlot, 
 
 
   /*  write trailer  */
+  //트레일러 영역에 valid 헤더(현재 액티브 슬롯 헤더) 와 test 헤더(다운로드 fw 헤더) 및 SWAP magic 을 기록한다.
+  //트레일러의 이 정보를 보고 설치가 시작되었는지 알 수 있다.
   e_ret_status = WriteTrailerHeader(DwlSlot, pValidHeader, pTestHeader);
   if (e_ret_status != SFU_SUCCESS)
   {
@@ -1740,6 +1749,11 @@ static SFU_ErrorStatus InstallNewVersion(uint32_t ActiveSlot, uint32_t DwlSlot, 
     */
 
   /*  swap  */
+  //다운로드 슬롯과 액티브 슬롯을 서로 swap 한다.
+  //내부 코드는 매우 복잡한데 이해를 위해 simple 하게 정리하면 액티브 슬롯 영역을 다운로드 슬롯으로 옮기고
+  //반대로 다운로드 슬롯의 내용을 액티브 슬롯으로 이동시킨다. 이 때 swap 슬롯을 사용한다.
+  //swap 진행상황은 트레일러의 N*CPY_TO_ACTIVE_SLOT 과 N*CPY_TO_DWL_SLOT 에 기록되기 때문에 swap 도중에 중단되었다가
+  //resume 하는 경우에는 이 정보를 바탕으로 다시 swap 을 resume 할 수 있다.
   e_ret_status = SwapFirmwareImages(ActiveSlot, DwlSlot, pTestHeader);
   if (e_ret_status != SFU_SUCCESS)
   {
@@ -1753,6 +1767,7 @@ static SFU_ErrorStatus InstallNewVersion(uint32_t ActiveSlot, uint32_t DwlSlot, 
 #endif /* ENABLE_IMAGE_STATE_HANDLING */
 
   /* Validate immediately the new active FW */
+  //모든 swap 이 완료되었으면 다운로드 슬롯의 내용이 모두 액티브 슬롯에 기록되었으므로 다운로드 슬롯의 헤더를 액티브 슬롯에 기록한다.
   e_ret_status = SFU_IMG_Validation(ActiveSlot, pTestHeader);
   if (SFU_SUCCESS != e_ret_status)
   {
@@ -1761,6 +1776,7 @@ static SFU_ErrorStatus InstallNewVersion(uint32_t ActiveSlot, uint32_t DwlSlot, 
   }
 
   /* clear swap pattern */
+  //설치가 완료되었으므로 다운로드 트레일러의 Clean 영역에 0x55 를 writing 하여 설치 완료를 기록해 준다.
   e_ret_status = CleanMagicValue(DwlSlot);
   if (e_ret_status != SFU_SUCCESS)
   {
@@ -2058,6 +2074,7 @@ SFU_ErrorStatus SFU_IMG_TriggerImageInstallation(uint32_t DwlSlot)
    * The preparation stage consists in decrypting the candidate firmware image.
    * fw_image_header_to_test is already populated after SFU_IMG_CheckPendingInstallation() call.
    */
+  //다운로드 슬롯에 있는 fw 는 AES 암호화 되어 있는 상태이므로 이를 복호화 하고 signature 를 검증하여 올바른 이미지가 맞는지 확인한다.
   e_ret_status = PrepareCandidateImageForInstall(DwlSlot, &fw_image_header_to_test);
   if (SFU_SUCCESS != e_ret_status)
   {
@@ -2069,6 +2086,7 @@ SFU_ErrorStatus SFU_IMG_TriggerImageInstallation(uint32_t DwlSlot)
    */
   if (SFU_SUCCESS == e_ret_status)
   {
+    //현재 액티브 슬롯의 헤더 정보를 읽어온다.
     active_slot = SFU_IMG_GetFwImageSlot(&fw_image_header_to_test);
     pbuffer = (uint8_t *) SlotHeaderAdd[active_slot];
     e_ret_status = SFU_LL_FLASH_Read((uint8_t *) &fw_image_header_validated, pbuffer,
@@ -2080,6 +2098,7 @@ SFU_ErrorStatus SFU_IMG_TriggerImageInstallation(uint32_t DwlSlot)
    */
   if (SFU_SUCCESS == e_ret_status)
   {
+    //다운로드 슬롯에 있는 fw 를 액티브 슬롯에 설치하고 설치 완료 기록을 writing 한다.
     e_ret_status = InstallNewVersion(active_slot, DwlSlot, &fw_image_header_validated, &fw_image_header_to_test);
   }
 

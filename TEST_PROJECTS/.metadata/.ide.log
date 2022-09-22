@@ -961,3 +961,11 @@
 2022-09-21 18:28:56,417 [INFO] McuFinderGlobals:57 - Set McuFinderConnectedMode to true
 2022-09-21 18:28:56,432 [INFO] ApiDb:443 - Save user favorites file C:\Users\jihoo/.stm32cubeide/favorites.mcus.txt: 0 item(s)
 2022-09-21 18:28:56,432 [INFO] ApiDb:447 - User favorites MCUs=[]
+2022-09-21 20:29:09,028 [ERROR] LogOutputStream:74 - [STDERR_REDIRECT] 
+2022-09-22 19:05:28,609 [INFO] Activator:177 - 
+
+
+2022-09-22 19:05:28,625 [INFO] Activator:178 - !SESSION log4j initialized
+2022-09-22 19:05:54,771 [ERROR] LogOutputStream:74 - [STDERR_REDIRECT] SLF4J: Failed to load class "org.slf4j.impl.StaticLoggerBinder".
+2022-09-22 19:05:54,787 [ERROR] LogOutputStream:74 - [STDERR_REDIRECT] SLF4J: Defaulting to no-operation (NOP) logger implementation
+2022-09-22 19:05:54,787 [ERROR] LogOutputStream:74 - [STDERR_REDIRECT] SLF4J: See http://www.slf4j.org/codes.html#StaticLoggerBinder for further details.

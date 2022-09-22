@@ -65,6 +65,7 @@ SFU_ErrorStatus SFU_IMG_InstallAtNextReset(uint8_t *fw_header)
   {
     return SFU_ERROR;
   }
+  //swap 영역에 헤더 정보를 남겨놓고 재부팅을 하면 swap 영역의 헤더 파일을 확인하고 인스톨을 수행한다.
   if (WriteInstallHeader(fw_header) != SFU_SUCCESS)
   {
     return SFU_ERROR;

@@ -796,6 +796,8 @@ static void SFU_BOOT_SM_DownloadNewUserFw(void)
    *     As example, we will choose SLOT_DWL_2 for SFU2 magic in the FW header
    *   - by default : SLOT_DWL_1
    */
+  //Loader 를 실행하여 다운로드 슬롯에 fw 를 다운로드 받는다.
+  //다운로드 받을 슬롯은 fw 헤더의 magic tag 값으로 확인하기 때문에 지정하지 않고 결정된 결과를 반환 받는다.
   e_ret_status = SFU_LOADER_DownloadNewUserFw(&e_ret_status_app, &dwl_slot, &u_size);
   if (e_ret_status == SFU_SUCCESS)
   {
@@ -806,6 +808,7 @@ static void SFU_BOOT_SM_DownloadNewUserFw(void)
 #endif /* SFU_VERBOSE_DEBUG_MODE */
 
     /* Read header in dwl slot */
+    //다운로드 완료 후 다운로드 영역에서 헤더 정보를 읽는다.
     e_ret_status = SFU_LL_FLASH_Read((uint8_t *) &fw_image_header_validated, (uint8_t *) SlotStartAdd[dwl_slot],
                                      sizeof(SE_FwRawHeaderTypeDef));
   }
@@ -816,6 +819,7 @@ static void SFU_BOOT_SM_DownloadNewUserFw(void)
      * Notify the Secure Boot that a new image has been downloaded
      * by calling the SE interface function to trigger the installation procedure at next reboot.
      */
+    //다운로드가 완료되었으므로 리셋 후에 설치가 될 수 있도록 swap 영역에 헤더 정보를 남겨 놓는다.
     if (SFU_IMG_InstallAtNextReset((uint8_t *) &fw_image_header_validated) != SFU_SUCCESS)
     {
       /* Erase downloaded image */
@@ -830,6 +834,7 @@ static void SFU_BOOT_SM_DownloadNewUserFw(void)
   else
   {
     /* Erase downloaded image */
+    //다운로드가 되지 않거나 헤더를 읽지 못하는 경우 다운로드 슬롯을 erase 하고 에러처리한다.
     (void) SFU_IMG_EraseDownloadedImg(dwl_slot);
 
     /* Memorize the specific error cause if any before handling this critical failure */
@@ -859,6 +864,7 @@ static void SFU_BOOT_SM_DownloadNewUserFw(void)
     }
   } /* else error with no specific error cause */
   /* Set the next State Machine state according to the success of the failure of e_ret_status */
+  //문제 없이 다운로드가 완료된 경우에는 reboot 하고 오류가 발생한 경우에는 예외처리한다.
   SFU_SET_SM_IF_CURR_STATE(e_ret_status, SFU_STATE_REBOOT_STATE_MACHINE, SFU_STATE_HANDLE_CRITICAL_FAILURE);
 }
 #endif /* SECBOOT_LOADER == SECBOOT_USE_STANDALONE_LOADER */
@@ -881,10 +887,13 @@ static void SFU_BOOT_SM_InstallNewUserFw(void)
      - errors caught by FLOW_CONTROL ==> infinite loop */
   FLOW_CONTROL_CHECK(uFlowProtectValue, FLOW_CTRL_RUNTIME_PROTECT);
   FLOW_CONTROL_INIT(uFlowProtectValue, FLOW_CTRL_INIT_VALUE);
+
+  //정적 보호 기능을 enable 한다.
   e_ret_status = SFU_LL_SECU_CheckApplyStaticProtections();
   FLOW_CONTROL_CHECK(uFlowProtectValue, FLOW_CTRL_STATIC_PROTECT);
   if (e_ret_status == SFU_SUCCESS)
   {
+    //동적 보호 기능을 enable 한다.
     e_ret_status = SFU_LL_SECU_CheckApplyRuntimeProtections(SFU_SECOND_CONFIGURATION);
   }
   FLOW_CONTROL_CHECK(uFlowProtectValue, FLOW_CTRL_RUNTIME_PROTECT);
@@ -899,6 +908,7 @@ static void SFU_BOOT_SM_InstallNewUserFw(void)
   }
 
   /* Check the candidate version vs current active version */
+  //다운로드 영역에 있는 fw 의 버전과 현재 액티브 영역의 버전을 확인하여 설치가능 여부를 확인한다.
   e_ret_status = SFU_IMG_CheckCandidateVersion(m_DwlSlotToInstall);
 
   if (SFU_SUCCESS != e_ret_status)
@@ -909,12 +919,14 @@ static void SFU_BOOT_SM_InstallNewUserFw(void)
   else
   {
     /* Secure coding : double check the candidate version vs current active version */
+    //더블 체크한다.
     e_ret_status = SFU_IMG_CheckCandidateVersion(m_DwlSlotToInstall);
   }
 
   if (SFU_SUCCESS == e_ret_status)
   {
     /* Launch the Firmware Installation procedure */
+    //다운로드 슬롯의 fw 가 문제가 없는 경우 설치를 완료한다.
     e_ret_status = SFU_IMG_TriggerImageInstallation(m_DwlSlotToInstall);
   }
 
@@ -945,6 +957,7 @@ static void SFU_BOOT_SM_InstallNewUserFw(void)
        - rollback */
   if (SFU_SUCCESS == e_ret_status)
   {
+    //정상적으로 설치된 경우에는 재부팅한다.
     SFU_BOOT_ForceReboot();
   }
   else

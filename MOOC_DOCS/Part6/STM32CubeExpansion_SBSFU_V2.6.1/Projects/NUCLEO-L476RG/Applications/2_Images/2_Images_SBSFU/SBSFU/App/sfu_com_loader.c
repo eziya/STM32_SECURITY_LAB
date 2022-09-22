@@ -112,6 +112,7 @@ SFU_ErrorStatus SFU_COM_YMODEM_Receive(SFU_COM_YMODEM_StatusTypeDef *peCOMStatus
     file_done = 0U;
     while ((file_done == 0U) && (*peCOMStatus == SFU_COM_YMODEM_OK))
     {
+      //UART 를 통해서 데이터를 수신한다. 패킷의 길이에 따라서 어떤 데이터를 수신하였는지 구분할 수 있다.
       switch (ReceivePacket(m_aPacketData, &packet_length, SFU_COM_YMODEM_DOWNLOAD_TIMEOUT))
       {
         case HAL_OK:
@@ -128,6 +129,7 @@ SFU_ErrorStatus SFU_COM_YMODEM_Receive(SFU_COM_YMODEM_StatusTypeDef *peCOMStatus
               break;
             case 0U:
               /* End of transmission */
+              //통신 종료 메시지를 받으면 수신한 파일 크기를 반환한다.
               (void) SFU_COM_Serial_PutByte(SFU_COM_YMODEM_ACK);
               *puSize = filesize;
               file_done = 1U;
@@ -137,15 +139,18 @@ SFU_ErrorStatus SFU_COM_YMODEM_Receive(SFU_COM_YMODEM_StatusTypeDef *peCOMStatus
               if (m_aPacketData[SFU_COM_YMODEM_PACKET_NUMBER_INDEX] != (packets_received & 0x000000FFU))
               {
                 /* No NACK sent for a better synchro with remote : packet will be repeated */
+                //패킷 인덱스와 수신한 패킷의 개수가 일치하지 않는 경우에는 오류 NACK 를 보내지 않으면 패킷은 재전송된다.
               }
               else
               {
+                //최초에 패킷을 수신할 때는 수신할 파일명과 파일의 크기가 전송된다.
                 if (packets_received == 0U)
                 {
                   /* File name packet */
                   if (m_aPacketData[SFU_COM_YMODEM_PACKET_DATA_INDEX] != 0U)
                   {
                     /* File name skipped */
+                    //파일명은 사용하지 않는다.
                     i = 0U;
                     file_ptr = m_aPacketData + SFU_COM_YMODEM_PACKET_DATA_INDEX;
                     while ((*file_ptr != 0U) && (i < SFU_COM_YMODEM_FILE_NAME_LENGTH))
@@ -157,6 +162,7 @@ SFU_ErrorStatus SFU_COM_YMODEM_Receive(SFU_COM_YMODEM_StatusTypeDef *peCOMStatus
                     file_ptr++;
 
                     /* File size extraction */
+                    //수신할 파일의 크기를 확인한다. filesize
                     i = 0U;
                     while ((*file_ptr != (uint8_t) ' ') && (i < SFU_COM_YMODEM_FILE_SIZE_LENGTH))
                     {
@@ -168,6 +174,7 @@ SFU_ErrorStatus SFU_COM_YMODEM_Receive(SFU_COM_YMODEM_StatusTypeDef *peCOMStatus
                     (void) Str2Int(file_size, &filesize);
 
                     /* Header packet received callback call*/
+                    //수신한 파일크기를 패킷의 크기 1kB 로 나누어서 몇 블록을 받아야 하는지 확인한다.
                     if (SFU_COM_YMODEM_HeaderPktRxCpltCallback((uint32_t) filesize) == SFU_SUCCESS)
                     {
                       (void) SFU_COM_Serial_PutByte(SFU_COM_YMODEM_ACK);
@@ -184,6 +191,7 @@ SFU_ErrorStatus SFU_COM_YMODEM_Receive(SFU_COM_YMODEM_StatusTypeDef *peCOMStatus
                     }
                   }
                   /* File header packet is empty, end session */
+                  // 헤더 정보가 없는 경우에는 세션 종료
                   else
                   {
                     (void) SFU_COM_Serial_PutByte(SFU_COM_YMODEM_ACK);
@@ -195,6 +203,7 @@ SFU_ErrorStatus SFU_COM_YMODEM_Receive(SFU_COM_YMODEM_StatusTypeDef *peCOMStatus
                 else /* Data packet */
                 {
                   /* Data packet received callback call*/
+                  //헤더 패킷이후에는 데이터 패킷을 수신한다. 데이터 패킷을 수신하면 다운로드 슬롯에 저장한다.
                   if (SFU_COM_YMODEM_DataPktRxCpltCallback(&m_aPacketData[SFU_COM_YMODEM_PACKET_DATA_INDEX],
                                                            packet_length) == SFU_SUCCESS)
                   {
@@ -204,6 +213,7 @@ SFU_ErrorStatus SFU_COM_YMODEM_Receive(SFU_COM_YMODEM_StatusTypeDef *peCOMStatus
                   else /* An error occurred while writing to Flash memory */
                   {
                     /* End session */
+                    //저장 오류 발생 시 세션을 종료한다.
                     (void) SFU_COM_Serial_PutByte(SFU_COM_YMODEM_CA);
                     (void) SFU_COM_Serial_PutByte(SFU_COM_YMODEM_CA);
                     *peCOMStatus = SFU_COM_YMODEM_DATA;
@@ -217,11 +227,13 @@ SFU_ErrorStatus SFU_COM_YMODEM_Receive(SFU_COM_YMODEM_StatusTypeDef *peCOMStatus
           }
           break;
         case HAL_BUSY: /* Abort actually */
+          //수신이 되지 않은 경우 종료
           (void) SFU_COM_Serial_PutByte(SFU_COM_YMODEM_CA);
           (void) SFU_COM_Serial_PutByte(SFU_COM_YMODEM_CA);
           *peCOMStatus = SFU_COM_YMODEM_ABORT;
           break;
         default:
+          //정의되지 않은 상태 회신시 에러회수를 확인하고 종료
           if (session_begin > 0U)
           {
             errors ++;

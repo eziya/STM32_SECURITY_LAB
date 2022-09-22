@@ -444,7 +444,7 @@ SFU_ErrorStatus VerifySlot(uint8_t *pSlotBegin, uint32_t uSlotSize, uint32_t uFw
   /* Check is already clean */
   pdata = pSlotBegin + SFU_IMG_IMAGE_OFFSET + uFwSize;
   length = uSlotSize - SFU_IMG_IMAGE_OFFSET - uFwSize;
-  //해당 슬롯이 지워졌거나 아무 것도 쓰여있지 않은 상태인지 확인한다.
+  //해당 슬롯의 FW 코드 이후 영역에 아무 것도 쓰여있지 않은 상태인지 확인한다.
   e_ret_status = SFU_LL_FLASH_Compare(pdata, 0x00000000U, 0xFFFFFFFFU, length);
 
   return e_ret_status;
@@ -949,8 +949,8 @@ SFU_ErrorStatus SFU_IMG_DetectFW(uint32_t SlotNumber)
        * Objective is to detect if the FW image has been erased
        * ==> this is the case after SFU_IMG_InvalidateCurrentFirmware() (could be an attack attempt)
        */
-      //VerifySlot은 지정된 슬롯이 비어있거나 아무것도 쓰여있지 않은지 확인한다.
-      //따라서 무엇인가 슬롯에 FW 가 있다면 SFU_ERROR 를 반환하고 SFU_IMG_DetectFW 는 FW 가 있으므로 SFU_SUCCESS 를 반환한다.
+      //VerifySlot은 보통 지정된 슬롯에 FW 외 아무것도 쓰여있지 않은지 확인한다.
+      //하지만 여기서는 파라미터로 offset + 0x20 위치에 fw 크기를 0 으로 전달하여 전체 영역에 무었인가 값이 쓰여 있는지를 확인하는 용도로 사용하였다.
       if (VerifySlot((uint8_t *) SlotStartAdd[SlotNumber], SFU_IMG_IMAGE_OFFSET + 0x20U, 0U) != SFU_SUCCESS)
       {
         e_ret_status = SFU_SUCCESS;
@@ -973,6 +973,7 @@ SFU_ErrorStatus SFU_IMG_Validation(uint32_t SlotNumber, SE_FwRawHeaderTypeDef *p
   SFU_FLASH_StatusTypeDef flash_if_status;
 
   /* Header writing: encrypted part with signature */
+  //지정된 슬롯 헤더에 헤더 정보를 업데이트해 준다.
   e_ret_status = SFU_LL_FLASH_Write(&flash_if_status, (uint8_t *) SlotHeaderAdd[SlotNumber], (uint8_t *) pFWImageHeader,
                                     SE_FW_AUTH_LEN + SE_FW_HEADER_SIGN_LEN);
   STATUS_FWIMG(e_ret_status == SFU_ERROR, SFU_IMG_FLASH_WRITE_FAILED);
@@ -982,6 +983,7 @@ SFU_ErrorStatus SFU_IMG_Validation(uint32_t SlotNumber, SE_FwRawHeaderTypeDef *p
   /* Header writing: previous FW image fingerprint */
   if (e_ret_status == SFU_SUCCESS)
   {
+    //지정된 슬롯의 figerprint 를 업데이트 한다.
     e_ret_status = SFU_LL_FLASH_Write(&flash_if_status, (uint8_t *)(SlotHeaderAdd[SlotNumber] + SE_FW_HEADER_TOT_LEN -
                                                                     SE_FW_HEADER_FINGERPRINT_LEN),
                                       (uint8_t *) pFWImageHeader->PrevHeaderFingerprint, SE_FW_HEADER_FINGERPRINT_LEN);
@@ -1127,11 +1129,14 @@ SFU_ErrorStatus SFU_IMG_CheckCandidateVersion(uint32_t DwlSlot)
    */
 
   /* Header analysis to find slot based on number with magic tag */
+  //다운로드 영역의 헤더에서 설치할 액티브 슬롯을 확인한다.
   active_slot = SFU_IMG_GetFwImageSlot(&fw_image_header_to_test);
 
   /* Get the version of active_slot */
+  //해당 액티브 슬롯의 현재 버전을 확인한다.
   cur_ver = SFU_IMG_GetActiveFwVersion(active_slot);
 
+  //현재 액트브 슬롯의 버전과 다운로드 슬롯의 fw 버전을 비교하여 설치가능 여부를 확인한다.
   if (SFU_IMG_CheckFwVersion(active_slot, cur_ver, fw_image_header_to_test.FwVersion) != SFU_SUCCESS)
   {
     /* The installation is forbidden */
@@ -1149,6 +1154,7 @@ SFU_ErrorStatus SFU_IMG_CheckCandidateVersion(uint32_t DwlSlot)
   {
     /* the anti-rollback check succeeds: the version is fine */
     /* double check to avoid basic hardware attack attack */
+    //더블 체크한다.
     verif_ver = SFU_IMG_GetActiveFwVersion(active_slot);
     e_ret_status = SFU_IMG_CheckFwVersion(active_slot, verif_ver, fw_image_header_to_test.FwVersion);
   }
