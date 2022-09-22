@@ -98,10 +98,10 @@ static __IO SFU_BOOT_StateMachineContextTypeDef m_StateMachineContext = {SFU_STA
                                                                         };
 
 /*!< Static member variables identifyng the slots to be processed by secure firmware update . */
-static uint32_t m_DwlSlotToInstall = SLOT_INACTIVE;
-static uint32_t m_ActiveSlotToResume = SLOT_INACTIVE;
-static uint32_t m_ActiveSlotToRollback = SLOT_INACTIVE;
-static uint32_t m_ActiveSlotToExecute = SLOT_INACTIVE;
+static uint32_t m_DwlSlotToInstall = SLOT_INACTIVE;         //설치할 다운로드 슬롯
+static uint32_t m_ActiveSlotToResume = SLOT_INACTIVE;       //설치를 resume 할 액티브 슬롯 번호
+static uint32_t m_ActiveSlotToRollback = SLOT_INACTIVE;     //rollback 할 액티브 슬롯 번호
+static uint32_t m_ActiveSlotToExecute = SLOT_INACTIVE;      //실행할 액티브 슬롯 번호
 
 /* Global variables ----------------------------------------------------------*/
 /**
@@ -112,6 +112,7 @@ static uint32_t m_ActiveSlotToExecute = SLOT_INACTIVE;
   * \li It is used to determine if the user button must be pressed before waiting for a local download to start
   * \li This is used at LocalDownload and CheckUserFwStatus stages.
   */
+//최초 실행시 점검 단계 확인용 flag
 uint8_t initialDeviceStatusCheck;
 
 /**
@@ -119,6 +120,7 @@ uint8_t initialDeviceStatusCheck;
   *   - Security protections flow (static + dynamic)
   *   - Crypto operations flow (authentication, integrity)
   */
+//flow control 관련 변수
 uint32_t uFlowProtectValue = FLOW_CTRL_INIT_VALUE;
 uint32_t uFlowCryptoValue = FLOW_CTRL_INIT_VALUE;
 
@@ -177,6 +179,7 @@ static void SFU_BOOT_ManageResetSources(void);
   * @retval SFU_BOOT_InitErrorTypeDef error code as the function returns only if a critical failure occurs at init
   *          stage.
   */
+//메인 함수에서 호출되면 초기화 후 SM 을 이용한 부트로더 실행상태로 전환, 동작 중 오류가 발생하면 에러를 반환한다.
 SFU_BOOT_InitErrorTypeDef SFU_BOOT_RunSecureBootService()
 {
   SFU_BOOT_InitErrorTypeDef e_ret_code = SFU_BOOT_INIT_ERROR;
@@ -234,6 +237,7 @@ SFU_BOOT_InitErrorTypeDef SFU_BOOT_RunSecureBootService()
   * @param  None
   * @retval None
   */
+//재부팅 수행 함수
 void SFU_BOOT_ForceReboot(void)
 {
   /*
@@ -244,6 +248,7 @@ void SFU_BOOT_ForceReboot(void)
   TRACE("\r\n\r\n\r\n");
 
   /* This is the last operation executed. Force a System Reset. */
+  //시스템 재부팅
   NVIC_SystemReset();
 }
 
@@ -252,6 +257,7 @@ void SFU_BOOT_ForceReboot(void)
   * @param  None
   * @retval SFU_ErrorStatus SFU_SUCCESS if successful, SFU_ERROR otherwise.
   */
+//초기화 함수
 static SFU_ErrorStatus SFU_BOOT_Init(void)
 {
   SFU_ErrorStatus  e_ret_status = SFU_ERROR;
@@ -261,17 +267,19 @@ static SFU_ErrorStatus SFU_BOOT_Init(void)
    * We start the execution at boot-up (display all messages in teraterm console, check the trigger to force a local
    * download)
    */
+  //최초 초기화 시에 flag 값을 1로 설정하고 fw 체크가 끝나면 0 이 된다. 정상적으로 fw 가 있는 경우에는 사용되지 않고
+  //fw 가 없는 경우 다시 체크 시에 상태를 다운로드 대기 상태로 전환 시키는데 사용된다.
   initialDeviceStatusCheck = 1U;
 
   /* Call the Hardware Abstraction Layer Init implemented for the specific MCU */
-  //low level 초기화, 현재는 CRC 초기화 기능만 포함
+  //low level 초기화, 현재는 YModem CRC 체크를 위한 CRC 초기화 기능만 포함하고 있다.
   if (SFU_LL_Init() != SFU_SUCCESS)
   {
     return SFU_ERROR;
   }
 
   /* Flash interface initialization */
-  //내부 외부 flash 초기화, 특별한 기능 없음
+  //내부,외부 flash 초기화, 특별한 기능 없음
   if (SFU_LL_FLASH_Init() != SFU_SUCCESS)
   {
     return SFU_ERROR;
@@ -349,8 +357,11 @@ static SFU_ErrorStatus SFU_BOOT_Init(void)
   *            required security mechanisms.
   * @retval SFU_ErrorStatus SFU_SUCCESS if successful, SFU_ERROR otherwise.
   */
+//SFU deinit 함수
 static SFU_ErrorStatus SFU_BOOT_DeInit(void)
 {
+  //SFU 관련 기능을 deinitialize 한다.
+  //대부분 특별한 기능이 없고 deinitialize 시점에 특정 작업이 필요시 코드를 추가한다.
   if (SFU_EXCPT_DeInit() != SFU_SUCCESS)
   {
     return SFU_ERROR;
@@ -385,13 +396,16 @@ static SFU_ErrorStatus SFU_BOOT_DeInit(void)
   * @param  None
   * @retval None
   */
+//LED, 버튼같은 주변장치 설정
 static void SFU_BOOT_BspConfiguration()
 {
   /* LED Init*/
+  //LED 초기화
   (void) BSP_LED_Init(SFU_STATUS_LED);
 
 #if (SECBOOT_LOADER == SECBOOT_USE_LOCAL_LOADER) || (SECBOOT_LOADER == SECBOOT_USE_STANDALONE_LOADER)
   /* User Button */
+  //버튼 초기화
   BUTTON_INIT();
 #endif /* (SECBOOT_LOADER == SECBOOT_USE_LOCAL_LOADER) || (SECBOOT_LOADER == SECBOOT_USE_STANDALONE_LOADER) */
 }
@@ -401,11 +415,14 @@ static void SFU_BOOT_BspConfiguration()
   * @param  None
   * @retval SFU_ErrorStatus SFU_SUCCESS if successful, SFU_ERROR otherwise.
   */
+//SFU 의 state machine 수행 함수이다. while 루프로 반복 수행되며 정상적인 경우 application 으로 점프하고
+//오류가 있는 경우에는 error 를 반환한다.
 static SFU_ErrorStatus SFU_BOOT_SM_Run(void)
 {
   SFU_ErrorStatus  e_ret_status = SFU_SUCCESS;
   void (*fnStateMachineFunction)(void);
   //SM 상태별 함수 정의 테이블
+  //loader 를 사용하지 않는 경우에는 다운로드 관련 함수는 미사용
   static void (* fnStateMachineTable[])(void) = {SFU_BOOT_SM_CheckStatusOnReset,
 #if (SECBOOT_LOADER == SECBOOT_USE_LOCAL_LOADER) || (SECBOOT_LOADER == SECBOOT_USE_STANDALONE_LOADER)
                                                  SFU_BOOT_SM_CheckNewFwToDownload,
@@ -425,10 +442,11 @@ static SFU_ErrorStatus SFU_BOOT_SM_Run(void)
   while (e_ret_status == SFU_SUCCESS)
   {
     /* Always execute a security/safety check before moving to the next state */
-    //동작시마다 시큐리티 체크, 현재는 IWDG 워치독 refresh 기능만 사용
+    //동작시마다 시큐리티 체크, 현재는 IWDG 워치독 refresh 와 firewall 동작 점검 기능 사용
     if (SFU_BOOT_SecuritySafetyCheck() == SFU_SUCCESS)
     {
       /* Get the right StateMachine function according to the current state */
+      //상태별 callback 함수 확인
       fnStateMachineFunction = fnStateMachineTable[(uint8_t)m_StateMachineContext.CurrState];
 
       /* Call the State Machine function associated to the current state */
@@ -464,7 +482,7 @@ static void SFU_BOOT_SM_CheckStatusOnReset(void)
   TRACE("\r\n= [SBOOT] STATE: CHECK STATUS ON RESET");
 
   /* Check the wakeup sources */
-  //RCC 플래그를 확인하여 재기동 원인 확인
+  //RCC 플래그를 확인하여 재기동 원인 확인하고 메시지를 출력한다.
   SFU_BOOT_ManageResetSources();
 
 
@@ -981,12 +999,14 @@ static void SFU_BOOT_SM_ResumeInstallNewUserFw(void)
   /*
    * This resume installation procedure continue installation of new User FW in the active slot
    */
+  //설치중에 중단된 경우 설치를 resume 한다.
   e_ret_status = SFU_IMG_TriggerResumeInstallation(m_ActiveSlotToResume, m_DwlSlotToInstall);
 
   /* Installation successful : reboot for next operations on other slots
        - installation
        - resume
        - rollback */
+  //설치가 완료된 경우 reboot 한다.
   if (SFU_SUCCESS == e_ret_status)
   {
     SFU_BOOT_ForceReboot();
@@ -994,6 +1014,7 @@ static void SFU_BOOT_SM_ResumeInstallNewUserFw(void)
   else
   {
     /* No specific error cause managed here because the FSM state already provides the information. */
+    //오류가 발생한 경우에는 오류 상태로 전환한다.
     SFU_SET_SM_CURR_STATE(SFU_STATE_HANDLE_CRITICAL_FAILURE);
   }
 }
@@ -1051,6 +1072,8 @@ static void SFU_BOOT_SM_VerifyUserFwSignature(void)
 
   TRACE("\r\n= [SBOOT] STATE: VERIFY USER FW SIGNATURE");
 
+  //액티브 슬롯의 fw 를 실행하기 이전에 fw signature 를 검증한다.
+
   /* Double security check :
      - testing "static protections" twice will avoid basic hardware attack
      - flow control reached : dynamic protections checked
@@ -1058,10 +1081,12 @@ static void SFU_BOOT_SM_VerifyUserFwSignature(void)
      - errors caught by FLOW_CONTROL ==> infinite loop */
   FLOW_CONTROL_CHECK(uFlowProtectValue, FLOW_CTRL_RUNTIME_PROTECT);
   FLOW_CONTROL_INIT(uFlowProtectValue, FLOW_CTRL_INIT_VALUE);
+  //정적 보호 기능을 enable 한다.
   e_ret_status = SFU_LL_SECU_CheckApplyStaticProtections();
   FLOW_CONTROL_CHECK(uFlowProtectValue, FLOW_CTRL_STATIC_PROTECT);
   if (e_ret_status == SFU_SUCCESS)
   {
+    //동적 보호 기능을 enable 한다.
     e_ret_status = SFU_LL_SECU_CheckApplyRuntimeProtections(SFU_THIRD_CONFIGURATION);
   }
   FLOW_CONTROL_CHECK(uFlowProtectValue, FLOW_CTRL_RUNTIME_PROTECT);
@@ -1089,20 +1114,24 @@ static void SFU_BOOT_SM_VerifyUserFwSignature(void)
     if (SlotStartAdd[SLOT_ACTIVE_1 + i] != 0U)
     {
       /* FW installed ? */
+      //액티브 슬롯에 fw 가 있는지 확인한다.
       if (SFU_SUCCESS == SFU_IMG_DetectFW(SLOT_ACTIVE_1 + i))
       {
         /* Initialize Flow control */
         FLOW_CONTROL_INIT(uFlowCryptoValue, FLOW_CTRL_INIT_VALUE);
 
         /* Check the header signature */
+        //액티브 슬롯의 헤더 signature 를 검증한다.
         e_ret_status = SFU_IMG_VerifyActiveImgMetadata(SLOT_ACTIVE_1 + i);
         if (SFU_SUCCESS == e_ret_status)
         {
           /* Check the FW signature */
+          //액티브 슬롯의 fw signature 를 검증한다.
           e_ret_status = SFU_IMG_VerifyActiveImg(SLOT_ACTIVE_1 + i);
           if (SFU_SUCCESS == e_ret_status)
           {
             /* Verify that there is no additional code beyond firmware image */
+            //액티브 slot 에 fw 외 다른 코드가 없는지 검증한다.
             e_ret_status = SFU_IMG_VerifyActiveSlot(SLOT_ACTIVE_1 + i);
             if (SFU_SUCCESS != e_ret_status)
             {
@@ -1137,6 +1166,7 @@ static void SFU_BOOT_SM_VerifyUserFwSignature(void)
            * We should never reach this code.
            * Could come from an attack ==> as an example we invalidate current firmware.
            */
+          //액티브 슬롯의 검증에서 오류가 발생한 경우 현재 액티브 슬롯의 fw 를 삭제한다. (헤더 제외)
 #if defined(SFU_VERBOSE_DEBUG_MODE)
           TRACE("\r\n\t  Erasing slot SLOT_ACTIVE_%d", SLOT_ACTIVE_1 + i);
 #endif /* SFU_VERBOSE_DEBUG_MODE */
@@ -1150,12 +1180,14 @@ static void SFU_BOOT_SM_VerifyUserFwSignature(void)
       }
       else
       {
+        //액티브 슬롯에 fw 가 없는 경우 clean 한지 검증한다.
         if (SFU_IMG_VerifyEmptyActiveSlot(SLOT_ACTIVE_1 + i) != SFU_SUCCESS)
         {
           /*
            * We should never reach this code.
            * Could come from an attack ==> as an example we invalidate current firmware.
            */
+          //clean 하지 않다면 액티브 슬롯의 fw 를 삭제한다. (헤더 제외)
 #if defined(SFU_VERBOSE_DEBUG_MODE)
           TRACE("\r\n\t  Slot SLOT_ACTIVE_%d not empty : erasing ...", SLOT_ACTIVE_1 + i);
 #endif /* SFU_VERBOSE_DEBUG_MODE */
@@ -1166,6 +1198,7 @@ static void SFU_BOOT_SM_VerifyUserFwSignature(void)
   }
 
   /* Set the next State Machine state according to the success of the failure of e_ret_status */
+  // 오류가 없다면 액티브 slot 이 정상적이기 때문에 fw 를 실행한다.
   SFU_SET_SM_IF_CURR_STATE(e_ret_status, SFU_STATE_EXECUTE_USER_FW, SFU_STATE_HANDLE_CRITICAL_FAILURE);
 }
 
@@ -1200,12 +1233,14 @@ static void SFU_BOOT_SM_ExecuteUserFw(void)
     if (SlotStartAdd[SLOT_ACTIVE_1 + i] != 0U)
     {
       /* FW installed ? */
+      //액티브 슬롯에 fw 가 있는지 확인한다.
       if (SFU_SUCCESS == SFU_IMG_DetectFW(SLOT_ACTIVE_1 + i))
       {
         /* Initialize Flow control */
         FLOW_CONTROL_INIT(uFlowCryptoValue, FLOW_CTRL_INIT_VALUE);
 
         /* Check the header signature */
+        //액티브 슬롯의 헤더를 검증한다.
         if (SFU_IMG_VerifyActiveImgMetadata(SLOT_ACTIVE_1 + i) != SFU_SUCCESS)
         {
           /* Security issue : execution stopped ! */
@@ -1213,6 +1248,7 @@ static void SFU_BOOT_SM_ExecuteUserFw(void)
         }
 
         /* Check the FW signature */
+        //액티브 슬롯의 tag 를 확인한다.
         if (SFU_IMG_ControlActiveImgTag(SLOT_ACTIVE_1 + i) != SFU_SUCCESS)
         {
           /* Security issue : execution stopped ! */
@@ -1246,6 +1282,7 @@ static void SFU_BOOT_SM_ExecuteUserFw(void)
    */
 
   /* Configure active slot in execution mode with OTFDEC (if any) : required in case of external flash */
+  // 선택된 액티브 슬롯을 실행 모드로 설정한다. (외부 flash 가 사용된 경우)
   e_ret_status = SFU_LL_FLASH_Config_Exe(m_ActiveSlotToExecute);
   if (e_ret_status != SFU_SUCCESS)
   {
@@ -1259,18 +1296,22 @@ static void SFU_BOOT_SM_ExecuteUserFw(void)
   if (e_ret_status == SFU_SUCCESS)
   {
     /* Lock part of Secure Engine services */
+    //SE 서비스를 제한한다. secure engine 를 SE_LOCKED 상태로 전환
     if (SE_LockRestrictServices(&e_se_status) == SE_SUCCESS)
     {
       /* Double instruction to avoid basic fault injection */
+      //더블 체크
       if (SE_LockRestrictServices(&e_se_status) == SE_SUCCESS)
       {
         /* De-initialize the SB_SFU bootloader before launching the UserApp */
+        //SFU 관련 기능을 deinitialize 한다.
         (void)SFU_BOOT_DeInit(); /* the return value is not checked, we will always try launching the UserApp */
 
         /* Last flow control : lock service */
         FLOW_CONTROL_STEP(uFlowCryptoValue, FLOW_STEP_LOCK_SERVICE, FLOW_CTRL_LOCK_SERVICE);
 
         /* This function should not return */
+        //이 함수를 이용해서 application 으로 점프하는 경우 이 함수는 반환하지 않는다.
         e_ret_status = SFU_IMG_LaunchActiveImg(m_ActiveSlotToExecute);
 
         /* This point should not be reached */
@@ -1281,23 +1322,28 @@ static void SFU_BOOT_SM_ExecuteUserFw(void)
         while (1 == 1)
         {
           ;    /* wait for watchdog */
+          //IWDG 에 의해서 reset 되도록 대기
         }
       }
       else
       {
         /* Set the error before forcing a reboot, don't care of return value as followed by reboot */
+        //SE 서비스 lock 이 되지 않는 오류 발생
         SFU_EXCPT_SetError(SFU_EXCPT_LOCK_SE_SERVICES_ERR);
 
         /* This is the last operation executed. Force a System Reset */
+        //재부팅
         SFU_BOOT_ForceReboot();
       }
     }
     else
     {
       /* Set the error before forcing a reboot, don't care of return value as followed by reboot */
+      //SE 서비스 lock 이 되지 않는 오류 발생
       SFU_EXCPT_SetError(SFU_EXCPT_LOCK_SE_SERVICES_ERR);
 
       /* This is the last operation executed. Force a System Reset */
+      //재부팅
       SFU_BOOT_ForceReboot();
     }
   }
@@ -1412,9 +1458,11 @@ static SFU_ErrorStatus SFU_BOOT_CheckApplySecurityProtections(void)
   SFU_ErrorStatus e_ret_status = SFU_ERROR;
 
   /* Apply Static protections involving Option Bytes */
+  //WRP, RDP 등 정적 보호 기능을 활성화 한다.
   if (SFU_LL_SECU_CheckApplyStaticProtections() == SFU_SUCCESS)
   {
     /* Apply runtime protections needed to be enabled after each Reset */
+    //MPU, Firewall, DMA, DAP, TAMPER, IWDG 등 동적 보호 기능을 활성화 한다.
     e_ret_status = SFU_LL_SECU_CheckApplyRuntimeProtections(SFU_INITIAL_CONFIGURATION);
   }
 
@@ -1443,6 +1491,7 @@ static SFU_ErrorStatus SFU_BOOT_SystemSecurity_Config(void)
   (void) SFU_COM_Init();
 #endif /* SFU_DEBUG_MODE || SFU_TEST_PROTECTION */
 
+  //정적 동적 보호 기능을 활성화 한다.
   if (SFU_BOOT_CheckApplySecurityProtections() != SFU_SUCCESS)
   {
     /* WARNING: This might be generated by an attempted attack or a bug of your code!
@@ -1478,10 +1527,12 @@ static SFU_ErrorStatus SFU_BOOT_SecuritySafetyCheck(void)
   SFU_ErrorStatus e_ret_status = SFU_ERROR;
 
   /* Refresh the IWDG */
+  //IWDG 카운터 refresh
   e_ret_status = SFU_LL_SECU_IWDG_Refresh();
 
 #ifdef SFU_FWALL_PROTECT_ENABLE
   /* Make sure the code isolation is properly set */
+  //방화벽 기능이 활성화 되어 있는지 확인
   if (SFU_SUCCESS == e_ret_status)
   {
     if (__HAL_FIREWALL_IS_ENABLED() != RESET)

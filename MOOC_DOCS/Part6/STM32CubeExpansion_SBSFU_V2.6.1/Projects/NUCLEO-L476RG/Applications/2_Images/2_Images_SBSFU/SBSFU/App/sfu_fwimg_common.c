@@ -773,6 +773,7 @@ SFU_ErrorStatus SFU_IMG_VerifyActiveImg(uint32_t SlotNumber)
   /*
    * fw_image_header_validated MUST have been populated with valid metadata first,
    */
+  //fw 의 signature 를 검증한다.
   e_ret_status = VerifyFwSignature(&e_se_status, SlotNumber, &fw_image_header_validated, SE_FW_IMAGE_COMPLETE);
 #if defined(SFU_VERBOSE_DEBUG_MODE)
   if (SFU_ERROR == e_ret_status)
@@ -878,15 +879,18 @@ SFU_ErrorStatus SFU_IMG_LaunchActiveImg(uint32_t SlotNumber)
 #endif /* (__FPU_PRESENT == 1) && (__FPU_USED == 1) */
 
   /* Initialize address of user application to jump into */
+  //액티브 슬롯의 헤더 이후 application reset 벡터 위치로 점프한다.
   jump_address = *(__IO uint32_t *)((SlotStartAdd[SlotNumber] + SFU_IMG_IMAGE_OFFSET + 4));
   p_jump_to_function = (Function_Pointer) jump_address;
 
   /* Initialize user application's Stack Pointer */
+  //스택포인터 초기화
   __set_MSP(*(__IO uint32_t *)(SlotStartAdd[SlotNumber] + SFU_IMG_IMAGE_OFFSET));
 
   if (SFU_SUCCESS == e_ret_status)
   {
     /* JUMP into User App */
+    //어플리케이션으로 점프
     p_jump_to_function();
   }
 

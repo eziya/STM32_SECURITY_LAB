@@ -2146,6 +2146,9 @@ SFU_ErrorStatus SFU_IMG_TriggerResumeInstallation(uint32_t ActiveSlot, uint32_t 
    * resume swap process
    * fw_image_header_to_test is already populated after SFU_IMG_CheckPendingInstallation()call.
    */
+  //액티브 슬롯과 다운로드 슬롯의 swap 을 resume 한다.
+  //resume 할 수 있는 이유는 다운로드 슬롯의 트레일러에 swap 된 이력이 기록되어 있어 이 기록을 보고 swap 이 완료되지 않은
+  //영역부터 swap 할 수 있기 때문이다.
   e_ret_status = SwapFirmwareImages(ActiveSlot, DwlSlot, &fw_image_header_to_test);
   if (e_ret_status != SFU_SUCCESS)
   {
@@ -2159,6 +2162,7 @@ SFU_ErrorStatus SFU_IMG_TriggerResumeInstallation(uint32_t ActiveSlot, uint32_t 
 #endif /* ENABLE_IMAGE_STATE_HANDLING */
 
   /* Validate immediately the new active FW */
+  //swap 이 완료되면 다운로드 슬롯의 테스트 헤더를 액티브 슬롯에 기록하여 준다.
   if (e_ret_status == SFU_SUCCESS)
   {
     e_ret_status = SFU_IMG_Validation(ActiveSlot, &fw_image_header_to_test);
@@ -2170,6 +2174,7 @@ SFU_ErrorStatus SFU_IMG_TriggerResumeInstallation(uint32_t ActiveSlot, uint32_t 
   }
 
   /* clear swap pattern */
+  //설치가 완료되었기 때문에 트레일러 영역의 clean 영역을 0x55 로 write 하여 완료 처리한다.
   if (e_ret_status == SFU_SUCCESS)
   {
     e_ret_status = CleanMagicValue(DwlSlot);
@@ -2183,6 +2188,7 @@ SFU_ErrorStatus SFU_IMG_TriggerResumeInstallation(uint32_t ActiveSlot, uint32_t 
 
 exit:
   /* Erase downloaded FW in case of installation issue to avoid any infinite loop */
+//설치가 정상적으로 완료되지 않은 경우 다운로드 슬롯을 erase 한다.
   if (SFU_SUCCESS != e_ret_status)
   {
     (void) SFU_IMG_EraseDownloadedImg(DwlSlot);
