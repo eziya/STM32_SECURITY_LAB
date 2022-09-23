@@ -7,6 +7,7 @@
 		<item key="WizardProjectsImportPage.STORE_CLOSE_CREATED_PROJECTS_ID" value="false"/>
 		<item key="WizardProjectsImportPage.STORE_HIDE_CONFLICTING_PROJECTS_ID" value="false"/>
 		<list key="WizardProjectsImportPage.STORE_DIRECTORIES">
+			<item value="E:\Workspace\STM32_SECURITY_LAB\TEST_PROJECTS\STM32CubeExpansion_SBSFU_V2.6.1\Projects\NUCLEO-L476RG\Applications\2_Images"/>
 			<item value="E:\Workspace\STM32_SECURITY_LAB\MOOC_DOCS\Part6\STM32CubeExpansion_SBSFU_V2.6.1\Projects\NUCLEO-G071RB\Applications\2_Images"/>
 			<item value="E:\Workspace\STM32_SECURITY_LAB\MOOC_DOCS\Part6\STM32CubeExpansion_SBSFU_V2.6.1\Projects\NUCLEO-L476RG\Applications\2_Images"/>
 			<item value="E:\Workspace\STM32_SECURITY_LAB\TEST_PROJECTS\STM32_HAL_INTEGRITY"/>
