@@ -1,0 +1,20 @@
+block size =16
+Magic: b'SFU1'!!
+Magic: b'SFU1'!!
+number of segment :6
+0x8060400
+0x80671f0
+0x8067200
+0x80672e0
+0x80672f0
+number of segment :6
+0x80001b0
+0x80059f8
+0x8010b90
+0x801d118
+0x801d2c0
+Merging
+SBSFU Base = 0x8000000
+Writing header = 0x8060000
+APPLI Base = 0x8060200
+Writing to ..//../Binary/SBSFU_UserApp.bin 422640
