@@ -21,4 +21,7 @@ https://www.st.com/content/st_com/en/support/learning/stm32-education/stm32-mooc
 18. X-CUBE-CRYTOLIB RSA (https://blog.naver.com/eziya76/222833004568)
 19. Application Integrity (https://blog.naver.com/eziya76/222846948435, https://blog.naver.com/eziya76/222849087028)
 20. Application Authentication (https://blog.naver.com/eziya76/222854074110)
+21. Secure Boot (https://blog.naver.com/eziya76/222863424961, https://blog.naver.com/eziya76/222866429467)
+22. X-CUBE-SBSFU STM32F429ZI Port (https://blog.naver.com/eziya76/222886947176)
+
 
