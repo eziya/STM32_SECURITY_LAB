@@ -1017,7 +1017,7 @@ static void SFU_BOOT_SM_VerifyUserFwSignature(void)
   SFU_ErrorStatus e_ret_status = SFU_ERROR;
   uint32_t i;
 
-  TRACE("\r\n= [SBOOT] STATE: VERIFY USER FW SIGNATURE");
+  TRACE("\r\n= [SBOOT] STATE: VERIFY USER FW SIGNATURE\r\n");
 
   /* Double security check :
      - testing "static protections" twice will avoid basic hardware attack

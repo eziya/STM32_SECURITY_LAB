@@ -37,14 +37,14 @@
 __ICFEDIT_SWAP_start__           = 0x08040000;
 __ICFEDIT_SWAP_end__             = 0x0805FFFF;
 
-/* Active slot #1 (832 kbytes) */
+/* Active slot #1 (768 kbytes) must be aligned with SWAP size */
 __ICFEDIT_SLOT_Active_1_start__  = 0x08060000;
-__ICFEDIT_SLOT_Active_1_end__    = 0x0812FFFF;
+__ICFEDIT_SLOT_Active_1_end__    = 0x0811FFFF;
 __ICFEDIT_SLOT_Active_1_header__ = __ICFEDIT_SLOT_Active_1_start__;
 
-/* Dwl slot #1 (832 kbytes) */
-__ICFEDIT_SLOT_Dwl_1_start__     = 0x08130000;
-__ICFEDIT_SLOT_Dwl_1_end__       = 0x081FFFFF;
+/* Dwl slot #1 (768 kbytes) */
+__ICFEDIT_SLOT_Dwl_1_start__     = 0x08120000;
+__ICFEDIT_SLOT_Dwl_1_end__       = 0x081DFFFF;
 
 
 /* Slots not configured */

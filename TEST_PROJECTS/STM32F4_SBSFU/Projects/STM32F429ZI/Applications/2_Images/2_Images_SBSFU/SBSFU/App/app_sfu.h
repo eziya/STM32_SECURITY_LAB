@@ -141,7 +141,7 @@ extern "C" {
  *
  */
 
-#define SECBOOT_DISABLE_SECURITY_IPS  /*!< Disable all security IPs at once when activated */
+//#define SECBOOT_DISABLE_SECURITY_IPS  /*!< Disable all security IPs at once when activated */
 
 #if !defined(SECBOOT_DISABLE_SECURITY_IPS)
 
@@ -149,8 +149,8 @@ extern "C" {
    In debug mode it can be better to disable some of the following protection
    for a better Debug experience (WRP, RDP, IWDG, DAP, etc.) */
 
-#define SFU_WRP_PROTECT_ENABLE
-#define SFU_RDP_PROTECT_ENABLE
+//#define SFU_WRP_PROTECT_ENABLE
+//#define SFU_RDP_PROTECT_ENABLE
 #define SFU_TAMPER_PROTECT_ENABLE
 #define SFU_DAP_PROTECT_ENABLE     /*!< WARNING: Be Careful if enabling this protection. Debugger will be disconnected.
                                         It might be difficult to reconnect the Debugger.*/

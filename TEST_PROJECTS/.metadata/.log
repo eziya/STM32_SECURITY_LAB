@@ -8116,3 +8116,24 @@ Command-line arguments:  -os win32 -ws win32 -arch x86_64
 
 !ENTRY com.st.stm32cube.ide.mcu.ide 1 1 2022-09-27 19:16:01.646
 !MESSAGE Started RMI Server, listening on port 41337
+!SESSION 2022-09-28 18:27:38.925 -----------------------------------------------
+eclipse.buildId=Version 1.10.1
+java.version=11.0.14.1
+java.vendor=Eclipse Adoptium
+BootLoader constants: OS=win32, ARCH=x86_64, WS=win32, NL=ko_KR
+Command-line arguments:  -os win32 -ws win32 -arch x86_64
+
+!ENTRY com.st.stm32cube.ide.mcu.informationcenter 4 4 2022-09-28 18:27:56.243
+!MESSAGE CubeMX plugin appears to be active, Log4j initialization might be too late.
+
+!ENTRY com.st.stm32cube.ide.mcu.informationcenter 1 1 2022-09-28 18:27:56.368
+!MESSAGE Log4j initialized with config file E:\Workspace\STM32_SECURITY_LAB\TEST_PROJECTS\.metadata\.log4j.xml
+
+!ENTRY com.st.stm32cube.ide.mcu.ide 1 1 2022-09-28 18:27:59.352
+!MESSAGE Started RMI Server, listening on port 41337
+
+!ENTRY org.eclipse.cdt.core 1 0 2022-09-28 19:03:07.962
+!MESSAGE Indexed 'STM32F429ZI_2_Images_SBSFU' (49 sources, 135 headers) in 3.98 sec: 10,638 declarations; 76,755 references; 0 unresolved inclusions; 3 syntax errors; 0 unresolved names (0%)
+
+!ENTRY org.eclipse.cdt.core 1 0 2022-09-28 19:41:09.990
+!MESSAGE Indexed 'STM32F429ZI_2_Images_SBSFU' (49 sources, 135 headers) in 1.87 sec: 10,638 declarations; 76,755 references; 0 unresolved inclusions; 3 syntax errors; 0 unresolved names (0%)

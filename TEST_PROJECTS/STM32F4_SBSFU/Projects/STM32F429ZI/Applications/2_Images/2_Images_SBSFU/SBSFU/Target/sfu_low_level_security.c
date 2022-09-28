@@ -820,7 +820,7 @@ SFU_ErrorStatus SFU_LL_SECU_SetProtectionMPU(uint8_t uStep)
     MPU_InitStruct.IsCacheable          = MpuAreas[mpu_region_num].Cacheable;
     MPU_InitStruct.TypeExtField         = MpuAreas[mpu_region_num].Tex;
 #if defined(SFU_VERBOSE_DEBUG_MODE)
-    TRACE(" @%d:%x size:%x sub:%x perm:%x exec:%x\r\n",
+    TRACE(" @%d:0x%08x size:0x%02x sub:0x%02x perm:0x%02x exec:0x%02x\r\n",
           MPU_InitStruct.Number, MPU_InitStruct.BaseAddress, MPU_InitStruct.Size, MPU_InitStruct.SubRegionDisable,
           MPU_InitStruct.AccessPermission, MPU_InitStruct.DisableExec);
 #endif /* SFU_VERBOSE_DEBUG_MODE */
