@@ -1,2 +1,0 @@
-#<SYMDEFS># ARM Linker, 6140002: Last Updated: Thu Sep  9 11:12:17 2021
-0x08005b01 T SE_APP_GetActiveFwInfo

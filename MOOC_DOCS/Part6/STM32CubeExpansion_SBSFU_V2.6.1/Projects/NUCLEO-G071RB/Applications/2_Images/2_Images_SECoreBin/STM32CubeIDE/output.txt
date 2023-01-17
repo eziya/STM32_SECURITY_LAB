@@ -1,4 +1,0 @@
-prebuild.sh : started
-prepareimage with windows executable
- E:/Workspace/STM32_SECURITY_LAB/MOOC_DOCS/Part6/STM32CubeExpansion_SBSFU_V2.6.1/Middlewares/ST/STM32_Secure_Engine/Utilities/KeysAndImages/win/prepareimage/prepareimage.exe
-SECBOOT_ECCDSA_WITH_AES128_CBC_SHA256 selected

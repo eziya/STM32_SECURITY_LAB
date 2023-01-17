@@ -1,4 +1,0 @@
-SE_APP_GetActiveFwInfo
-SE_APP_ValidateFw
-SE_APP_GetActiveFwState
-SE_APP_SVC_Handler
