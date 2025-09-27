@@ -1,0 +1,225 @@
+@echo off
+:: ============================================================================
+::  postbuild.bat (EWARM / SBSFU Project Post-Build Script)
+::
+::  목적 (Purpose):
+::    1) UserApp 빌드 산출물(ELF/BIN)을 암호화(AES-CBC) & 패키징(SFB) 처리
+::    2) 헤더(headerbin) 및 Bootloader(SBSFU) + UserApp ELF 병합 bigbinary 생성
+::    3) 기준(ref) 바이너리 존재 시 Partial 업데이트 패키지(부분 SFB) 생성
+::    4) (옵션) 6번째 인자 존재 시 STM32CubeProgrammer -ms 로 통합 ELF(big ELF) 생성
+::    5) 이전 ELF와 동일하면 작업 스킵 (nothingtodo)
+::
+::  인자 (Arguments):
+::    %1 projectdir : UserApp 프로젝트 디렉터리(EWARM 폴더)
+::    %2 elf        : UserApp ELF (실행 이미지)
+::    %3 bin        : UserApp BIN (암호화/해시/diff 대상)
+::    %4 fwid       : Firmware ID (1/2/3...) - Magic 및 키 선택
+::    %5 version    : Firmware Version (header/pack 메타에 기록)
+::    %6 (옵션)     : 값 존재 시 글로벌 ELF(-ms) 생성 수행
+::
+::  산출물 (Artifacts)  (execname = %~n3):
+::    %execname%.sfu        : AES-CBC 암호화본 (bin → enc)
+::    %execname%.sign       : plaintext BIN 의 SHA256 (Tag / 복호화 후 무결성 검증)
+::    %execname%.sfb        : Header(서명 포함) + sfu + sign 패키지
+::    %execname%sfuh.bin    : Header 단독 (headerbin)
+::    SBSFU_%execname%.bin  : Bootloader + Header + UserApp ELF 병합 결과(bigbinary)
+::    SBSFU_%execname%.elf  : 이전 빌드 ELF 백업 (변경 감지용)
+::
+::  Partial 업데이트 (RefUserApp.bin 존재 시):
+::    Partial%execname%.bin     : ref vs bin DIFF (plaintext 변경 블록)
+::    Partial%execname%.offset  : DIFF 적용 시작 오프셋
+::    Partial%execname%.sfu     : partialbin 암호화본
+::    Partial%execname%.sign    : partialbin SHA256
+::    Partial%execname%.sfb     : 전체 + 부분 업데이터를 모두 포함한 패키지
+::
+::  사용 도구 (prepareimage):
+::    enc / sha256 / pack / header / merge / diff
+::  선택 도구:
+::    STM32_Programmer_CLI  (-ms : ELF 병합)
+::
+::  워크플로 (Workflow):
+::    A. ELF 변경 감지(fc) → 동일 시 nothingtodo
+::    B. enc → sha256 → pack → header → merge
+::    C. Partial (ref 존재 시) diff → enc → sha256 → pack
+::    D. (옵션) 글로벌 ELF 생성
+::    E. 중간 산출물 정리
+::
+::  스킴 전제:
+::    - SECBOOT_ECCDSA_WITH_AES128_CBC_SHA256 (ECDSA + AES-CBC) 예제 기준
+::
+::  보안 주의:
+::    - ECCKEY*.txt : EC PRIVATE KEY 포함 (데모용) → 운영 전 공개키만 남기고 교체/히스토리 정리
+::    - OEM_KEY_COMPANY*_key_AES_CBC.bin : 대칭키 유출 시 암호화 무력화 → 보호 필수
+::    - iv.bin : CBC IV 재사용 여부/정책 검토 (실 환경에서는 관리 전략 필요)
+::    - *.sign : 암호화 전 plaintext BIN 기준 해시
+::
+::  기타:
+::    - goto exe: 뒤 goto py: 는 dead code (원형 유지 목적)
+::    - sbsfuelf 경로는 보드/프로젝트 구조에 따라 조정 필요
+::    - 로직(명령/흐름)은 변경하지 않고 주석만 확장
+:: ============================================================================
+
+set "projectdir=%1"
+set "execname=%~n3"
+set "elf=%2"
+set "bin=%3"
+set "fwid=%4"
+set "version=%5"
+
+:: Bootloader 루트 (스크립트 위치 기준 상대)
+set "SBSFUBootLoader=%~d0%~p0\\..\\.."
+
+:: STM32CubeProgrammer CLI (설치 경로 필요 시 수정)
+set "programmertool="C:\\Program Files (x86)\\STMicroelectronics\\STM32Cube\\STM32CubeProgrammer\\bin\\STM32_Programmer_CLI""
+
+:: UserApp Binary 산출물 폴더
+set "userAppBinary=%projectdir%\\..\\Binary\\"
+
+:: 전체 산출물 이름 구성
+set "sfu=%userAppBinary%\\%execname%.sfu"
+set "sfb=%userAppBinary%\\%execname%.sfb"
+set "sign=%userAppBinary%\\%execname%.sign"
+set "headerbin=%userAppBinary%\\%execname%sfuh.bin"
+set "bigbinary=%userAppBinary%\\SBSFU_%execname%.bin"
+set "elfbackup=%userAppBinary%\\SBSFU_%execname%.elf"
+
+:: Partial 산출물
+set "partialbin=%userAppBinary%\\Partial%execname%.bin"
+set "partialsfb=%userAppBinary%\\Partial%execname%.sfb"
+set "partialsfu=%userAppBinary%\\Partial%execname%.sfu"
+set "partialsign=%userAppBinary%\\Partial%execname%.sign"
+set "partialoffset=%userAppBinary%\\Partial%execname%.offset"
+set "ref_userapp=%projectdir%\\RefUserApp.bin"
+
+:: 키/벡터/부트로더 ELF
+set "iv=%SBSFUBootLoader%\\2_Images_SECoreBin\\Binary\\iv.bin"
+set "ecckey=%SBSFUBootLoader%\\2_Images_SECoreBin\\Binary\\ECCKEY%fwid%.txt"
+set "sbsfuelf=%SBSFUBootLoader%\\2_Images_SBSFU\\EWARM\\STM32L476RG_NUCLEO\\Exe\\project.out"
+:: (주의) H7 기반이라면 해당 경로를 실제 H7 Bootloader 산출물로 수정 필요
+set "oemkey=%SBSFUBootLoader%\\2_Images_SECoreBin\\Binary\\OEM_KEY_COMPANY%fwid%_key_AES_CBC.bin"
+
+set "magic=SFU%fwid%"   :: Header Magic (FW ID 포함)
+set "offset=512"        :: Header ↔ Firmware offset
+set "alignment=16"      :: diff alignment (Partial 비교 단위)
+
+:: prepareimage 유틸리티 디렉터리 이동
+pushd %projectdir%\..\..\..\..\..\..\Middlewares\ST\STM32_Secure_Engine\Utilities\KeysAndImages
+set basedir=%cd%
+popd
+
+:: 실행파일 우선 사용 (동작 없으면 python)
+goto exe:
+goto py:
+
+:exe
+echo Postbuild with windows executable
+set "prepareimage=%basedir%\\win\\prepareimage\\prepareimage.exe"
+set "python="
+if exist %prepareimage% (
+    goto postbuild
+)
+
+:py
+echo Postbuild with python script
+set "prepareimage=%basedir%\\prepareimage.py"
+set "python=python "
+
+:postbuild
+:: 산출물 폴더 생성
+if not exist "%userAppBinary%" (
+    mkdir "%userAppBinary%"
+)
+
+:: ELF 변경 감지 (이전 백업 동일 시 전체 스킵)
+if exist %elfbackup% (
+    fc %elfbackup% %elf% >NUL && (goto nothingtodo) || echo "elf has been modified, processing required"
+)
+
+:: 1) 암호화 (plaintext bin → sfu)
+set "command=%python%%prepareimage% enc -k %oemkey% -i %iv% %bin% %sfu%  > %projectdir%\output.txt 2>&1"
+%command%
+IF %ERRORLEVEL% NEQ 0 goto :error
+
+:: 2) 해시 (plaintext bin → sign)
+set "command=%python%%prepareimage% sha256 %bin% %sign% >> %projectdir%\output.txt 2>&1"
+%command%
+IF %ERRORLEVEL% NEQ 0 goto :error
+
+:: 3) 패키징 (Header + sfu + sign → sfb)
+set "command=%python%%prepareimage% pack -m %magic% -k %ecckey% -r 28 -v %version% -i %iv% -f %sfu% -t %sign% %sfb% -o %offset% >> %projectdir%\output.txt 2>&1"
+%command%
+IF %ERRORLEVEL% NEQ 0 goto :error
+
+:: 4) Header 단독 (headerbin)
+set "command=%python%%prepareimage% header -m %magic% -k %ecckey% -r 28 -v %version% -i %iv% -f %sfu% -t %sign% -o %offset% %headerbin% >> %projectdir%\output.txt 2>&1"
+%command%
+IF %ERRORLEVEL% NEQ 0 goto :error
+
+:: 5) Bootloader + header + UserApp ELF 병합 → bigbinary
+set "command=%python%%prepareimage% merge -v 0 -i %headerbin% -s %sbsfuelf% -u %elf% %bigbinary% >> %projectdir%\output.txt 2>&1"
+%command%
+IF %ERRORLEVEL% NEQ 0 goto :error
+
+:: Partial 처리 (RefUserApp 없으면 건너뜀)
+if not exist "%ref_userapp%" (
+    goto :bigelf
+)
+
+:: 6) diff (ref vs bin) → partialbin + partialoffset
+set "command=%python%%prepareimage% diff -1 %ref_userapp% -2 %bin% %partialbin% -a %alignment% --poffset %partialoffset% >> %projectdir%\output.txt 2>&1"
+%command%
+IF %ERRORLEVEL% NEQ 0 goto :error
+
+:: 7) partialbin 암호화 → partialsfu
+set "command=%python%%prepareimage% enc -k %oemkey% -i %iv% %partialbin% %partialsfu% >> %projectdir%\output.txt 2>&1"
+%command%
+IF %ERRORLEVEL% NEQ 0 goto :error
+
+:: 8) partialbin 해시 → partialsign
+set "command=%python%%prepareimage% sha256 %partialbin% %partialsign% >> %projectdir%\output.txt 2>&1"
+%command%
+IF %ERRORLEVEL% NEQ 0 goto :error
+
+:: 9) partial 패키징 (전체 + 부분 업데이트 동시 포함)
+set "command=%python%%prepareimage% pack -m %magic% -k %ecckey% -r 28 -v %version% -i %iv% -f %sfu% -t %sign% -o %offset% --pfw %partialsfu% --ptag %partialsign% --poffset %partialoffset% %partialsfb% >> %projectdir%\output.txt 2>&1"
+%command%
+IF %ERRORLEVEL% NEQ 0 goto :error
+
+:bigelf
+:: 10) (옵션) 글로벌 ELF 생성
+IF  "%~6"=="" goto :finish
+echo "Generating the global elf file (SBSFU and userApp)"
+echo "Generating the global elf file (SBSFU and userApp)" >> %projectdir%\output.txt
+set "command=%programmertool% -ms %elf% %headerbin% %sbsfuelf% >> %projectdir%\output.txt 2>&1"
+%command%
+IF %ERRORLEVEL% NEQ 0 goto :error
+
+:: 11) ELF 백업 (변경 감지용)
+set "command=copy %elf% %elfbackup% >> %projectdir%\output.txt 2>&1"
+%command%
+IF %ERRORLEVEL% NEQ 0 goto :error
+
+:finish
+:: 12) 중간 산출물 정리
+del %sign%
+del %sfu%
+del %headerbin%
+if exist "%ref_userapp%" (
+    del %partialsign%
+    del %partialbin%
+    del %partialsfu%
+    del %partialoffset%
+)
+exit 0
+
+:error
+:: 오류 처리: 실패 명령 기록 + 백업 ELF 제거
+echo "%command% : failed" >> %projectdir%\output.txt
+if exist %elfbackup%(del %elfbackup%)
+echo %command% : failed
+pause
+exit 1
+
+:nothingtodo
+:: ELF 변경 없음 → 처리 생략
+exit 0
