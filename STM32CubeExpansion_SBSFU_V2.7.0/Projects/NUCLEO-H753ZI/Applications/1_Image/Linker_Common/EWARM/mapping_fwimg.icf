@@ -1,0 +1,14 @@
+/*###ICF### Set of symbols used in SE and SB_SFU projects ****/
+
+/* Active slot #1 in Sector 1 to 15 : 15 x 128 kbytes */
+define exported symbol  __ICFEDIT_SLOT_Active_1_start__ = 0x08020000;
+define exported symbol  __ICFEDIT_SLOT_Active_1_end__   = 0x081FFFFF;
+define exported symbol  __ICFEDIT_SLOT_Active_1_header__= __ICFEDIT_SLOT_Active_1_start__;
+
+/* Slots not configured */
+define exported symbol  __ICFEDIT_SLOT_Active_2_header__= 0x00000000;
+define exported symbol  __ICFEDIT_SLOT_Active_2_start__ = 0x00000000;
+define exported symbol  __ICFEDIT_SLOT_Active_2_end__   = 0x00000000;
+define exported symbol  __ICFEDIT_SLOT_Active_3_header__= 0x00000000;
+define exported symbol  __ICFEDIT_SLOT_Active_3_start__ = 0x00000000;
+define exported symbol  __ICFEDIT_SLOT_Active_3_end__   = 0x00000000;
